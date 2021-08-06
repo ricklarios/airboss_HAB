@@ -1,0 +1,27 @@
+#searches-container-all {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-family: Montserrat, sans-serif;
+    background-color: #126e82;
+    background-image: linear-gradient(#126e82, hsl(194, 100%, 50%));
+}
+
+#searches-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8rem;
+    width: 100%;
+    padding: 2rem;
+}
+
+#flight-screen-results {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr;
+    align-items: flex-start;
+    justify-content: space-around;
+    grid-gap: 1rem;
+    width: 100%;
+}

@@ -1,0 +1,159 @@
+#flight-info-container {
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: -1px 1px 2px rgb(129, 129, 129);
+    margin: 100px auto;
+    width: 75%;
+    max-width: 850px;
+    font-family: Montserrat, sans-serif;
+    text-align: left;
+}
+
+.flight-info-header-container {
+    margin-bottom: 10px;
+}
+.flight-info-header {
+    margin-bottom: 5px;
+    border-bottom: solid 1px rgb(19, 44, 51);
+    font-weight: normal;
+    font-size: 1.4em;
+}
+
+.itinerarie-info-header {
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+.flight-info-segments-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+.flight-info-segment {
+    padding: 20px;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+.flight-info-separator {
+    display: inline-block;
+
+    border-left: solid 1px rgb(19, 44, 51);
+}
+.flight-info-segment > h5 {
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.flight-info-time,
+.total-price {
+    font-weight: 500;
+    font-size: 1.4em;
+}
+
+.price-info-container {
+    margin-bottom: 20px;
+}
+
+.total-price {
+    font-weight: 500;
+    font-size: 1.3em;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons-container > button {
+    background-color: rgb(18, 110, 130);
+    color: white;
+    width: 200px;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    gap: 0.5rem;
+    box-shadow: -1px 1px 2px rgb(129, 129, 129) !important;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.buttons-container > button:hover {
+    background-color: #30525c;
+}
+.covid-info-title {
+    border-bottom: solid 1px rgb(19, 44, 51);
+    margin-bottom: 10px;
+}
+
+.covid-info-container {
+    margin-top: 20px;
+}
+
+#itineraries-line {
+    position: relative;
+    display: inline-block;
+    width: 75%;
+    height: 1px;
+    margin: 0.375rem auto;
+    padding: 0;
+    border-radius: 0.375rem;
+    background-color: #68697f;
+    line-height: 0;
+    text-align: center;
+}
+
+#airplane-logo {
+    position: absolute;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -0.5rem;
+    padding-left: 0.25rem;
+}
+
+#non-stop-text {
+    color: blue;
+    font-size: 0.8rem;
+}
+
+#red-spot {
+    position: relative;
+    top: -0.125rem;
+    display: inline-block;
+    width: 0.375rem;
+    height: 0.375rem;
+    margin: 0 4%;
+    border-radius: 0.375rem;
+    background-color: #d1435b;
+    background-image: none;
+    line-height: 0;
+    box-shadow: 0 0 0 0.125rem #d8e3e7;
+    zoom: 1;
+}
+
+#exist-stop-text {
+    color: #d1435b;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+#stops-name {
+    color: black;
+    display: inline-block;
+    font-size: 0.8rem;
+}
+#logo-ida {
+    font-size: 1.2rem;
+    margin-left: 3px;
+}
+.stops-info-container {
+    list-style: none;
+}
+
+.stops-info-container > li > p {
+    display: flex;
+}

@@ -1,0 +1,123 @@
+.login-container{
+    min-height: 400px;
+    width: 350px;
+    background-color: #D8E3E7;
+    border-radius: 5px;
+    border: 3px solid #132C33;
+    position: absolute;
+    z-index: 5000;
+    left: calc(50% - 175px);
+    top: calc(50% - 200px);
+    transform: translate(-50%,-50%);
+    text-align: center;
+    padding:1rem;
+
+  }
+
+  #forgot-password {
+    text-align: right;
+    font-size: 0.65rem;
+    margin-bottom: 0.8rem ;
+  }
+
+  .login-container > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+ 
+  }
+
+  #no-account-container {
+
+
+  font-size: 0.65rem;
+  margin-top: 1rem ;
+  }
+
+.btnFacebook{
+
+  background-color: #4c69ba;
+  color: white;
+  border-style: none;
+  border-radius: 2px;
+  padding:0.5rem 1rem;
+  font-size: 14px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px;
+ 
+} 
+
+#social-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  gap: 0.5rem;
+ 
+}
+#social-btn button {
+  
+  width: 100%;
+ 
+}
+#social-btn button div {
+  
+ margin-right: 0 !important;
+ 
+}
+
+form > div {
+  width: 100%;
+}
+.fa-facebook{
+  padding:0.5rem;
+ 
+
+}
+
+#form-login > div .MuiFormControl-root {
+  padding:0.2rem !important;
+  width: 100% !important;
+}
+
+#form-login > div .MuiFormControl-root label {
+  padding:0.2rem !important;
+
+}
+
+#form-login .MuiFormControl-root {
+  padding:0.2rem !important;
+  width: 100% !important;
+}
+#form-login .MuiFormControl-root label {
+  padding:0.2rem !important;
+ 
+}
+
+
+.MuiFormControl-root .MuiInputBase-root {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#button-login {
+  background-color:#126E82;
+}
+
+.line-v{
+  height: 1px;
+  background-color: #132C33;
+  width: 60%;
+  margin: 8px;
+ 
+
+}
+
+#standard-adornment-password-label{
+  z-index: 99999 !important;
+}
+
+
+

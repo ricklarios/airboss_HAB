@@ -1,0 +1,87 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;600;700&display=swap');
+
+.MuiAutocomplete-root {
+ 
+    margin: 0 auto;
+    width: 100% !important;
+    width: 100% ;
+    box-shadow: -1px 1px 2px rgb(129, 129, 129) !important;
+    font-family: Roboto, sans-serif !important;
+    font-weight: 300 !important;
+    font-size: 0.8rem !important;
+    background-color: white !important;
+  
+
+    
+}
+
+.MuiInputBase-root {
+    background-color: white !important;
+}
+
+
+#mui-76702-label {
+    font-family: Roboto, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+}
+.MuiFormLabel-root {
+    font-family: Roboto, sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.75rem !important;
+}
+.MuiInputBase-input {
+    font-family: Roboto, sans-serif !important;
+    font-weight: 300 !important;
+    font-size: 0.8rem !important;
+}
+.PrivateNotchedOutline-legendLabelled-3 span {
+    color: black !important;
+    font-size: 0.6rem;
+}
+
+.MuiFormControl-root, .MuiTextField-root, .MuiFormControl-fullWidth {
+    background-color: rgba(255, 255, 255) !important;
+    font-family: Roboto, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    color: black !important;
+}
+.PrivateNotchedOutline-root-5 {
+    border-radius: 0 !important;
+}
+.MuiFilledInput-root {
+    background-color: white !important;
+}
+.MuiFormControl-root, .MuiTextField-root, .MuiFormControl-fullWidth {
+    border-radius: 0;
+    background-color: white !important;
+}
+
+.MuiFilledInput-underline:after {
+  
+    border-bottom: 2px solid #132C33 !important;
+}
+.MuiFormLabel-root  {
+    color: rgb(117, 116, 116) !important;
+}
+.MuiInputBase-input {
+    font-family: Roboto, sans-serif !important;
+    font-size: 0.8rem !important;
+    color: rgb(0, 0, 0) !important;
+}
+
+.MuiFormLabel-root.Mui-focused {
+    color: #132C33 !important;
+}
+
+.PrivateNotchedOutline-root-1 {
+    border-radius: 0 !important;
+}
+
+
+.inputs-form{
+    width: 300px;
+    
+  }

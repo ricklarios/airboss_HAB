@@ -1,0 +1,56 @@
+#container-register-form{
+    min-height: 500px;
+    width: 400px;
+    background-color: #D8E3E7;
+    border-radius: 5px;
+    border: 3px solid #132C33;
+    position: absolute;
+    z-index: 5000;
+    left: calc(50% - 200px);
+    top: calc(50% - 250px);
+    transform: translate(-50%,-50%);
+    
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+#container-register-form form {
+  width: 100%;
+}
+
+
+ .birthday{
+   width: 300px;
+ }
+ #register-button {
+  grid-column: span 8;
+  grid-row: 4;
+  background-color: #132C33;
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 0 0 10px 10px;
+  cursor: pointer;
+  margin: 5px;
+  grid-gap: 0.5rem;
+  gap: 0.5rem;
+  box-shadow: -1px 1px 2px rgb(129 129 129) !important;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.label,#standard-basic-nombre-label, #standard-basic-apellidos-label, #country-select-label{
+  z-index: 999999 !important;
+}
+.MuiAutocomplete-paper, .MuiList-root, .MuiMenu-list, .MuiList-padding{
+  z-index: 999999 !important;
+  }
+
+  .list-countries{
+    z-index:99999 !important;
+  }

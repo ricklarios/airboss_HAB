@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+  }
+  
+body {
+  
+    height: 100vh;
+}
+
+#profile-container {
+    
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: Montserrat, sans-serif;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-image: linear-gradient( #126E82, #00c3ff );
+}
+
+
+@media only screen and (max-width: 700px) {
+  #hohome-screen copyme-container {
+    
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: Montserrat, sans-serif;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+  } 
+}
+
+#profile{
+  background-color: white;
+  margin: 0 auto;
+  width: 900px;
+  height: 500px;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+#titles{
+  background-color: #126E82;
+  color: whitesmoke;
+  padding: 15px;
+  max-height: 500px;
+  border-radius: 5px 0px 0px 5px;
+  grid-row-start: 1;
+  grid-row-end: 9;
+  display: grid;
+  align-items: center;
+  grid-template-rows: 3fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+
+}
+
+#data{
+  padding: 15px;
+  color: #132C33;
+  grid-row-start: 1;
+  grid-row-end: 9;
+  display: grid;
+  align-items: center;
+  grid-template-rows: 3fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  font-size: 1.5rem;
+}
+.info-account{
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+}
+.pictureProfile{
+  border-radius: 50%;
+  max-height: 150px;
+  max-width: 150px;
+  height: 150px;
+  width: 150px;
+  display: block;
+  margin: auto;
+  padding: 15px;
+  grid-row-start: 0;
+  grid-row-end: 2;
+}
+#avatar-container{
+  grid-row-start: 0;
+  grid-row-end: 2;
+}
+.item-1, .data-1{
+  grid-row-start: 2;
+  grid-row-end: 3;
+  
+}
+.item-2, .data-2{
+  grid-row-start: 3;
+  grid-row-end: 4;
+}
+.item-3, .data-3{
+  grid-row-start: 4;
+  grid-row-end: 5;
+}
+.item-4, .data-4{
+  grid-row-start: 5;
+  grid-row-end: 6;
+}
+.item-5, .data-5{
+  grid-row-start: 6;
+  grid-row-end: 7;
+}
+.item-6, .data-6{
+  grid-row-start: 7;
+  grid-row-end: 8;
+}
+
+.camera{
+  color: aliceblue !important;
+}

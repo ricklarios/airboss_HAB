@@ -1,0 +1,16 @@
+#selected-flight-info-container-all {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    font-family: Montserrat, sans-serif;
+    background-color: #126e82;
+    background-image: linear-gradient(#126e82, #00c3ff);
+
+    min-height: 100vh;
+}
+
+#camera-icon{
+    position: absolute;
+}

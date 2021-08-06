@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;600;700&display=swap');
+#header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 5.7rem;
+    position: fixed;
+    z-index: 1001;
+    background-color: rgb(255,255,255,.9);
+    width: 100%;
+    box-shadow: 1px 1px 10px grey;
+}
+
+#container-exchange-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#logo-container {
+    max-width: 90px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+#button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0.7rem;
+   
+}
+
+#login-button {
+    border: 1px solid #132c33;
+    background: none;
+    box-shadow: 0 0 10px #eee;
+    transition: 0.5s;
+    padding: 0.23rem 0.6rem !important;
+}
+
+#login-button:hover {
+    box-shadow: 2px 5px 10px #eee;
+}
+#login-button:active {
+    box-shadow: 0 0 10px #eee;
+    transform: translate3d(0px, 1px, 1px);
+}
+
+#button-container > button {
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+#signup-button {
+    background-image: linear-gradient(
+        to right,
+        #132c33 0%,
+        #126e82 51%,
+        #51c4d3 100%
+    );
+}
+
+#signup-button {
+    border: none;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    box-shadow: 0 0 10px #eee;
+}
+
+#signup-button:hover {
+    background-position: right center;
+}
+#signup-button:active {
+    background-image: linear-gradient(
+        to right,
+        #51c4d3 0%,
+        #126e82 51%,
+        #132c33 100%
+    );
+    transform: translate3d(0px, 1px, 1px);
+}
+
+@media only screen and (max-width: 700px) {
+    #button-container {
+        display: none;
+    }
+    #logo-container {
+        max-width: 80px;
+    }
+}
+#select-currency {
+    border-radius: 8px;
+    font-family: Roboto, sans-serif;
+    padding: 0.1rem 0.2rem;
+    margin-left: 0.3rem;
+    font-size: 0.7rem;
+    margin-right: 30px;
+}
