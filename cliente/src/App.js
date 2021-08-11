@@ -1,13 +1,15 @@
 import { AppRouter } from './routers/AppRouter';
 import './App.css';
 import { createContext, useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext(null);
 
 export const App = () => {
     const [login, setLogin] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [nameUser, setNameUser] = useState(null);
+    const [name, setNameUser] = useState(null);
+    const [lastname, setLastname] = useState(null);
     const [phone, setPhone] = useState('');
     const [nationality, setNationality] = useState('');
     const [birthday, setBirthday] = useState(null);
@@ -46,18 +48,16 @@ export const App = () => {
         document.addEventListener('keydown', handleKeyDown);
 
         const token = localStorage.getItem('userToken');
-        if (token) {
-            const typeAuth = localStorage.getItem('typeAuth');
+        const typeAuth = localStorage.getItem('typeAuth');
+        
+        if (token && typeAuth==='API') {
             const idUser = localStorage.getItem('idUser');
-
             const myHeaders = new Headers();
-            
-
             myHeaders.append('Content-Type', 'application/json');
             myHeaders.append('Authorization', token);
             myHeaders.append('idUser', idUser);
-            console.log(email);
-            // console.log(myHeaders);
+            
+            console.log(myHeaders);
 
             fetch(`http://localhost:3001/users/validate-token/${typeAuth}`, {
                 method: 'GET',
@@ -68,13 +68,11 @@ export const App = () => {
                     if (response.status === 'error') {
                         // error
                         console.log(response.message);
-                        //console.log(error.message);
                     } else {
                         // si NO hay error seteo la sesion redirect a /home
-                        // console.log(response);
                         setLogin(true);
                         setNameUser(localStorage.getItem('userName'));
-                        setNameUser(response.data.name);
+                        setLastname(response.data.lastname);
                         setPhone(response.data.phoneNumber);
                         setNationality(response.data.nationality);
                         setCreatedAt(response.data.createdAt);
@@ -84,11 +82,42 @@ export const App = () => {
                     }
                 });
         }
+        if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
+            console.log('app.js 87');
+
+            async function validateToken(){
+                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, {
+                    headers:{ 'Content-Type': 'application/json',
+                    'Authorization': token,  
+                    },
+                })
+                console.log('DENTRO GOOGLE/FB');
+                console.log(res);
+                if (res.data.status === 'ok'){
+                    //setValues({...values, ok: "Logado Google OK!", showOk: true});
+                    // si NO hay error seteo la sesion redirect a /home
+                    setLogin(true);
+                    setNameUser(res.data.data.name);
+                    setLastname(res.data.data.lastname);
+                    setPhone(res.data.data?.phoneNumber);
+                    setNationality(res.data.data?.nationality);
+                    setCreatedAt(res.data.data.createdAt);
+                    setBirthday(res.data.data?.birthday);
+                    setEmail(res.data.data.email);
+                    setPicture(res.data.data?.avatar);
+                    localStorage.setItem('idUser', res.data.data.idUser)
+                    //console.log(res.data);
+                }else{
+                    console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
+                }
+            }
+            validateToken();
+        }
 
         return function cleanup() {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showForm]);//REV_ERRORS
+    }, [showForm, email]);
 
     return (
         <div ref={ref}>
@@ -100,8 +129,10 @@ export const App = () => {
                     setShowForm,
                     email,
                     setEmail,
-                    nameUser,
+                    name,
                     setNameUser,
+                    lastname,
+                    setLastname,
                     ref,
                     animation,
                     setAnimation,
