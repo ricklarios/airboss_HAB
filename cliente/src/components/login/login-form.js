@@ -17,6 +17,7 @@ import { AuthContext } from '../../App';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const idFB = process.env.REACT_APP_ID_FB;
 const idGoogle = process.env.REACT_APP_ID_GOOGLE;
@@ -65,6 +66,10 @@ function LoginForm() {
         setNationality,
         setCreatedAt,
         setBirthday,
+        setLastname,
+        name,
+        lastname,
+        email
     } = useContext(AuthContext);
 
     useEffect(() => {
@@ -91,11 +96,15 @@ function LoginForm() {
 
     //Funciones para el manejo de respuestas de las API de Google y Facebook
     const responseGoogle = (response) => {
+        
+        //console.log('login-form 100');
         //console.log(response);
         if (response?.profileObj?.name) {
-            setNameUser(response?.profileObj?.name);
+            setNameUser(response?.profileObj?.givenName);
+            setLastname(response?.profileObj?.familyName)
             setPicture(response?.profileObj?.imageUrl);
             setEmail(response.profileObj.email);
+
             setValues({
                 ...values,
                 ok: 'Te has logado con éxito',
@@ -108,15 +117,48 @@ function LoginForm() {
             localStorage.setItem('userToken', response.tokenObj.id_token);
             localStorage.setItem('userName', response.profileObj.name);
             localStorage.setItem('typeAuth', 'google');
+            //*******************/
+            async function loginGoogle() {
+                const token = localStorage.getItem('userToken');
+                const typeAuth = localStorage.getItem('typeAuth');
+                const myHeaders = new Headers();
+                
+                
+                myHeaders.append('Content-Type', 'application/json');
+                myHeaders.append('authorization', response.tokenObj.id_token);
+                myHeaders.append('email', email);
+                myHeaders.append('name', name);
+                myHeaders.append('lastname', lastname);
+                
+                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, 
+                    myHeaders);
+                //console.log(res);
+                if (res.data.status === 'ok'){
+                  setValues({...values, ok: "Logado Google OK!", showOk: true});
+                }
+            }
+          
+            loginGoogle();
+
+            //*******************/
+            
+        }else{
+            setValues({
+                ...values,
+                error: 'No ha sido posible logarte mediante Google, inténtalo más tarde',
+                showError: true,
+            });
         }
     };
     const responseFacebook = (response) => {
         // setData(response); //REV_ERRORS
-        setPicture(response?.picture?.data?.url);
-        setEmail(response.email);
-        console.log(response);
+        //console.log('DENTRO DE RESPONSE FACEBOOK');
+        //console.log('RESPONSE**************:',response);
         if (response.accessToken) {
-            setNameUser(response.name);
+            setPicture(response?.picture?.data?.url);
+            setEmail(response.email);
+            setNameUser(response.first_name);
+            setLastname(response.last_name);
             setValues({
                 ...values,
                 ok: 'Te has logado con éxito',
@@ -127,8 +169,29 @@ function LoginForm() {
                 setLogin(true);
             }, 2000);
             localStorage.setItem('userToken', response.accessToken);
-            localStorage.setItem('userName', response.name);
+            localStorage.setItem('userName', response.first_name);
             localStorage.setItem('typeAuth', 'fb');
+            //Validamos en back si el usuario ya está registrado en la BBDD, sino se creará
+            async function loginFB() {
+                const token = localStorage.getItem('userToken');
+                const typeAuth = localStorage.getItem('typeAuth');
+                const myHeaders = new Headers();
+                  
+                myHeaders.append('Content-Type', 'application/json');
+                myHeaders.append('Authorization', token);
+                myHeaders.append('email', email);
+                myHeaders.append('name', name);
+                myHeaders.append('lastname', lastname);
+                
+                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, 
+                    myHeaders);
+                console.log(res);
+                if (res.data.status === 'ok'){
+                  setValues({...values, ok: "Logado Facebook OK!", showOk: true});
+                }
+            }
+
+            loginFB();
         } else {
             setLogin(false);
         }
@@ -188,7 +251,7 @@ function LoginForm() {
                     setValues({
                         ...values,
                         error: response.message,
-                        showError: true,
+                        showError: true,//REV_ERRORS
                     });
                     //console.log(error.message);
                 } else {
@@ -321,7 +384,7 @@ function LoginForm() {
                             appId={idFB}
                             cssClass='btnFacebook'
                             autoLoad={false}
-                            fields='name,email,picture'
+                            fields='name,email,picture,first_name,last_name'
                             scope='public_profile,user_friends, email'
                             callback={responseFacebook}
                             icon='fa-facebook'

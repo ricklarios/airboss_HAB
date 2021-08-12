@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken');
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const fetch = require("node-fetch");
-
+const {formatDate} = require('../../helpers');
 const validateToken = async (req, res, next) => {
     // console.log('DENTRO DE VALIDATE TOKEN');
     let connection;
-    
+    connection = await getDB();
     const { typeAuth } = req.params;
     // console.log(typeAuth);
     //FALTA ORGANIZAR MEJOR EL CODIGO, PROBABLEMENTE EN FUNCIONES EN HELPERS
@@ -15,8 +15,6 @@ const validateToken = async (req, res, next) => {
         
         try {
             const { authorization, iduser } = req.headers;
-            // console.log(req.headers);
-            // console.log("IDUSER",iduser);
             if (!authorization) {
                 const error = new Error('Falta la cabecera de autorización');
                 error.httpStatus = 401;
@@ -30,7 +28,6 @@ const validateToken = async (req, res, next) => {
             
             // Variable que almacenará la información del token.
             let tokenInfo;
-            connection = await getDB();
             tokenInfo = jwt.verify(authorization, process.env.SECRET);
             const [user] = await connection.query(
                 `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar FROM users WHERE id = ?;`,
@@ -72,15 +69,18 @@ const validateToken = async (req, res, next) => {
         } finally {
             if (connection) connection.release();
         }
-    }else if(typeAuth==='google'){
+    }else if(typeAuth==='google' && req.headers.authorization){
         try {
+        
+            
             const { authorization } = req.headers;
+            //console.log(authorization);
             if (!authorization) {
-                const error = new Error('Falta la cabecera de autorización');
+                const error = new Error('Falta la cabecera de autorización de Google');
                 error.httpStatus = 401;
                 throw error;
             }
-            let err = ''
+            let err = '';
             
             const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${authorization}`;
             
@@ -92,24 +92,61 @@ const validateToken = async (req, res, next) => {
                 error.httpStatus = 401;
                 throw error
             }
+            const [user] = await connection.query(
+                `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                [data.email]
+                );
+            if (user.length===0){
+                console.log('NO HAY USUARIO');
+                await connection.query(
+                    `INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) VALUES (?, ?, ?, ?,?,?, ?);`,
+                    [data.email, data.given_name, data.family_name, formatDate(new Date()), 'google', true, 'password']
+                );
+                const [user] = await connection.query(
+                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                    [data.email]
+                    );
+                console.log(user);
+                console.log(data);
+                res.send({
+                    status: 'ok',
+                    data: {
+                        message: "Usuario autenticado",
+                        email: data.email,
+                        name: user[0].name,
+                        lastname: user[0].lastname,
+                        avatar: user[0].avatar || data.picture,
+                        createdAt: user[0].createdAt,
+                        phoneNumber: user[0].phoneNumber,
+                        nationality: user[0].nationality,
+                        birthday: user[0].birthDate,
+                        idUser: user[0].id,
+                    },
+                });
+                //console.log(user[0]);
+            } 
             res.send({
                 status: 'ok',
                 data: {
                     message: "Usuario autenticado",
                     email: data.email,
-                    name: data.given_name,
-                    lastname: data.family_name,
-                    avatar: data.picture
+                    name: user[0].name,
+                    lastname: user[0].lastname,
+                    avatar: user[0].avatar || data.picture,
+                    createdAt: user[0].createdAt,
+                    phoneNumber: user[0].phoneNumber,
+                    nationality: user[0].nationality,
+                    birthday: user[0].birthDate,
+                    idUser: user[0].id,
                 },
             });
-            // console.log('PASA DEL DATA.ERRO GOOGLE');
-            
             
         } catch (error) {
-                console.log('DENTRO TRY GOOGLE BACK');
+            console.log('DENTRO TRY GOOGLE BACK');
+            console.log(error);
             next(error)
         }
-    }else if(typeAuth==='fb'){
+    }else if(typeAuth==='fb' && req.headers.authorization){
         try {
             
             const { authorization } = req.headers;
@@ -120,20 +157,63 @@ const validateToken = async (req, res, next) => {
             }
             let err = ''
 
-            const url = `https://graph.facebook.com/me?access_token=${authorization}`;
+            const url = `https://graph.facebook.com/me?access_token=${authorization}&fields=email,name,first_name,last_name,picture`;
             
             const response = await fetch(url);
             const data = await response.json();
-            
+            console.log(data);
             if (data.error){
                 const error = new Error("Token de facebook invalido")
                 error.httpStatus = 401;
                 throw error
             }
+            const [user] = await connection.query(
+                `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                [data.email]
+                );
+            console.log(user);
+            if (user.length===0){
+                console.log('NO HAY USUARIO');
+                await connection.query(
+                    `INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) VALUES (?, ?, ?, ?,?,?, ?);`,
+                    [data.email, data.first_name, data.last_name, formatDate(new Date()), 'fb', true, 'password']
+                );
+                const [user] = await connection.query(
+                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                    [data.email]
+                    );
+                console.log(user);
+                res.send({
+                    status: 'ok',
+                    data: {
+                        message: "Usuario autenticado",
+                        email: data.email,
+                        name: user[0].name,
+                        lastname: user[0].lastname,
+                        avatar: user[0].avatar || data.picture.data.url,
+                        createdAt: user[0].createdAt,
+                        phoneNumber: user[0].phoneNumber,
+                        nationality: user[0].nationality,
+                        birthday: user[0].birthDate,
+                        idUser: user[0].id,
+                    },
+                });
+                //console.log(user[0]);
+            } 
+            console.log(data);
             res.send({
                 status: 'ok',
                 data: {
                     message: "Usuario autenticado",
+                    email: data.email,
+                    name: user[0].name,
+                    lastname: user[0].lastname,
+                    avatar: user[0].avatar || data.picture.data.url,
+                    createdAt: user[0].createdAt,
+                    phoneNumber: user[0].phoneNumber,
+                    nationality: user[0].nationality,
+                    birthday: user[0].birthDate,
+                    idUser: user[0].id,
                 },
             });
     

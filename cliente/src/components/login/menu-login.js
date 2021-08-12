@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 
 export default function SimpleMenu() {
 
-  const { nameUser, setLogin, picture } = useContext(AuthContext);
+  const { name, setLogin, picture, setLastname } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
 
@@ -50,39 +50,30 @@ export default function SimpleMenu() {
         localStorage.removeItem('userName');
         localStorage.removeItem('typeAuth');
         localStorage.removeItem('idUser');
+        setLastname("");
         setLogin(false);
         setAnchorEl(null);
         history.push('/');
     };
+    
 
-    return (
-        <div>
-            <Button
-                aria-controls='simple-menu'
-                aria-haspopup='true'
-                onClick={handleClick}
-            >
-                <Avatar
-                    alt={nameUser}
-                    src={picture}
-                    className={classes.rounded}
-                />{' '}
-                {nameUser}
-            </Button>
-            <Menu
-                id='simple-menu'
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={handleAccount}>Mi cuenta</MenuItem>
-                <MenuItem onClick={handleClose}>Mis Vuelos</MenuItem>
-                <MenuItem onClick={handleLogout}>
-                    <ExitToAppIcon />
-                    Salir
-                </MenuItem>
-            </Menu>
-        </div>
-    );
+  
+  return (
+    <div>
+      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+      <Avatar alt={name} src={picture} className={classes.rounded}/> {name}
+      </Button>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleAccount}>Mi cuenta</MenuItem>
+        <MenuItem onClick={handleClose}>Mis Vuelos</MenuItem>
+        <MenuItem onClick={handleLogout}><ExitToAppIcon />Salir</MenuItem>
+      </Menu>
+    </div>
+  );
 }
