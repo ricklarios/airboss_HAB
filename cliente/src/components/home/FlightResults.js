@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { getSymbol } from '../../helpers';
 import { UserContext } from '../../routers/AppRouter';
 import './css/flight-results.css';
@@ -7,9 +7,13 @@ import { parse } from 'iso8601-duration';
 import { useHistory } from 'react-router-dom';
 import airplane from '../../assets/airplane-vector.png';
 import { CgAirplane } from 'react-icons/cg';
+import axios from 'axios';
 
 function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     // console.log(dataResults);
+    const [myDepartureCity, setDepartureCity] = useState('');//TEST
+    const [showDepartureCity, setShowDepartureCity] = useState(false);
+
     const { preferredCurrency } = useContext(UserContext);
 
     // console.log(dataResults.data.dictionaries.aircraft);
@@ -97,10 +101,30 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
             myReturnAircraft,
             ...flight,
         };
-
+        console.log(myFlightObject);
         history.push(`/pricing`, [myFlightObject]);
     }
+    //TEST
+    const departureCityCall = async (iataCityCode) => {
+        console.log(iataCityCode);
+        /* setShowDepartureCity(false);
+        const { data } = await axios.get(
+            'http://localhost:3001/citySearch',
+            {
+                params: {
+                    keyword: iataCityCode,
+                    view: 'LIGHT',
+                },
+            }
+        );
 
+        if (data) {
+            const myCity = data.data.data[0];
+            setDepartureCity(myCity);
+            setShowDepartureCity(true);
+            return myCity;
+        } */
+    };
     return (
         <ul id='results-list'>
             {dataResults?.data?.data?.map((flight) => (
@@ -127,6 +151,10 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                     flight.itineraries[0].segments[0].departure
                                         ?.iataCode
                                 }
+                                {/* {
+                                    departureCityCall(flight.itineraries[0].segments[0].departure
+                                        ?.iataCode)
+                                } */}
                             </b>
 
                             {
