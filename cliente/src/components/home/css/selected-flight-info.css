@@ -157,3 +157,7 @@
 .stops-info-container > li > p {
     display: flex;
 }
+
+.paypal-container{
+    text-align: center;
+}

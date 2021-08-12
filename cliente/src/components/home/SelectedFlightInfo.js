@@ -5,6 +5,10 @@ import { getSymbol } from '../../helpers';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { CgAirplane } from 'react-icons/cg';
+import { PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import Alert from '@material-ui/lab/Alert';
 
 function SelectedFlightInfo({ dataResults }) {
     const [myArrivalCity, setMyArrivalCity] = useState('');
@@ -18,6 +22,16 @@ function SelectedFlightInfo({ dataResults }) {
     const [showReturnDepartureCity, setShowReturnDepartureCity] =
         useState(false);
     const [showCovidRestrictions, setShowCovidRestrictions] = useState(false);
+    const [values, setValues] = useState({
+        email: '',
+        name: '',
+        lastname: '',
+        error: '',
+        showError: false,
+        ok: '',
+        showOk: false,
+        disabledPDF: true,
+    });
 
     function getMyDateTime(resultsDate) {
         const dateTime = new Date(resultsDate);
@@ -177,6 +191,23 @@ function SelectedFlightInfo({ dataResults }) {
         returnArrivalCity,
     ]);
 
+    //Si el pago es satisfactorio accedemos a esta función
+    function paymentSuccess (details){
+        //console.log(details.payer.name.given_name);
+        setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
+    }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({...values, showError: false});
+    };
+    const handleCloseOk = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({...values, showOk: false});
+    };
     // console.log(myDepartureCity.address.cityName);
 
     return (
@@ -596,12 +627,39 @@ function SelectedFlightInfo({ dataResults }) {
                                         .travelerPricings[0].price.currency
                                 )}
                             </p>
+                    {values.disabledPDF && <PayPalScriptProvider className="paypal-container" options={{ "client-id": "Ae6i8sy-tjToSx9Lqx7hv3-S-AvqPpY415M6JQeyJMetn9YiIYDU-Gy3XzRg6lccY4rstYOgxkF2IjiX" }}>
+                        <PayPalButtons
+                            className = "paypal-container"
+                            style={{ height: 44 }}
+                            createOrder={(data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [
+                                        {
+                                            amount: {
+                                                value: `${dataResults.data.data.flightOffers[0]
+                                                    .travelerPricings[0].price.total}`,
+                                            },
+                                        },
+                                    ],
+                                });
+                            }}
+                            onApprove = {(data, actions) => {
+                                // This function captures the funds from the transaction.
+                                return actions.order.capture().then(function(details) {
+                            
+                                  // This function shows a transaction success message to your buyer.
+                                  paymentSuccess(details);
+                                  //alert('Transaction completed by ' + details.payer.name.given_name);
+                                });
+                              }}
+                        />
+                    </PayPalScriptProvider>                 }
                         </div>
                     )}
                 </div>
                 <div className='buttons-container not-to-pdf'>
-                    <button className='buy-button'>Comprar</button>
-                    <button onClick={() => generatePDF()}>Ver en PDF</button>
+                    {/* <button className='buy-button'>Comprar</button> */}
+                    {!values.disabledPDF && <button onClick={() => generatePDF()}>Ver en PDF</button>}
                     <button
                         className='covid-info-button'
                         onClick={() => {
@@ -672,6 +730,18 @@ function SelectedFlightInfo({ dataResults }) {
                         </div>
                     </div>
                 )}
+            <>
+                <Snackbar open={values.showError} autoHideDuration={3000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="error">
+                    {values.error}
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={values.showOk} autoHideDuration={3000} onClose={handleCloseOk}>
+                    <Alert onClose={handleCloseOk} severity="success">
+                    {values.ok}
+                    </Alert>
+                </Snackbar>
+            </>
             </div>
         </div>
     );
