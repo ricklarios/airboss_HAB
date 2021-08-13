@@ -7,6 +7,7 @@ const amadeus = new Amadeus({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
 });
+const iatacodes = require('../../iatacodes_v2.json');
 
 const newSearch = async (req, res, next) => {
     let connection;
@@ -158,16 +159,38 @@ const newSearch = async (req, res, next) => {
 
         const jsonBody = JSON.stringify(getFlightOffersBody);
 
-        const { result } = await amadeus.shopping.flightOffersSearch.post(
+        let { result } = await amadeus.shopping.flightOffersSearch.post(
             jsonBody
         );
+        //TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        //console.log(result);
 
+        for (i=0; i<result.data.length; i++){
+            // console.log(result.data[i].itineraries[0].segments[0].departure.iataCode);//.departure.iataCode);
+            // console.log(result.data[i].itineraries[0].segments[result.data[i].itineraries[0].segments.length-1].arrival.iataCode);//.departure.iataCode);
+            // console.log(i);
+            result.data[i].itineraries[0].segments[0].departureCityName = iatacodes[result.data[i].itineraries[0].segments[0].departure.iataCode];
+            result.data[i].itineraries[0].segments[0].arrivalCityName = iatacodes[result.data[i].itineraries[0].segments[result.data[i].itineraries[0].segments.length-1].arrival.iataCode];
+            if (result.data[i].itineraries.length>1){
+                result.data[i].itineraries[1].segments[0].departureCityName = iatacodes[result.data[i].itineraries[1].segments[0].departure.iataCode];
+                result.data[i].itineraries[1].segments[0].arrivalCityName = iatacodes[result.data[i].itineraries[1].segments[result.data[i].itineraries[1].segments.length-1].arrival.iataCode];
+
+            }
+        }
+        
+        //const entry = iatacodes[originLocationCode];
+
+        //console.log(entry[0].City, entry[0].Country);
+        //result2 = {...result, cityDepartureName: entry[0].City};
+        
+        //TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        
         res.send({
             status: 'ok',
             data: result,
         });
     } catch (error) {
-        //console.log(error);
+        console.log(error);
         res.send({ status: 'error', data: error.message });
     } finally {
         if (connection) connection.release;
