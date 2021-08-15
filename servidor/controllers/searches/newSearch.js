@@ -166,25 +166,15 @@ const newSearch = async (req, res, next) => {
         //console.log(result);
 
         for (i=0; i<result.data.length; i++){
-            // console.log(result.data[i].itineraries[0].segments[0].departure.iataCode);//.departure.iataCode);
-            // console.log(result.data[i].itineraries[0].segments[result.data[i].itineraries[0].segments.length-1].arrival.iataCode);//.departure.iataCode);
-            // console.log(i);
-            result.data[i].itineraries[0].segments[0].departureCityName = iatacodes[result.data[i].itineraries[0].segments[0].departure.iataCode];
-            result.data[i].itineraries[0].segments[0].arrivalCityName = iatacodes[result.data[i].itineraries[0].segments[result.data[i].itineraries[0].segments.length-1].arrival.iataCode];
-            if (result.data[i].itineraries.length>1){
-                result.data[i].itineraries[1].segments[0].departureCityName = iatacodes[result.data[i].itineraries[1].segments[0].departure.iataCode];
-                result.data[i].itineraries[1].segments[0].arrivalCityName = iatacodes[result.data[i].itineraries[1].segments[result.data[i].itineraries[1].segments.length-1].arrival.iataCode];
-
+            //Bucle para recorrer los itinerarios
+            for (j=0; j<result.data[i].itineraries.length;j++){
+                //Bucle para recorrer los segmentos
+                for (k=0; k<result.data[i].itineraries[j].segments.length; k++){
+                    result.data[i].itineraries[j].segments[k].departureCityName = iatacodes[result.data[i].itineraries[j].segments[k].departure.iataCode] || "";
+                    result.data[i].itineraries[j].segments[k].arrivalCityName = iatacodes[result.data[i].itineraries[j].segments[k].arrival.iataCode] || "";
+                }
             }
         }
-        
-        //const entry = iatacodes[originLocationCode];
-
-        //console.log(entry[0].City, entry[0].Country);
-        //result2 = {...result, cityDepartureName: entry[0].City};
-        
-        //TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-        
         res.send({
             status: 'ok',
             data: result,
