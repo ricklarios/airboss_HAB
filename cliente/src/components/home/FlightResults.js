@@ -154,8 +154,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                 <div>
 
                                     {
-                                        flight.itineraries[0]?.segments[0]?.departureCityName[0]?.City
-                                    
+                                        flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City
                                     }
                                 </div>
                             </b>
