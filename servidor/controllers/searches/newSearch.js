@@ -24,6 +24,7 @@ const newSearch = async (req, res, next) => {
             travelClass,
             crossBorderAllowed,
             maxFlightOffers,
+            nonStop,
         } = req.query;
 
         // Creamos el array de origenes y destinos
@@ -132,6 +133,10 @@ const newSearch = async (req, res, next) => {
         }
 
         //Creamos el objeto de criterios de Búsqueda
+        let maxNumberOfConnections = 0;
+        if (!nonStop || nonStop === 'false') {
+            maxNumberOfConnections = 2;
+        }
         const searchCriteria = {
             maxFlightOffers: Number(maxFlightOffers),
             flightFilters: {
@@ -144,6 +149,9 @@ const newSearch = async (req, res, next) => {
                 ],
                 carrierRestrictions: {
                     blacklistedInEUAllowed: true,
+                },
+                connectionRestriction: {
+                    maxNumberOfConnections: maxNumberOfConnections,
                 },
             },
         };
