@@ -291,15 +291,14 @@ function SearchBox({ history, vertical }) {
                                 required
                                 onChange={(date) => {
                                     setDepartureDate(date);
-
-                                    if (
-                                        !dateIsPrevious(date, returnDate) &&
-                                        optionsSearch.idaYvuelta
-                                    ) {
-                                        setShowErrorDateDeparture(true);
-                                    } else {
-                                        setShowErrorDateDeparture(false);
-                                        setShowErrorDateReturn(false);
+                                    //Evitamos que de error si no se ha seleccionado aun fecha de vuelta
+                                    if(returnDate !== ""){
+                                        if ( !dateIsPrevious(date, returnDate) && optionsSearch.idaYvuelta ) {
+                                            setShowErrorDateDeparture(true);
+                                        } else {
+                                            setShowErrorDateDeparture(false);
+                                            setShowErrorDateReturn(false);
+                                        }
                                     }
                                 }}
                             />
