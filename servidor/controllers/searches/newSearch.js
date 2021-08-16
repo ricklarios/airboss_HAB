@@ -47,7 +47,7 @@ const newSearch = async (req, res, next) => {
                     id: '1',
                     originLocationCode: originLocationCode,
                     destinationLocationCode: destinationLocationCode,
-                    destinationRadius: 250,
+                    destinationRadius: 50,
                     departureDateTimeRange: {
                         date: departureDate,
                     },
@@ -73,7 +73,7 @@ const newSearch = async (req, res, next) => {
                     id: '1',
                     originLocationCode: originLocationCode,
                     destinationLocationCode: destinationLocationCode,
-                    destinationRadius: 250,
+                    destinationRadius: 50,
                     departureDateTimeRange: {
                         date: departureDate,
                     },
@@ -81,7 +81,7 @@ const newSearch = async (req, res, next) => {
                 {
                     id: '2',
                     originLocationCode: destinationLocationCode,
-                    originRadius: 250,
+                    originRadius: 50,
                     destinationLocationCode: originLocationCode,
                     departureDateTimeRange: {
                         date: returnDate,
@@ -173,13 +173,27 @@ const newSearch = async (req, res, next) => {
         //TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
         //console.log(result);
 
-        for (i=0; i<result.data.length; i++){
+        for (i = 0; i < result.data.length; i++) {
             //Bucle para recorrer los itinerarios
-            for (j=0; j<result.data[i].itineraries.length;j++){
+            for (j = 0; j < result.data[i].itineraries.length; j++) {
                 //Bucle para recorrer los segmentos
-                for (k=0; k<result.data[i].itineraries[j].segments.length; k++){
-                    result.data[i].itineraries[j].segments[k].departureCityName = iatacodes[result.data[i].itineraries[j].segments[k].departure.iataCode] || "";
-                    result.data[i].itineraries[j].segments[k].arrivalCityName = iatacodes[result.data[i].itineraries[j].segments[k].arrival.iataCode] || "";
+                for (
+                    k = 0;
+                    k < result.data[i].itineraries[j].segments.length;
+                    k++
+                ) {
+                    result.data[i].itineraries[j].segments[
+                        k
+                    ].departureCityName =
+                        iatacodes[
+                            result.data[i].itineraries[j].segments[k].departure
+                                .iataCode
+                        ] || '';
+                    result.data[i].itineraries[j].segments[k].arrivalCityName =
+                        iatacodes[
+                            result.data[i].itineraries[j].segments[k].arrival
+                                .iataCode
+                        ] || '';
                 }
             }
         }
