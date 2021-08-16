@@ -52,6 +52,7 @@ export const FlightSelectionScreen = ({ history }) => {
 
             if (data) {
                 setDataResults(data);
+                console.log(data);
             }
         };
 

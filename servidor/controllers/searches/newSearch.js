@@ -7,6 +7,7 @@ const amadeus = new Amadeus({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
 });
+const iatacodes = require('../../iatacodes_v2.json');
 
 const newSearch = async (req, res, next) => {
     let connection;
@@ -166,16 +167,28 @@ const newSearch = async (req, res, next) => {
 
         const jsonBody = JSON.stringify(getFlightOffersBody);
 
-        const { result } = await amadeus.shopping.flightOffersSearch.post(
+        let { result } = await amadeus.shopping.flightOffersSearch.post(
             jsonBody
         );
+        //TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+        //console.log(result);
 
+        for (i=0; i<result.data.length; i++){
+            //Bucle para recorrer los itinerarios
+            for (j=0; j<result.data[i].itineraries.length;j++){
+                //Bucle para recorrer los segmentos
+                for (k=0; k<result.data[i].itineraries[j].segments.length; k++){
+                    result.data[i].itineraries[j].segments[k].departureCityName = iatacodes[result.data[i].itineraries[j].segments[k].departure.iataCode] || "";
+                    result.data[i].itineraries[j].segments[k].arrivalCityName = iatacodes[result.data[i].itineraries[j].segments[k].arrival.iataCode] || "";
+                }
+            }
+        }
         res.send({
             status: 'ok',
             data: result,
         });
     } catch (error) {
-        //console.log(error);
+        console.log(error);
         res.send({ status: 'error', data: error.message });
     } finally {
         if (connection) connection.release;

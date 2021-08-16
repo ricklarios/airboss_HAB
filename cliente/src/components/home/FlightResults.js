@@ -101,7 +101,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
             myReturnAircraft,
             ...flight,
         };
-        console.log(myFlightObject);
+        //console.log(myFlightObject);
         history.push(`/pricing`, [myFlightObject]);
     }
     //TEST
@@ -151,10 +151,12 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                     flight.itineraries[0].segments[0].departure
                                         ?.iataCode
                                 }
-                                {/* {
-                                    departureCityCall(flight.itineraries[0].segments[0].departure
-                                        ?.iataCode)
-                                } */}
+                                <div>
+
+                                    {
+                                        flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City
+                                    }
+                                </div>
                             </b>
 
                             {
@@ -225,8 +227,14 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                         flight.itineraries[0].segments[
                                             flight.itineraries[0]?.segments
                                                 .length - 1
-                                        ].arrival?.iataCode
+                                        ].arrival?.iataCode 
                                     }
+                                    <div>
+                                        {
+                                             flight.itineraries[0]?.segments[flight.itineraries[0]?.segments
+                                            .length - 1]?.arrivalCityName[0]?.City 
+                                        }
+                                    </div> 
                                 </b>
                             }
 
@@ -327,6 +335,12 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                             flight.itineraries[1]?.segments[0]
                                                 ?.departure?.iataCode
                                         }
+                                        <div>
+
+                                            {
+                                                flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City
+                                            }
+                                        </div>
                                     </b>
 
                                     {
@@ -410,6 +424,12 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                                     ?.segments[0].arrival
                                                     ?.iataCode
                                             }
+                                            <div>
+                                                {
+                                                    flight.itineraries[1]?.segments[flight.itineraries[0]?.segments
+                                                    .length - 1]?.arrivalCityName[0]?.City 
+                                                }
+                                            </div> 
                                         </b>
                                     ) : (
                                         <b>
