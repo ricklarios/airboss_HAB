@@ -1,5 +1,5 @@
 import './css/selected-flight-info.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSymbol } from '../../helpers';
 import { jsPDF } from 'jspdf';
@@ -7,8 +7,9 @@ import html2canvas from 'html2canvas';
 import { CgAirplane } from 'react-icons/cg';
 import { PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import Alert from '@material-ui/lab/Alert';
+import { AuthContext } from '../../App';
+require('dotenv').config();
 
 function SelectedFlightInfo({ dataResults }) {
     const [myArrivalCity, setMyArrivalCity] = useState('');
@@ -32,6 +33,7 @@ function SelectedFlightInfo({ dataResults }) {
         showOk: false,
         disabledPDF: true,
     });
+    const { login, setShowForm} = useContext(AuthContext);
 
     function getMyDateTime(resultsDate) {
         const dateTime = new Date(resultsDate);
@@ -192,9 +194,51 @@ function SelectedFlightInfo({ dataResults }) {
     ]);
 
     //Si el pago es satisfactorio accedemos a esta función
-    function paymentSuccess (details){
+    async function paymentSuccess (details){
         //console.log(details.payer.name.given_name);
         setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
+        //Es necesario guardar orden
+        try {
+            
+            const body = {
+                idUser: localStorage.getItem('idUser'),
+                flightObjet: dataResults.data.data.flightOffers[0],
+                travelers: [{
+                    "id": "1",
+                    "dateOfBirth": "1982-01-16",
+                    "name": {
+                        "firstName": "USER",
+                        "lastName": "TEST"
+                    },
+                    "gender": "MALE",
+                    "contact": {
+                        "emailAddress": "jorge.gonzales833@telefonica.es",
+                        "phones": [{
+                        "deviceType": "MOBILE",
+                        "countryCallingCode": "34",
+                        "number": "480080076"
+                        }]
+                    },
+                    "documents": [{
+                        "documentType": "PASSPORT",
+                        "birthPlace": "Madrid",
+                        "issuanceLocation": "Madrid",
+                        "issuanceDate": "2015-04-14",
+                        "number": "00000000",
+                        "expiryDate": "2025-04-14",
+                        "issuanceCountry": "ES",
+                        "validityCountry": "ES",
+                        "nationality": "ES",
+                        "holder": true
+                    }],
+
+              }],
+            };
+            const res = await axios.post('http://localhost:3001/booking',body);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
     }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -208,8 +252,6 @@ function SelectedFlightInfo({ dataResults }) {
         }
         setValues({...values, showOk: false});
     };
-    // console.log(myDepartureCity.address.cityName);
-
     return (
         <div id='flight-info-container'>
             {!dataResults && <div>Cargando información del vuelo...</div>}
@@ -256,15 +298,26 @@ function SelectedFlightInfo({ dataResults }) {
                                 {dataResults && showDepartureCity ? (
                                     <div>
                                         <div className='flight-info-time'>
-                                            {
-                                                getMyDateTime(
-                                                    dataResults.data.data
-                                                        .flightOffers[0]
-                                                        .itineraries[0]
-                                                        .segments[0].departure
-                                                        .at
-                                                )[1]
-                                            }
+                                                <>
+                                                    {getMyDateTime(
+                                                        dataResults.data.data
+                                                            .flightOffers[0]
+                                                            .itineraries[0]
+                                                            .segments[0].departure
+                                                            .at
+                                                    )[0] }
+                                                </>
+                                                <div>
+                                                    {getMyDateTime(
+                                                        dataResults.data.data
+                                                            .flightOffers[0]
+                                                            .itineraries[0]
+                                                            .segments[0].departure
+                                                            .at
+                                                    )[1]}
+
+                                                </div>
+                                            
                                         </div>
                                         <div>
                                             {myDepartureCity.address.cityName} (
@@ -294,6 +347,20 @@ function SelectedFlightInfo({ dataResults }) {
                                 {dataResults && showArrivalCity ? (
                                     <div>
                                         <div className='flight-info-time'>
+                                            <>
+                                                {getMyDateTime(
+                                                    dataResults.data.data
+                                                        .flightOffers[0]
+                                                        .itineraries[0]
+                                                        .segments[
+                                                        dataResults.data.data
+                                                            .flightOffers[0]
+                                                            .itineraries[0]
+                                                            .segments.length - 1
+                                                    ].arrival.at
+                                                )[0]}
+                                            </>
+                                            <div>
                                             {
                                                 getMyDateTime(
                                                     dataResults.data.data
@@ -307,6 +374,8 @@ function SelectedFlightInfo({ dataResults }) {
                                                     ].arrival.at
                                                 )[1]
                                             }
+
+                                            </div>
                                         </div>
                                         <div>
                                             {myArrivalCity.address.cityName} (
@@ -627,21 +696,31 @@ function SelectedFlightInfo({ dataResults }) {
                                         .travelerPricings[0].price.currency
                                 )}
                             </p>
-                    {values.disabledPDF && <PayPalScriptProvider className="paypal-container" options={{ "client-id": "Ae6i8sy-tjToSx9Lqx7hv3-S-AvqPpY415M6JQeyJMetn9YiIYDU-Gy3XzRg6lccY4rstYOgxkF2IjiX" }}>
+                    {values.disabledPDF && <PayPalScriptProvider 
+                    className="paypal-container" 
+                    options={{ "client-id": `${process.env.REACT_APP_PAYPAL_CLIENTID}`, 
+                               "currency":  `${dataResults.data.data.flightOffers[0]
+                                .travelerPricings[0].price.currency}`,
+                                "disable-funding": "sofort",}}>
                         <PayPalButtons
                             className = "paypal-container"
                             style={{ height: 44 }}
                             createOrder={(data, actions) => {
-                                return actions.order.create({
-                                    purchase_units: [
-                                        {
-                                            amount: {
-                                                value: `${dataResults.data.data.flightOffers[0]
-                                                    .travelerPricings[0].price.total}`,
+                                if (login){
+                                    return actions.order.create({
+                                        purchase_units: [
+                                            {
+                                                amount: {
+                                                    value: `${dataResults.data.data.flightOffers[0]
+                                                        .travelerPricings[0].price.total}`,
+                                                    
+                                                },
                                             },
-                                        },
-                                    ],
-                                });
+                                        ],
+                                    });
+                                }else{
+                                    setShowForm(true);
+                                }
                             }}
                             onApprove = {(data, actions) => {
                                 // This function captures the funds from the transaction.
@@ -651,7 +730,13 @@ function SelectedFlightInfo({ dataResults }) {
                                   paymentSuccess(details);
                                   //alert('Transaction completed by ' + details.payer.name.given_name);
                                 });
-                              }}
+                            }}
+                            onCancel = { function ( data ){
+                                console.log('CANCEL');
+                            }}
+                            onError = { function ( err ) {
+                                console.log( err );
+                            } }
                         />
                     </PayPalScriptProvider>                 }
                         </div>
@@ -736,7 +821,7 @@ function SelectedFlightInfo({ dataResults }) {
                     {values.error}
                     </Alert>
                 </Snackbar>
-                <Snackbar open={values.showOk} autoHideDuration={3000} onClose={handleCloseOk}>
+                <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
                     <Alert onClose={handleCloseOk} severity="success">
                     {values.ok}
                     </Alert>

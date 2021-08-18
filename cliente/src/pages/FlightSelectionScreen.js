@@ -8,6 +8,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { UserContext } from '../routers/AppRouter';
 import { formatDate } from '../helpers';
 import SearchBox from '../components/home/SearchBox';
+import { AuthContext } from '../App';
 
 const queryString = require('query-string');
 
@@ -19,6 +20,7 @@ export const FlightSelectionScreen = ({ history }) => {
 
     const location = useLocation();
     const { preferredCurrency } = useContext(UserContext);
+    const { opacity } = useContext(AuthContext);
 
     //Extraigo los valores separados de las querys de busqueda.
     const {
@@ -75,7 +77,7 @@ export const FlightSelectionScreen = ({ history }) => {
     const classes = useStyles();
 
     return (
-        <div id='searches-container-all'>
+        <div id='searches-container-all' style= {opacity}>
             <div id='searches-container'>
                 {showResults && !dataResults && (
                     <LinearProgress className={classes.root} />
