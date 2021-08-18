@@ -92,7 +92,7 @@ const main = async () => {
             id INT PRIMARY KEY AUTO_INCREMENT,
             name VARCHAR(50),
             lastname VARCHAR(50),
-            passport VARCHAR(50) UNIQUE NOT NULL,
+            passport VARCHAR(50) NOT NULL,
             birthDate DATETIME NOT NULL,
             gender ENUM('MALE', 'FEMALE', 'UNSPECIFIED', 'UNDISCLOSED'),
             phoneContact VARCHAR(25),
