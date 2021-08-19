@@ -9,3 +9,7 @@
 -   **BACKEND** - Node.js
 -   **FRONTEND** - React.js
 -   **BASE DE DATOS** - MySQL
+
+# Tarjetas válidas de pago para simulación
+- **MASTERCARD** 2223000048400011
+- **VISA** 4012888888881881

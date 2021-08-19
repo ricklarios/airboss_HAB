@@ -74,6 +74,9 @@ function LoginForm() {
 
     useEffect(() => {
         setShowRegisterForm(false);
+        setOpacity({
+            opacity: 0.5,
+        });
         return () => {
             setOpacity({
                 opacity: 1,
