@@ -324,7 +324,7 @@ function RegisterForm({ history }) {
                 <>
                     <Autocomplete
                         id='country-select'
-                        style={{ width: 300 }}
+                        style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal
                         classes={{

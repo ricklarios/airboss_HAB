@@ -1,17 +1,31 @@
 .login-container{
     min-height: 400px;
-    width: 350px;
-    background-color: #D8E3E7;
+    width: 700px;
+    background-color: #ffffff;
     border-radius: 5px;
     border: 3px solid #132C33;
     position: absolute;
     z-index: 5000;
-    left: calc(50% - 175px);
-    top: calc(50% - 200px);
+    left: calc(50% - 350px);
+    top: calc(50% - 180px);
     transform: translate(-50%,-50%);
     text-align: center;
-    padding:1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  
 
+  }
+
+  .login-container > div:first-child {
+    background-color: #132C33;
+    width: 50%;
+    min-height: 400px;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: center;
+ 
   }
 
   #forgot-password {
@@ -26,7 +40,8 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
- 
+    width: 50%;
+    padding: 1rem;
   }
 
   #no-account-container {
@@ -104,6 +119,7 @@ form > div {
 
 #button-login {
   background-color:#126E82;
+  text-transform: capitalize;
 }
 
 .line-v{
