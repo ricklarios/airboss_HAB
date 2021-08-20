@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, Fragment } from 'react';
+import { useContext, useState, useEffect, Fragment, useRef } from 'react';
 import './register-form.css';
 import validator from 'validator';
 // import 'react-datepicker/dist/react-datepicker.css';
@@ -67,7 +67,7 @@ function RegisterForm({ history }) {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { setShowForm, ref, animation, setOpacity, setShowRegisterForm } =
+    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm } =
         useContext(AuthContext);
 
     const [values, setValues] = useState({
@@ -87,13 +87,23 @@ function RegisterForm({ history }) {
     });
     const classes = useStyles();
     const classesFlags = useStylesFlags();
-    //const { preferredCurrency } = useContext(UserContext);
+
+    const refRegisterForm = useRef (null);
 
     useEffect(() => {
         setShowForm(false);
         setOpacity({
             opacity: 0.5,
         });
+
+        document.addEventListener ( 'mousedown', handleClick);
+        function handleClick (e){
+            // console.log(e);
+            if ( refRegisterForm.current && !refRegisterForm.current.contains (e.target) ){
+                setShowRegisterForm(false);
+            }
+        } 
+
         return () => {
             setOpacity({
                 opacity: 1,
@@ -101,13 +111,6 @@ function RegisterForm({ history }) {
         };
     }, [setShowForm, setOpacity]);
 
-    /* useEffect(() => {
-        
-    return () => {
-    }
-    }, [values.nationality]) */
-
-    //Manejador del boton de registrar
     const handleRegister = async (e) => {
         e.preventDefault();
         if (!validator.isEmail(values.email)) {
@@ -218,12 +221,18 @@ function RegisterForm({ history }) {
         console.log(event.target.value);
         setValues({ ...values, birthday: event.target.value });
     };
+    document.addEventListener('keydown', handleKeyDown);
 
+    function handleKeyDown (e){
+        if (e.keyCode === 27){
+            setShowRegisterForm(false);
+        }
+    }
     return (
         <div
             id='container-register-form'
             className={'login-container animate__animated ' + animation}
-            ref={ref}
+            ref={refRegisterForm}
         >
             <form id='register-form' onSubmit={handleRegister}>
                 <div>

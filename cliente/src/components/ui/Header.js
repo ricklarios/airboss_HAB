@@ -12,32 +12,49 @@ import { useHistory } from 'react-router-dom';
 
 export const Header = () => {
     
-    const { login, setShowForm, setAnimation, opacity, setOpacity, setShowRegisterForm,setRestorePasswordForm } = useContext(AuthContext);
+    const { login, setShowForm, setAnimation, opacity, setOpacity, setShowRegisterForm,setRestorePasswordForm, showForm, showRegisterForm } = useContext(AuthContext);
     const { preferredCurrency, setPreferredCurrency } = useContext(UserContext);
     const history = useHistory();
 
     
     function launchFormLogin() {
-        setAnimation('animate__backInDown');
-        setRestorePasswordForm(false);
-        setShowForm(true);
-        setOpacity({
-            opacity: 0.5,
-        });
+        if (showRegisterForm){
+            setShowRegisterForm (false);
+        } else {
+            setAnimation('animate__backInDown');
+            setRestorePasswordForm(false);
+            setShowForm(true);
+            setOpacity({
+                opacity: 0.5,
+            });
+        }
     }
     function launchFormRegister() {
-        setAnimation('animate__backInDown');
-        setRestorePasswordForm(false);
-        setShowRegisterForm(true);
-        setOpacity({
-            opacity: 0.5,
-        });
+        //Si el formulario de login está habilitado simplemente lo deshabilitamos
+        if (showForm){
+            setShowForm(false);
+        }else{
+
+            setAnimation('animate__backInDown');
+            setRestorePasswordForm(false);
+            setShowRegisterForm(true);
+            setOpacity({
+                opacity: 0.5,
+            });
+        }
+    }
+
+    function goToHome(){
+        setShowForm(false);
+        setShowRegisterForm (false);
+        history.push('/')
+
     }
     return (
         <header id='header-container' style={opacity}>
             <div id='logo-container'>
                 <img
-                    onClick={() => history.push('/')}
+                    onClick={goToHome}
                     src={logo}
                     alt='logo airboss plataforma de vuelos'
                     width='100%'
