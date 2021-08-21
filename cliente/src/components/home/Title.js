@@ -1,5 +1,6 @@
 import './css/title-home.css';
 
+
 export const TitleHome = () => {
     return (
         <div id='title-container'>

@@ -39,7 +39,7 @@ function ResetPasswordForm({code}) {
     showOk: false,
   });
   const classes = useStyles();
-  const { setShowRegisterForm, ref , animation, setOpacity } = useContext(AuthContext);
+  const { setShowRegisterForm, refApp , animation, setOpacity } = useContext(AuthContext);
   
   useEffect(() => {
     // console.log(code);
@@ -114,8 +114,10 @@ function ResetPasswordForm({code}) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  
   return (
-    <div className={"reset-password-form animate__animated " + animation} ref={ref}>
+    <div className={"reset-password-form animate__animated " + animation} ref={refApp}>
       <form onSubmit={onSubmitChangePwd}>
       <FormControl className={clsx(classes.margin, classes.textField)}>
                     <InputLabel htmlFor="standard-adornment-password" className="label">contraseña</InputLabel>

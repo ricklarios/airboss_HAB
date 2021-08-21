@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import './login-form.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -36,10 +36,6 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 function LoginForm() {
-    //setShowForm, setLogin, login
-    //REV_ERRRORS
-    //const [data, setData] = useState({});
-    //const [error, setError] = useState("");
     const [values, setValues] = useState({
         email: '',
         password: '',
@@ -58,7 +54,7 @@ function LoginForm() {
         setRestorePasswordForm,
         setLogin,
         setNameUser,
-        ref,
+        refApp,
         animation,
         setOpacity,
         setPicture,
@@ -72,11 +68,21 @@ function LoginForm() {
         email
     } = useContext(AuthContext);
 
+    const refLoginForm = useRef(null);
+
     useEffect(() => {
         setShowRegisterForm(false);
         setOpacity({
             opacity: 0.5,
         });
+
+        document.addEventListener('mousedown', handleClick);
+        function handleClick (e){
+            // console.log(e);
+            if ( refLoginForm.current && !refLoginForm.current.contains (e.target) ){
+                setShowForm(false);
+            }
+        } 
         return () => {
             setOpacity({
                 opacity: 1,
@@ -271,8 +277,6 @@ function LoginForm() {
                     setBirthday(response.data.birthDate);
                     setEmail(values.email);
                     setPicture(response.data.avatar);
-                    // console.log(response.data.avatar);
-                    // console.log(response);
                     setTimeout(() => {
                         setShowForm(false);
                         setLogin(true);
@@ -284,12 +288,17 @@ function LoginForm() {
                 }
             });
     }
+    document.addEventListener('keydown', handleKeyDown);
+    
+
+    function handleKeyDown (e){
+        if (e.keyCode === 27){
+            setShowForm(false);
+        }
+    }
 
     return (
-        <div
-            className={'login-container animate__animated ' + animation}
-            ref={ref}
-        >
+        <div className={'login-container animate__animated ' + animation} ref={refLoginForm}>
             <form id='form-login' onSubmit={onSubmitLogin}>
                 <div>
                     <TextField

@@ -34,7 +34,7 @@ function RestorePasswordForm() { //setShowForm, setLogin, login
     ok: '',
     showOk: false,
   });
-  const { setShowRegisterForm, ref , animation, setOpacity } = useContext(AuthContext);
+  const { setShowRegisterForm, refApp , animation, setOpacity } = useContext(AuthContext);
   
   useEffect(() => {
     setOpacity({
@@ -99,7 +99,7 @@ function RestorePasswordForm() { //setShowForm, setLogin, login
   }
   
   return (
-    <div className={"restore-password-form animate__animated " + animation} ref={ref}>
+    <div className={"restore-password-form animate__animated " + animation} ref={refApp}>
       <form onSubmit={onSubmitLogin}>
         <div>
           <TextField className="inputs-form" id="standard-basic-email" label="email" value={values.email} onChange={handleChange('email')}/>
