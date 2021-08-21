@@ -23,12 +23,16 @@ export const App = () => {
     const [showRegisterForm, setShowRegisterForm] = useState(false);
     const [showRestorePasswordForm, setRestorePasswordForm] = useState(false);
 
-    const ref = useRef(null);
+    const refApp = useRef(null);
 
     useEffect(() => {
         function handleKeyDown(e) {
-            if (!ref.current || ref.current.contains(e.target)) {
+            if (!refApp.current || refApp.current.contains(e.target)) {
                 return;
+            }
+            if (e.keyCode === 27){
+                setShowRegisterForm(false);
+                setShowForm(false);
             }
             //si pulsamos ESC cambiamos la clase para la animación y tras 2 segundos fijamos a false
             if (e.keyCode === 27) {
@@ -120,7 +124,7 @@ export const App = () => {
     }, [showForm, email]);
 
     return (
-        <div ref={ref}>
+        <div ref={refApp}>
             <AuthContext.Provider
                 value={{
                     login,
@@ -133,7 +137,7 @@ export const App = () => {
                     setNameUser,
                     lastname,
                     setLastname,
-                    ref,
+                    refApp,
                     animation,
                     setAnimation,
                     phone,

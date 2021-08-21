@@ -11,7 +11,9 @@ const createOrder = async (req, res, next) => {
     let connection;
     try {
         const { flightObjet, travelers, idUser } = req.body;
-
+        // console.log(flightObjet);
+        // console.log('travelers:', travelers);
+        // console.log('idUser: ', idUser);
         const { result } = await amadeus.booking.flightOrders.post(
             JSON.stringify({
                 data: {
@@ -99,16 +101,27 @@ const createOrder = async (req, res, next) => {
                 );
             }
         }
-        console.log('todo guay');
+        //console.log('todo guay');
         res.send({
-            satus: 'ok',
+            status: 'ok',
             data: result,
         });
     } catch (error) {
-        console.log(error);
+        console.log('dentro de error: ', error);
+        //console.log(error.result.errors);
+        //console.log(error.description.source);
+        res.send({
+            status: 'error',
+            message: error,
+        }
+
+        )
     } finally {
         if (connection) connection.release;
     }
 };
 
 module.exports = createOrder;
+// id reserva
+//eJzTd9cPdTI2M7EAAAqHAhI%3D
+

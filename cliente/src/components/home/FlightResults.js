@@ -8,14 +8,21 @@ import { useHistory } from 'react-router-dom';
 import airplane from '../../assets/airplane-vector.png';
 import { CgAirplane } from 'react-icons/cg';
 import axios from 'axios';
+import { AuthContext } from '../../App';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+
 
 function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     // console.log(dataResults);
-    const [myDepartureCity, setDepartureCity] = useState('');//TEST
-    const [showDepartureCity, setShowDepartureCity] = useState(false);
 
     const { preferredCurrency } = useContext(UserContext);
+    const { login, setShowForm} = useContext(AuthContext);
 
+    const [values, setValues] = useState({
+        error: '',
+        showError: false,
+    });
     // console.log(dataResults.data.dictionaries.aircraft);
     function getMyCarrier(carrierCode) {
         const myCarrier =
@@ -70,61 +77,56 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     const history = useHistory();
 
     function handleSearch(flight) {
-        const myCarrier = getMyCarrier(
-            flight.itineraries[0].segments[0].carrierCode
-        );
-        const myAircraft = getMyAircraft(
-            flight.itineraries[0].segments[0].aircraft.code
-        );
-
-        const myDuration = formatDuration(flight.itineraries[0]?.duration);
-
-        const myReturnDuration =
-            flight.itineraries.length > 1
-                ? formatDuration(flight.itineraries[1].duration)
-                : null;
-        const myReturnCarrier =
-            flight.itineraries.length > 1
-                ? getMyCarrier(flight.itineraries[1].segments[0].carrierCode)
-                : null;
-        const myReturnAircraft =
-            flight.itineraries.length > 1
-                ? getMyAircraft(flight.itineraries[1].segments[0].aircraft.code)
-                : null;
-
-        const myFlightObject = {
-            myCarrier,
-            myAircraft,
-            myDuration,
-            myReturnDuration,
-            myReturnCarrier,
-            myReturnAircraft,
-            ...flight,
-        };
-        //console.log(myFlightObject);
-        history.push(`/pricing`, [myFlightObject]);
+        if( login === true){
+            const myCarrier = getMyCarrier(
+                flight.itineraries[0].segments[0].carrierCode
+            );
+            const myAircraft = getMyAircraft(
+                flight.itineraries[0].segments[0].aircraft.code
+            );
+    
+            const myDuration = formatDuration(flight.itineraries[0]?.duration);
+    
+            const myReturnDuration =
+                flight.itineraries.length > 1
+                    ? formatDuration(flight.itineraries[1].duration)
+                    : null;
+            const myReturnCarrier =
+                flight.itineraries.length > 1
+                    ? getMyCarrier(flight.itineraries[1].segments[0].carrierCode)
+                    : null;
+            const myReturnAircraft =
+                flight.itineraries.length > 1
+                    ? getMyAircraft(flight.itineraries[1].segments[0].aircraft.code)
+                    : null;
+    
+            const myFlightObject = {
+                myCarrier,
+                myAircraft,
+                myDuration,
+                myReturnDuration,
+                myReturnCarrier,
+                myReturnAircraft,
+                ...flight,
+            };
+            //console.log(myFlightObject);
+            history.push(`/pricing`, [myFlightObject]);
+        }else{
+            setValues({...values, error: 'Debes estar logado para poder comprar un vuelo.', showError: true})
+            setShowForm(false);
+            //setTimeout(() => {
+            setShowForm(true);
+            //}, 1500);
+        }
     }
-    //TEST
-    const departureCityCall = async (iataCityCode) => {
-        console.log(iataCityCode);
-        /* setShowDepartureCity(false);
-        const { data } = await axios.get(
-            'http://localhost:3001/citySearch',
-            {
-                params: {
-                    keyword: iataCityCode,
-                    view: 'LIGHT',
-                },
-            }
-        );
-
-        if (data) {
-            const myCity = data.data.data[0];
-            setDepartureCity(myCity);
-            setShowDepartureCity(true);
-            return myCity;
-        } */
+    //Gestionamos el evento de close en el snackbar
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({...values, showError: false});
     };
+
     return (
         <ul id='results-list'>
             {dataResults?.data?.data?.map((flight) => (
@@ -189,12 +191,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                             </div>
                             <div id='itineraries-container'>
                                 <div id='itineraries-line'>
-                                    {flight.itineraries[0].segments?.length > 1
-                                        ? stopSpots(
-                                              flight.itineraries[0]?.segments
-                                                  .length
-                                          )
-                                        : null}
+                                
                                 </div>
                                 <img src={airplane} alt='' id='airplane-logo' />
                             </div>
@@ -313,6 +310,11 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                             >
                                 SELECCIONAR
                             </button>
+                            <Snackbar open={values.showError} autoHideDuration={3000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="error">
+                                    {values.error}
+                                </Alert>
+                            </Snackbar>
                         </div>
                     </div>
 
