@@ -357,7 +357,7 @@ function LoginForm() {
                         Iniciar Sesión
                     </Button>
                 </div>
-                <div className='line-v'></div>
+
                 <>
                     <Snackbar
                         open={values.showError}
