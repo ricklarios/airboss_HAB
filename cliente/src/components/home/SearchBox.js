@@ -11,6 +11,8 @@ import {
 } from '../../helpers';
 import { FLIGHT_CLASSES, OPTIONS_SEARCH } from '../../constants';
 import { UserContext } from '../../routers/AppRouter';
+import { Snackbar } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 function SearchBox({ history, vertical }) {
     // Estados de los parametros de Busqueda
@@ -31,6 +33,13 @@ function SearchBox({ history, vertical }) {
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
 
+    //Hook para manejar alertas
+    const [values, setValues] = useState({
+        error: '',
+        showError: false,
+        ok: '',
+        showOk: false,
+    });
     // Estado de las opciones de busqueda.
     const [optionsSearch, setOptionSearch] = useState({
         soloIda: true,
@@ -65,6 +74,29 @@ function SearchBox({ history, vertical }) {
         e.preventDefault();
         history.push(`/searches${querysHistory}`);
     };
+
+    //Manejamos el cierre de la alerta
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({ ...values, showError: false });
+    };
+
+    const handleAccept = () =>{
+        // console.log('Aquí llega');
+        if ((numAdults + numChilds) > 9){
+            // console.log('DENTRO');
+            setValues({
+                ...values,
+                error: 'No puedes solicitar más de 9 billetes en una única reserva',
+                showError: true,
+            });
+        }else{
+
+            setshowTravelersOptions(false)
+        }
+    }
     return (
         <div
             id={
@@ -201,7 +233,11 @@ function SearchBox({ history, vertical }) {
                                         />
                                         <div
                                             onClick={() =>
-                                                setNumAdults(numAdults + 1)
+                                                numAdults !== 9
+                                                    ? setNumAdults(
+                                                          numAdults + 1
+                                                      )
+                                                    : setNumAdults(9)
                                             }
                                             className='button'
                                         >
@@ -231,7 +267,11 @@ function SearchBox({ history, vertical }) {
                                         />
                                         <div
                                             onClick={() =>
-                                                setNumChilds(numChilds + 1)
+                                                numChilds !== 8
+                                                ? setNumChilds(
+                                                      numChilds + 1
+                                                  )
+                                                : setNumChilds(8)
                                             }
                                             className='button'
                                         >
@@ -241,11 +281,20 @@ function SearchBox({ history, vertical }) {
                                     <div
                                         id='finish-selection-button-class-adults'
                                         onClick={() =>
-                                            setshowTravelersOptions(false)
+                                            handleAccept()
                                         }
                                     >
                                         Aceptar
                                     </div>
+                                    <Snackbar
+                                        open={values.showError}
+                                        autoHideDuration={3000}
+                                        onClose={handleClose}
+                                    >
+                                        <Alert onClose={handleClose} severity='error'>
+                                        {values.error}
+                                        </Alert>
+                                    </Snackbar>
                                 </div>
                             )}
                         </div>
