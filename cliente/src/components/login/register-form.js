@@ -109,7 +109,7 @@ function RegisterForm({ history }) {
                 opacity: 1,
             });
         };
-    }, [setShowForm, setOpacity]);
+    }, [setShowForm, setOpacity, setShowRegisterForm]);
 
     const handleRegister = async (e) => {
         e.preventDefault();

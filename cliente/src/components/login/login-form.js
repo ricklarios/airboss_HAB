@@ -88,7 +88,7 @@ function LoginForm() {
                 opacity: 1,
             });
         };
-    }, [setShowRegisterForm, setOpacity]); //REV_ERRORS
+    }, [setShowRegisterForm, setOpacity, setShowForm]); //REV_ERRORS
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
