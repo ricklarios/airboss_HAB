@@ -21,10 +21,12 @@ function SearchBox({ history, vertical }) {
     const [originLocationCode, setOriginLocationCode] = useState({
         city: '',
         country: '',
+        cityName: '',
     });
     const [destinationLocationCode, setDestinationLocationCode] = useState({
         city: '',
         country: '',
+        cityName: '',
     });
     const [travelClass, setTravelClass] = useState('ECONOMY');
     const [oneWay, setOneWay] = useState(true);
@@ -321,6 +323,7 @@ function SearchBox({ history, vertical }) {
                             <CitySearch
                                 label={'Seleccione el origen'}
                                 setInput={setOriginLocationCode}
+                                input={originLocationCode}
                             />
                         </div>
                         <div id='input-destination'>
@@ -341,8 +344,11 @@ function SearchBox({ history, vertical }) {
                                 onChange={(date) => {
                                     setDepartureDate(date);
                                     //Evitamos que de error si no se ha seleccionado aun fecha de vuelta
-                                    if(returnDate !== ""){
-                                        if ( !dateIsPrevious(date, returnDate) && optionsSearch.idaYvuelta ) {
+                                    if (returnDate !== '') {
+                                        if (
+                                            !dateIsPrevious(date, returnDate) &&
+                                            optionsSearch.idaYvuelta
+                                        ) {
                                             setShowErrorDateDeparture(true);
                                         } else {
                                             setShowErrorDateDeparture(false);

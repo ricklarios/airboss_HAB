@@ -313,6 +313,7 @@ function LoginForm() {
             className={'login-container animate__animated ' + animation}
             ref={refLoginForm}
         >
+            <div>Logo</div>
             <form id='form-login' onSubmit={onSubmitLogin}>
                 <div>
                     <TextField

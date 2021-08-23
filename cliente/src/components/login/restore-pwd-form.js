@@ -118,6 +118,8 @@ function RestorePasswordForm() {
             className={'restore-password-form animate__animated ' + animation}
             ref={ref}
         >
+            <h3>Solicitar reseteo</h3>
+            <p>Ingrese su correo electrónico</p>
             <form onSubmit={onSubmitLogin}>
                 <div>
                     <TextField

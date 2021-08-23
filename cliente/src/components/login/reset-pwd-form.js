@@ -141,12 +141,8 @@ function ResetPasswordForm({ code }) {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
     return (
-        <div
-            className={'reset-password-form animate__animated ' + animation}
-            ref={refApp}
-        >
+        <div className={'reset-password-form animate__animated ' + animation}>
             <form onSubmit={onSubmitChangePwd}>
                 <FormControl
                     className={clsx(classes.margin, classes.textField)}
@@ -155,7 +151,7 @@ function ResetPasswordForm({ code }) {
                         htmlFor='standard-adornment-password'
                         className='label'
                     >
-                        contraseña
+                        Contraseña
                     </InputLabel>
                     <Input
                         id='standard-adornment-password'
@@ -188,7 +184,7 @@ function ResetPasswordForm({ code }) {
                         htmlFor='standard-adornment-password'
                         className='label'
                     >
-                        Confirme contraseña
+                        contraseña
                     </InputLabel>
                     <Input
                         id='standard-adornment-repeatPassword'

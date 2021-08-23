@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import './css/city-search.css';
 
-export default function CitySearch({ label, setInput }) {
+export default function CitySearch({ label, setInput, input }) {
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
     const loading = open && options.length === 0;
@@ -27,7 +27,6 @@ export default function CitySearch({ label, setInput }) {
                 const cities = data.data.data?.map((city) => {
                     return {
                         detailedName: city.detailedName,
-
                         iataCode: city.iataCode,
                         cityName: city.address.cityName,
                         airportName: city.name,
@@ -79,6 +78,7 @@ export default function CitySearch({ label, setInput }) {
                     setInput({
                         city: o?.iataCode,
                         country: o?.countryCode,
+                        cityName: o?.cityName,
                     });
                 }
             }}

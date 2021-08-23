@@ -7,17 +7,15 @@ import { parse } from 'iso8601-duration';
 import { useHistory } from 'react-router-dom';
 import airplane from '../../assets/airplane-vector.png';
 import { CgAirplane } from 'react-icons/cg';
-import axios from 'axios';
 import { AuthContext } from '../../App';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-
 
 function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     // console.log(dataResults);
 
     const { preferredCurrency } = useContext(UserContext);
-    const { login, setShowForm} = useContext(AuthContext);
+    const { login, setShowForm } = useContext(AuthContext);
 
     const [values, setValues] = useState({
         error: '',
@@ -77,29 +75,33 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     const history = useHistory();
 
     function handleSearch(flight) {
-        if( login === true){
+        if (login === true) {
             const myCarrier = getMyCarrier(
                 flight.itineraries[0].segments[0].carrierCode
             );
             const myAircraft = getMyAircraft(
                 flight.itineraries[0].segments[0].aircraft.code
             );
-    
+
             const myDuration = formatDuration(flight.itineraries[0]?.duration);
-    
+
             const myReturnDuration =
                 flight.itineraries.length > 1
                     ? formatDuration(flight.itineraries[1].duration)
                     : null;
             const myReturnCarrier =
                 flight.itineraries.length > 1
-                    ? getMyCarrier(flight.itineraries[1].segments[0].carrierCode)
+                    ? getMyCarrier(
+                          flight.itineraries[1].segments[0].carrierCode
+                      )
                     : null;
             const myReturnAircraft =
                 flight.itineraries.length > 1
-                    ? getMyAircraft(flight.itineraries[1].segments[0].aircraft.code)
+                    ? getMyAircraft(
+                          flight.itineraries[1].segments[0].aircraft.code
+                      )
                     : null;
-    
+
             const myFlightObject = {
                 myCarrier,
                 myAircraft,
@@ -111,8 +113,12 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
             };
             //console.log(myFlightObject);
             history.push(`/pricing`, [myFlightObject]);
-        }else{
-            setValues({...values, error: 'Debes estar logado para poder comprar un vuelo.', showError: true})
+        } else {
+            setValues({
+                ...values,
+                error: 'Inicia Sesión para poder comprar un vuelo.',
+                showError: true,
+            });
             setShowForm(false);
             //setTimeout(() => {
             setShowForm(true);
@@ -124,7 +130,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showError: false});
+        setValues({ ...values, showError: false });
     };
 
     return (
@@ -149,17 +155,21 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                     <div id='info-flight-container'>
                         <div className='date-time-container'>
                             <b>
+                                {' '}
+                                {`${flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[0].segments[0].departure?.iataCode})`}{' '}
+                            </b>
+                            {/* <b>
                                 {
                                     flight.itineraries[0].segments[0].departure
                                         ?.iataCode
                                 }
                                 <div>
-
                                     {
-                                        flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City
+                                        flight?.itineraries[0]?.segments[0]
+                                            ?.departureCityName[0]?.City
                                     }
                                 </div>
-                            </b>
+                            </b> */}
 
                             {
                                 <span>
@@ -190,9 +200,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                 )}
                             </div>
                             <div id='itineraries-container'>
-                                <div id='itineraries-line'>
-                                
-                                </div>
+                                <div id='itineraries-line'></div>
                                 <img src={airplane} alt='' id='airplane-logo' />
                             </div>
                             <div id='itineraries-info'>
@@ -220,19 +228,35 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                         <div className='date-time-container'>
                             {
                                 <b>
-                                    {
+                                    {' '}
+                                    {`${
+                                        flight.itineraries[0]?.segments[
+                                            flight.itineraries[0]?.segments
+                                                .length - 1
+                                        ]?.arrivalCityName[0]?.City
+                                    } (${
                                         flight.itineraries[0].segments[
                                             flight.itineraries[0]?.segments
                                                 .length - 1
-                                        ].arrival?.iataCode 
-                                    }
-                                    <div>
-                                        {
-                                             flight.itineraries[0]?.segments[flight.itineraries[0]?.segments
-                                            .length - 1]?.arrivalCityName[0]?.City 
-                                        }
-                                    </div> 
+                                        ].arrival?.iataCode
+                                    })`}{' '}
                                 </b>
+                                // <b>
+                                //     {
+                                //         flight.itineraries[0].segments[
+                                //             flight.itineraries[0]?.segments
+                                //                 .length - 1
+                                //         ].arrival?.iataCode
+                                //     }
+                                //     <div>
+                                //         {
+                                //             flight.itineraries[0]?.segments[
+                                //                 flight.itineraries[0]?.segments
+                                //                     .length - 1
+                                //             ]?.arrivalCityName[0]?.City
+                                //         }
+                                //     </div>
+                                // </b>
                             }
 
                             {
@@ -310,8 +334,12 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                             >
                                 SELECCIONAR
                             </button>
-                            <Snackbar open={values.showError} autoHideDuration={3000} onClose={handleClose}>
-                                <Alert onClose={handleClose} severity="error">
+                            <Snackbar
+                                open={values.showError}
+                                autoHideDuration={3000}
+                                onClose={handleClose}
+                            >
+                                <Alert onClose={handleClose} severity='error'>
                                     {values.error}
                                 </Alert>
                             </Snackbar>
@@ -333,17 +361,22 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                             <div id='info-flight-container'>
                                 <div className='date-time-container'>
                                     <b>
+                                        {' '}
+                                        {`${flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[1]?.segments[0]?.departure?.iataCode})`}{' '}
+                                    </b>
+                                    {/* <b>
                                         {
                                             flight.itineraries[1]?.segments[0]
                                                 ?.departure?.iataCode
                                         }
                                         <div>
-
                                             {
-                                                flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City
+                                                flight.itineraries[1]
+                                                    ?.segments[0]
+                                                    ?.departureCityName[0]?.City
                                             }
                                         </div>
-                                    </b>
+                                    </b> */}
 
                                     {
                                         <span>
@@ -421,19 +454,35 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                     {flight.itineraries[1]?.segments.length ===
                                     1 ? (
                                         <b>
-                                            {
+                                            {`${
+                                                flight.itineraries[1]?.segments[
+                                                    flight.itineraries[0]
+                                                        ?.segments.length - 1
+                                                ]?.arrivalCityName[0]?.City
+                                            } (${
                                                 flight.itineraries[1]
                                                     ?.segments[0].arrival
                                                     ?.iataCode
-                                            }
-                                            <div>
-                                                {
-                                                    flight.itineraries[1]?.segments[flight.itineraries[0]?.segments
-                                                    .length - 1]?.arrivalCityName[0]?.City 
-                                                }
-                                            </div> 
+                                            })`}
                                         </b>
                                     ) : (
+                                        // <b>
+                                        //     {
+                                        //         flight.itineraries[1]
+                                        //             ?.segments[0].arrival
+                                        //             ?.iataCode
+                                        //     }
+                                        //     <div>
+                                        //         {
+                                        //             flight.itineraries[1]
+                                        //                 ?.segments[
+                                        //                 flight.itineraries[0]
+                                        //                     ?.segments.length -
+                                        //                     1
+                                        //             ]?.arrivalCityName[0]?.City
+                                        //         }
+                                        //     </div>
+                                        // </b>
                                         <b>
                                             {
                                                 flight.itineraries[1]?.segments[

@@ -10,6 +10,7 @@
     background-color: rgb(255,255,255,.9);
     width: 100%;
     box-shadow: 1px 1px 10px grey;
+    height: 70px;
 }
 
 #container-exchange-icon {
@@ -30,6 +31,11 @@
     align-items: center;
     justify-content: space-around;
     gap: 0.7rem;
+   
+}
+
+#button-container > div:last-child > button > span > div {
+ margin-right: 5px;
    
 }
 

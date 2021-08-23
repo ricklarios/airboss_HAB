@@ -9,6 +9,7 @@ import { UserContext } from '../routers/AppRouter';
 import { formatDate } from '../helpers';
 import SearchBox from '../components/home/SearchBox';
 import { AuthContext } from '../App';
+import { PoisDestinations } from '../components/utilities/PoisDestinations';
 
 const queryString = require('query-string');
 
@@ -61,12 +62,12 @@ export const FlightSelectionScreen = ({ history }) => {
         setShowResults(true);
 
         getFlights();
-    }, [querysAPI, history]);
+    }, [querysAPI, history, idUser]);
 
     const useStyles = makeStyles((theme) => ({
         root: {
             position: 'absolute',
-            top: '10%',
+            top: '70px',
             width: '100%',
             zIndex: '2000',
             '& > * + *': {
@@ -77,7 +78,7 @@ export const FlightSelectionScreen = ({ history }) => {
     const classes = useStyles();
 
     return (
-        <div id='searches-container-all' style= {opacity}>
+        <div id='searches-container-all' style={opacity}>
             <div id='searches-container'>
                 {showResults && !dataResults && (
                     <LinearProgress className={classes.root} />
@@ -91,7 +92,9 @@ export const FlightSelectionScreen = ({ history }) => {
                             numAdults={numAdults}
                             numChilds={numChilds}
                         />
-                        <div>aca va algo</div>
+                        <PoisDestinations
+                            destinationLocationCode={destinationLocationCode}
+                        />
                     </div>
                 )}
             </div>

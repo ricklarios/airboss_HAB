@@ -1,0 +1,84 @@
+
+#pois-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+#pois-container > div:first-child{
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 400;
+    background-color:rgb(231, 231, 231);
+    width: 100%;
+    text-align: center;
+    padding:1.2rem;
+    border-radius: 8px;
+    padding-bottom: 0.5rem;
+}
+.poi-card {
+
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.poi-card > div:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.poi-card > div:first-child > img {
+    border-radius: 8px 8px 0 0;
+}
+
+
+.poi-card > h3 {
+    text-align: center;
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.poi-card > p {
+
+    padding: 1rem;
+    font-size: 0.7rem;
+    font-weight: 400;
+}
+
+.poi-card > div:last-child {
+
+    background-color: rgb(82, 82, 82);
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.poi-card > div:last-child > a {
+
+   padding:1rem;
+   color: white;
+   text-decoration: none;
+   font-size: 0.9rem;
+
+}
+
+.poi-card > div:last-child:hover {
+
+    background-color: rgb(59, 59, 59);
+
+}
+
+.poi-card > div:last-child:active {
+
+    transform: translateY(2px);
+
+}
+
+.arrow-icon-poi {
+
+    margin: top 0.5rem;
+}
