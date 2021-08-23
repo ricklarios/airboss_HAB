@@ -44,7 +44,7 @@ function ResetPasswordForm({ code }) {
         showOk: false,
     });
     const classes = useStyles();
-    const { setShowRegisterForm, ref, animation, setOpacity } =
+    const { setShowRegisterForm, refApp, animation, setOpacity } =
         useContext(AuthContext);
 
     useEffect(() => {
