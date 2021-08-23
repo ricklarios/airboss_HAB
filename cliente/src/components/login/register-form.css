@@ -1,7 +1,7 @@
 #container-register-form{
     min-height: 500px;
     width: 400px;
-    background-color: #D8E3E7;
+    background-color: #ffffff;
     border-radius: 5px;
     border: 3px solid #132C33;
     position: absolute;
@@ -9,13 +9,29 @@
     left: calc(50% - 200px);
     top: calc(50% - 250px);
     transform: translate(-50%,-50%);
-    
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
+
+#register-form > div > .MuiFormControl-root, #register-form > .MuiFormControl-root  {
+  width: 100%;
+  height: 40px;
+  
+}
+
+
+#register-form > div:nth-child(7) > div >div::before {
+  padding: 0rem;
+}
+
+
+#register-form > div > .MuiFormControl-root {
+  box-shadow: 0 !important;
+}
+
 
 
 #container-register-form form {
@@ -31,9 +47,9 @@
   grid-row: 4;
   background-color: #132C33;
   color: white;
-  padding: 0.7rem;
+  padding: 0.7rem 1.4rem;
   border: none;
-  border-radius: 0 0 10px 10px;
+  border-radius: 8px;
   cursor: pointer;
   margin: 5px;
   grid-gap: 0.5rem;
@@ -45,7 +61,7 @@
 }
 
 .label,#standard-basic-nombre-label, #standard-basic-apellidos-label, #country-select-label{
-  z-index: 999999 !important;
+  z-index: 9999 !important;
 }
 .MuiAutocomplete-paper, .MuiList-root, .MuiMenu-list, .MuiList-padding{
   z-index: 999999 !important;

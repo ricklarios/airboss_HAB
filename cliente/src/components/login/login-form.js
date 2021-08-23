@@ -65,7 +65,7 @@ function LoginForm() {
         setLastname,
         name,
         lastname,
-        email
+        email,
     } = useContext(AuthContext);
 
     const refLoginForm = useRef(null);
@@ -77,12 +77,15 @@ function LoginForm() {
         });
 
         document.addEventListener('mousedown', handleClick);
-        function handleClick (e){
+        function handleClick(e) {
             // console.log(e);
-            if ( refLoginForm.current && !refLoginForm.current.contains (e.target) ){
+            if (
+                refLoginForm.current &&
+                !refLoginForm.current.contains(e.target)
+            ) {
                 setShowForm(false);
             }
-        } 
+        }
         return () => {
             setOpacity({
                 opacity: 1,
@@ -105,12 +108,11 @@ function LoginForm() {
 
     //Funciones para el manejo de respuestas de las API de Google y Facebook
     const responseGoogle = (response) => {
-        
         //console.log('login-form 100');
         //console.log(response);
         if (response?.profileObj?.name) {
             setNameUser(response?.profileObj?.givenName);
-            setLastname(response?.profileObj?.familyName)
+            setLastname(response?.profileObj?.familyName);
             setPicture(response?.profileObj?.imageUrl);
             setEmail(response.profileObj.email);
 
@@ -131,27 +133,31 @@ function LoginForm() {
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const myHeaders = new Headers();
-                
-                
+
                 myHeaders.append('Content-Type', 'application/json');
                 myHeaders.append('authorization', response.tokenObj.id_token);
                 myHeaders.append('email', email);
                 myHeaders.append('name', name);
                 myHeaders.append('lastname', lastname);
-                
-                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, 
-                    myHeaders);
+
+                const res = await axios.get(
+                    `http://localhost:3001/users/validate-token/${typeAuth}`,
+                    myHeaders
+                );
                 //console.log(res);
-                if (res.data.status === 'ok'){
-                  setValues({...values, ok: "Logado Google OK!", showOk: true});
+                if (res.data.status === 'ok') {
+                    setValues({
+                        ...values,
+                        ok: 'Logado Google OK!',
+                        showOk: true,
+                    });
                 }
             }
-          
+
             loginGoogle();
 
             //*******************/
-            
-        }else{
+        } else {
             setValues({
                 ...values,
                 error: 'No ha sido posible logarte mediante Google, inténtalo más tarde',
@@ -185,18 +191,24 @@ function LoginForm() {
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const myHeaders = new Headers();
-                  
+
                 myHeaders.append('Content-Type', 'application/json');
                 myHeaders.append('Authorization', token);
                 myHeaders.append('email', email);
                 myHeaders.append('name', name);
                 myHeaders.append('lastname', lastname);
-                
-                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, 
-                    myHeaders);
+
+                const res = await axios.get(
+                    `http://localhost:3001/users/validate-token/${typeAuth}`,
+                    myHeaders
+                );
                 console.log(res);
-                if (res.data.status === 'ok'){
-                  setValues({...values, ok: "Logado Facebook OK!", showOk: true});
+                if (res.data.status === 'ok') {
+                    setValues({
+                        ...values,
+                        ok: 'Logado Facebook OK!',
+                        showOk: true,
+                    });
                 }
             }
 
@@ -260,7 +272,7 @@ function LoginForm() {
                     setValues({
                         ...values,
                         error: response.message,
-                        showError: true,//REV_ERRORS
+                        showError: true, //REV_ERRORS
                     });
                     //console.log(error.message);
                 } else {
@@ -289,16 +301,18 @@ function LoginForm() {
             });
     }
     document.addEventListener('keydown', handleKeyDown);
-    
 
-    function handleKeyDown (e){
-        if (e.keyCode === 27){
+    function handleKeyDown(e) {
+        if (e.keyCode === 27) {
             setShowForm(false);
         }
     }
 
     return (
-        <div className={'login-container animate__animated ' + animation} ref={refLoginForm}>
+        <div
+            className={'login-container animate__animated ' + animation}
+            ref={refLoginForm}
+        >
             <form id='form-login' onSubmit={onSubmitLogin}>
                 <div>
                     <TextField
@@ -359,7 +373,7 @@ function LoginForm() {
                         Iniciar Sesión
                     </Button>
                 </div>
-                <div className='line-v'></div>
+
                 <>
                     <Snackbar
                         open={values.showError}
