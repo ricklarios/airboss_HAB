@@ -8,10 +8,10 @@ const amadeus = new Amadeus({
 
 const poisDestination = async (req, res, next) => {
     try {
-        const { latitude, longitude } = req.query;
+        const { south, west, north, east } = req.query;
         const { result } = await amadeus.client.get(
-            '/v1/reference-data/locations/pois',
-            { latitude: latitude, longitude: longitude }
+            '/v1//shopping/activities/by-square',
+            { south: south, west: west, north: north, east: east }
         );
 
         res.send({
