@@ -15,7 +15,7 @@ const deletePassenger = async (req, res, next) => {
         // Obtenemos el usuario relacionado con esta reserva:
 
         const idSearch = await connection.query(
-            `SELECT idSearch FROM booking WHERE id = ?;`,
+            `SELECT idSearch FROM bookings WHERE id = ?;`,
             [idBooking]
         );
 

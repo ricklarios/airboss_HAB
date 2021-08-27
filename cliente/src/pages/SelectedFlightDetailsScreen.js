@@ -6,10 +6,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import './css/selected-flight-details.css';
 
 import SelectedFlightInfo from '../components/home/SelectedFlightInfo';
+import { Snackbar } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 export const SelectedFlightDetailsScreen = ({ history }) => {
     const selectedFlight = useLocation().state[0];
-
+    const [values, setValues] = useState({
+        info: '',
+        showInfo: false,
+    });
     const {
         myCarrier,
         myAircraft,
@@ -25,6 +30,7 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
     useEffect(() => {
         setShowResults(false);
         setDataResults('');
+        setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
         const getPricing = async () => {
             const flightPrincingObject = {
                 data: {
@@ -72,7 +78,12 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
         },
     }));
     const classes = useStyles();
-
+    const handleCloseOk = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({...values, showInfo: false});
+    };
     return (
         <div id='selected-flight-info-container-all'>
             {showResults && !dataResults && (
@@ -81,6 +92,11 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
             {showResults && dataResults && (
                 <SelectedFlightInfo dataResults={dataResults} />
             )}
+            <Snackbar open={values.showInfo} autoHideDuration={5000} onClose={handleCloseOk}>
+                    <Alert onClose={handleCloseOk} severity="info">
+                    {values.info}
+                    </Alert>
+                </Snackbar>
         </div>
     );
 };

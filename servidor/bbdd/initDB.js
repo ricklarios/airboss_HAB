@@ -13,7 +13,7 @@ const main = async () => {
         // users, reservas, tickets, passengers
         await connection.query('DROP TABLE IF EXISTS users;');
         await connection.query('DROP TABLE IF EXISTS searches;');
-        await connection.query('DROP TABLE IF EXISTS booking;');
+        await connection.query('DROP TABLE IF EXISTS bookings;');
         await connection.query('DROP TABLE IF EXISTS tickets;');
         await connection.query('DROP TABLE IF EXISTS passengers;');
         await connection.query('DROP TABLE IF EXISTS users_payment;');
@@ -74,7 +74,7 @@ const main = async () => {
 
         //* Creamos la tabla de BOOKING:
         await connection.query(`
-            CREATE TABLE booking (
+            CREATE TABLE bookings (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 bookingCode VARCHAR(100) UNIQUE NOT NULL,
                 createdAt DATETIME NOT NULL, 
