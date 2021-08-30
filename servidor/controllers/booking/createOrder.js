@@ -38,7 +38,7 @@ const createOrder = async (req, res, next) => {
         const finalPrice = data.flightOffers[0].price.total;
         const [newBooking] = await connection.query(
             `
-                INSERT INTO booking (bookingCode, createdAt, finalPrice, idUser)
+                INSERT INTO bookings (bookingCode, createdAt, finalPrice, idUser)
                 VALUES(?, ?, ?, ?);
             `,
             [bookingCode, createdAt, finalPrice, idUser]

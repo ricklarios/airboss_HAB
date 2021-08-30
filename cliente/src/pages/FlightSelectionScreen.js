@@ -10,8 +10,14 @@ import { formatDate } from '../helpers';
 import SearchBox from '../components/home/SearchBox';
 import { AuthContext } from '../App';
 import { PoisDestinations } from '../components/utilities/PoisDestinations';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const queryString = require('query-string');
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 export const FlightSelectionScreen = ({ history }) => {
     const idUser = localStorage.getItem('idUser');
@@ -37,6 +43,16 @@ export const FlightSelectionScreen = ({ history }) => {
         travelClass,
     } = queryString.parse(location.search);
 
+    //Hook para el manejo de snackbar
+    const [values, setValues] = useState({
+        error: '',
+        showError: false,
+        ok: '',
+        showOk: false,
+        info: '',
+        showInfo: false,
+    });
+
     let querysAPI = `?currencyCode=${
         preferredCurrency.currency
     }&oneWay=${oneWay}&nonStop=${nonStop}&originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${formatDate(
@@ -52,10 +68,17 @@ export const FlightSelectionScreen = ({ history }) => {
                 `http://localhost:3001/searches${querysAPI}`,
                 { idUser: idUser }
             );
-
             if (data) {
                 setDataResults(data);
                 console.log(data);
+                //Si no hay resultados muestro aviso en pantalla
+                if (data.data.data.length === 0) {
+                    setValues({
+                        ...values,
+                        info: 'No hay resultados con la búsqueda indicada.',
+                        showInfo: true,
+                    });
+                }
             }
         };
 
@@ -77,6 +100,13 @@ export const FlightSelectionScreen = ({ history }) => {
     }));
     const classes = useStyles();
 
+    //Manejo del snackbar para cerrarlo
+    const handleCloseOk = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({ ...values, showInfo: false });
+    };
     return (
         <div id='searches-container-all' style={opacity}>
             <div id='searches-container'>
@@ -92,6 +122,15 @@ export const FlightSelectionScreen = ({ history }) => {
                             numAdults={numAdults}
                             numChilds={numChilds}
                         />
+                        <Snackbar
+                            open={values.showInfo}
+                            autoHideDuration={4000}
+                            onClose={handleCloseOk}
+                        >
+                            <Alert onClose={handleCloseOk} severity='info'>
+                                {values.info}
+                            </Alert>
+                        </Snackbar>
                         <PoisDestinations
                             destinationLocationCode={destinationLocationCode}
                         />

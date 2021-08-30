@@ -12,7 +12,7 @@ const getBooking = async (req, res, next) => {
         const [booking] = await connection.query(
             `   
             SELECT B.bookingCode, B.createdAt, B.finalPrice, I.id as 'Itinerario', I.duration, S.id as 'Segmento', S.origin, S.destination, S.departure_datetime, S.arrival_datetime, S.carrierCode, S.duration
-            FROM booking B 
+            FROM bookings B 
             INNER JOIN itineraries I
             ON B.id = I.idBooking
             INNER JOIN segments S

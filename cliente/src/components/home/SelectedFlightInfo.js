@@ -9,6 +9,9 @@ import { PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { AuthContext } from '../../App';
+import { useHistory } from 'react-router-dom';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
 require('dotenv').config();
 
 function SelectedFlightInfo({ dataResults }) {
@@ -34,6 +37,7 @@ function SelectedFlightInfo({ dataResults }) {
         disabledPDF: true,
     });
     const { login, setShowForm} = useContext(AuthContext);
+    const history = useHistory();
 
     function getMyDateTime(resultsDate) {
         const dateTime = new Date(resultsDate);
@@ -112,6 +116,7 @@ function SelectedFlightInfo({ dataResults }) {
         ];
 
     useEffect(() => {
+        
         const cityCall = async (iataCityCode, setCity, setShowCity) => {
             setShowCity(false);
             const { data } = await axios.get(
@@ -197,9 +202,20 @@ function SelectedFlightInfo({ dataResults }) {
     async function paymentSuccess (details){
         //console.log(details.payer.name.given_name);
         setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
+        //history.push(`/passengers${}`);
+                
+        //Necesitamos generar la siguiente información de cada usuario
+        /* traveler.name.firstName,
+                    traveler.name.lastName,
+                    traveler.documents[0].number,
+                    traveler.dateOfBirth,
+                    traveler.gender,
+                    traveler.contact.phones[0].number,
+                    traveler.contact.emailAddress, */
         //Es necesario guardar orden
+        
+/* 
         try {
-            
             const body = {
                 idUser: localStorage.getItem('idUser'),
                 flightObjet: dataResults.data.data.flightOffers[0],
@@ -238,7 +254,7 @@ function SelectedFlightInfo({ dataResults }) {
             console.log(res);
         } catch (error) {
             console.log(error);
-        }
+        } */
     }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -252,6 +268,11 @@ function SelectedFlightInfo({ dataResults }) {
         }
         setValues({...values, showOk: false});
     };
+    const handleClickPassengers = () => {
+        //console.log('Nos vamos a confirmar pasajeros');
+        history.push('/passengers');
+    }
+
     return (
         <div id='flight-info-container'>
             {!dataResults && <div>Cargando información del vuelo...</div>}
@@ -665,8 +686,8 @@ function SelectedFlightInfo({ dataResults }) {
                             <p>
                                 BASE:{' '}
                                 {
-                                    dataResults.data.data.flightOffers[0]
-                                        .travelerPricings[0].price.base
+                                    dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                        (acu, value) => acu + Number(value.price.base),0)
                                 }
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
@@ -676,9 +697,8 @@ function SelectedFlightInfo({ dataResults }) {
                             <p>
                                 IMPUESTOS:{' '}
                                 {
-                                    dataResults.data.data.flightOffers[0]
-                                        .travelerPricings[0].price
-                                        .refundableTaxes
+                                    dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                        (acu, value) => acu + Number(value.price.refundableTaxes),0)
                                 }
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
@@ -688,15 +708,15 @@ function SelectedFlightInfo({ dataResults }) {
                             <p className='total-price'>
                                 TOTAL:{' '}
                                 {
-                                    dataResults.data.data.flightOffers[0]
-                                        .travelerPricings[0].price.total
+                                    dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                        (acu, value) => acu + Number(value.price.total),0)
                                 }
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
                                         .travelerPricings[0].price.currency
                                 )}
                             </p>
-                    {values.disabledPDF && <PayPalScriptProvider 
+                    {/* {values.disabledPDF && <PayPalScriptProvider 
                     className="paypal-container" 
                     options={{ "client-id": `${process.env.REACT_APP_PAYPAL_CLIENTID}`, 
                                "currency":  `${dataResults.data.data.flightOffers[0]
@@ -738,13 +758,22 @@ function SelectedFlightInfo({ dataResults }) {
                                 console.log( err );
                             } }
                         />
-                    </PayPalScriptProvider>                 }
+                         </PayPalScriptProvider>                 } */}
                         </div>
                     )}
                 </div>
                 <div className='buttons-container not-to-pdf'>
                     {/* <button className='buy-button'>Comprar</button> */}
                     {!values.disabledPDF && <button onClick={() => generatePDF()}>Ver en PDF</button>}
+                    <button
+                        className='passengers-confirm-button'
+                        onClick={() => {
+                            handleClickPassengers();
+                        }}
+                    >
+                     <CheckCircleOutlineIcon fontSize="medium"/>
+                     Confirmar pasajeros
+                    </button>
                     <button
                         className='covid-info-button'
                         onClick={() => {
