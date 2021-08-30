@@ -270,7 +270,10 @@ function SelectedFlightInfo({ dataResults }) {
     };
     const handleClickPassengers = () => {
         //console.log('Nos vamos a confirmar pasajeros');
-        history.push('/passengers');
+        history.push({
+            pathname: '/passengers',
+            state: dataResults
+        });
     }
 
     return (

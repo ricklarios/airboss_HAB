@@ -14,21 +14,27 @@ export const ConfirmPassengersScreen = ({ history }) => {
         info: '',
         showInfo: false,
     });
-    /* const {
-        myCarrier,
-        myAircraft,
-        myDuration,
-        myReturnDuration,
-        myReturnCarrier,
-        myReturnAircraft,
-    } = selectedFlight; */
-
-    // const [dataResults, setDataResults] = useState('');
-    // const [showResults, setShowResults] = useState(false);
-
+    const [travelersInfo, setTravelersInfo] = useState(null);
+    const data = useLocation();
+    if (travelersInfo === null){
+        console.log('ENTRO EN IF');
+        //setTravelersInfo("HOLA");
+        console.log(data);
+        const travelers = data.state.data.data.flightOffers[0].travelerPricings.map ((e) => (
+            {travelerId: e.travelerId,
+             typePassenger: e.travelerType, 
+             typeSeat: e.fareOption,
+             travelerValidate: false,
+             name: "",
+             lastname: "",}));
+        setTravelersInfo(travelers);
+        
+    };
+            
     useEffect(() => {
         setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
-    }, [values]);
+        
+    }, []);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -48,9 +54,10 @@ export const ConfirmPassengersScreen = ({ history }) => {
         }
         setValues({...values, showOk: false});
     };
+    
     return (
         <div id='selected-flight-info-container-all'>
-            <PassengersForm />
+            <PassengersForm travelersInfo={travelersInfo}/>
             <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
                     <Alert onClose={handleCloseOk} severity="info">
                     {values.ok}
