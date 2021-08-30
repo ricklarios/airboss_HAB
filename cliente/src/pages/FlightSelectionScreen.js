@@ -85,7 +85,7 @@ export const FlightSelectionScreen = ({ history }) => {
         setShowResults(true);
 
         getFlights();
-    }, [querysAPI, history, idUser]);
+    }, [querysAPI, history, idUser, values]);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -131,9 +131,10 @@ export const FlightSelectionScreen = ({ history }) => {
                                 {values.info}
                             </Alert>
                         </Snackbar>
-                        <PoisDestinations
+
+                        {/* <PoisDestinations
                             destinationLocationCode={destinationLocationCode}
-                        />
+                        /> */}
                     </div>
                 )}
             </div>
