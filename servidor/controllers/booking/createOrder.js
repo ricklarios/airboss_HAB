@@ -10,15 +10,15 @@ const amadeus = new Amadeus({
 const createOrder = async (req, res, next) => {
     let connection;
     try {
-        const { flightObjet, travelers, idUser } = req.body;
-        // console.log(flightObjet);
+        const { flightObject, travelers, idUser } = req.body;
+        // console.log(flightObject);
         // console.log('travelers:', travelers);
         // console.log('idUser: ', idUser);
         const { result } = await amadeus.booking.flightOrders.post(
             JSON.stringify({
                 data: {
                     type: 'flight-order',
-                    flightOffers: [flightObjet],
+                    flightOffers: [flightObject],
                     travelers: travelers,
                 },
             })
@@ -49,6 +49,7 @@ const createOrder = async (req, res, next) => {
 
         //Inserto pasajeros
         for (const traveler of travelers) {
+            console.log(traveler);
             await connection.query(
                 `
                     INSERT INTO passengers (name, lastname, passport, birthDate, gender, phoneContact, emailContact, idBooking )

@@ -37,7 +37,7 @@
  .birthday{
    width: 300px;
  }
- #register-button {
+ #save-button {
   grid-column: span 8;
   grid-row: 4;
   background-color: #132C33;
@@ -55,7 +55,7 @@
   font-size: 1rem;
 }
 
-.label,#standard-basic-nombre-label, #standard-basic-apellidos-label, #country-select-label{
+.label,#standard-basic-nombre-label, #standard-basic-apellidos-label, #country-select-label, #standard-basic-number-document-label, #standard-basic-birthPlace-label, #standard-basic-type-document{
   z-index: 9999 !important;
 }
 .MuiAutocomplete-paper, .MuiList-root, .MuiMenu-list, .MuiList-padding{
@@ -64,4 +64,9 @@
 
   .list-countries{
     z-index:99999 !important;
+  }
+
+  .d-flex{
+    display: flex !important;
+    flex-direction: row !important;
   }

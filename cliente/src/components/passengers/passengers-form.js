@@ -8,6 +8,10 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { green, red } from '@material-ui/core/colors';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -17,6 +21,15 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { AuthContext } from '../../App';
 import MaterialUiPhoneNumber from 'material-ui-phone-number';
+import Tooltip from '@material-ui/core/Tooltip';
+import { Fab, FormLabel } from '@material-ui/core';
+import { TravelersContext } from '../../pages/ConfirmPassengersScreen';
+import React from 'react';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,10 +63,11 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
-function PassengersForm({ history }) {
+function PassengersForm({ currentTraveler }) {
+    // console.log(currentTraveler);
+    // console.log(travelersInfo);
+    
     //Control de la alerta SnackBar
-    // const [open, setOpen] = useState(false); REV_ERRORS
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -69,15 +83,35 @@ function PassengersForm({ history }) {
     // Estados de los parametros de Busqueda
     const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm } =
         useContext(AuthContext);
-
+    const { travelersInfo, setTravelersInfo, setShowEditTravelerForm } = useContext(TravelersContext);
+    // console.log(travelersInfo);
+    // console.log(travelersInfo[Number(currentTraveler)-1]);
     const [values, setValues] = useState({
-        email: '',
-        password: '',
-        showPassword: false,
-        repeatPassword: '',
-        showRepeatPasswor: false,
-        name: '',
-        lastname: '',
+        id:'',
+        name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
+               lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
+        gender: '',
+        dateOfBirth: null,
+        contact: {
+            emailAddress: '',
+            phones: [{
+                deviceType: 'MOBILE',
+                contruyCallingCode: '34',
+                number: '666666666'
+            }]
+        },
+        documents:[{
+            documentType: '',
+            birthPlace: '',
+            issuanceLocation: '',
+            issuanceDate: null,
+            number: '',
+            expiryDate: '2050-12-31',
+            issuanceCountry: '',
+            validityCountry: '',
+            nationality: '',
+            holder: true
+        },],
         error: '',
         showError: false,
         nationality: '',
@@ -85,127 +119,19 @@ function PassengersForm({ history }) {
         ok: '',
         showOk: false,
     });
+    
+    //const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
     const classes = useStyles();
     const classesFlags = useStylesFlags();
 
-    const refRegisterForm = useRef (null);
-
+    // const refRegisterForm = useRef (null);
+    
     useEffect(() => {
-
+        //console.log(travelersInfo);
         return () => {
         };
-    }, [setShowForm, setOpacity, setShowRegisterForm]);
+    }, []);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        if (!validator.isEmail(values.email)) {
-            setValues({
-                ...values,
-                error: 'Correo electrónico no válido',
-                showError: true,
-            });
-            return;
-        } else if (values.repeatPassword !== values.password) {
-            setValues({
-                ...values,
-                error: 'La contraseña debe coincidir',
-                showError: true,
-            });
-            return;
-        } else if (
-            validator.isEmpty(values.name) ||
-            validator.isEmpty(values.lastname)
-        ) {
-            setValues({
-                ...values,
-                error: 'Nombre y apellidos son necesarios',
-                showError: true,
-            });
-            return;
-        } else if (validator.isEmpty(values.nationality)) {
-            setValues({
-                ...values,
-                error: 'Debes elegir tu nacionalidad',
-                showError: true,
-            });
-            return;
-        } else if (validator.isEmpty(values.phone)) {
-            setValues({
-                ...values,
-                error: 'El número de teléfono debe ser correcto',
-                showError: true,
-            });
-            return;
-        } else if (validator.isMobilePhone(values.phone)) {
-            setValues({
-                ...values,
-                error: 'El número de teléfono debe ser correcto',
-                showError: true,
-            });
-            return;
-        }
-        const response = await fetch('http://localhost:3001/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: values.email,
-                password: values.password,
-                name: values.name,
-                lastname: values.lastname,
-                birthday: values.birthday,
-                nationality: values.nationality,
-                phone: values.phone.replace(/\s/g, ''),
-            }),
-        });
-        const data = await response.json();
-        console.log(data);
-        if (data.status === 'ok') {
-            setValues({ ...values, ok: data.message, showOk: true });
-            setTimeout(() => {
-                setShowRegisterForm(false);
-            }, 3000);
-        }
-    };
-
-    const handleClickShowPassword = () => {
-        setValues({ ...values, showPassword: !values.showPassword });
-    };
-
-    const handleClickShowRepeatPassword = () => {
-        setValues({
-            ...values,
-            showRepeatPassword: !values.showRepeatPassword,
-        });
-    };
-    const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
-        if (
-            event.target.id === 'standard-adornment-password' &&
-            event.charCode === 13
-        ) {
-            handleRegister(event);
-        }
-    };
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
-
-    const handleChangeNationality = (event) => {
-        const country =
-            countries[event.currentTarget.dataset.optionIndex]?.label;
-        setValues({ ...values, nationality: country });
-    };
-
-    const handleonChange = (event) => {
-        setValues({ ...values, phone: event });
-    };
-
-    const changeBirthday = (event) => {
-        console.log(event.target.value);
-        setValues({ ...values, birthday: event.target.value });
-    };
     document.addEventListener('keydown', handleKeyDown);
 
     function handleKeyDown (e){
@@ -213,109 +139,208 @@ function PassengersForm({ history }) {
             setShowRegisterForm(false);
         }
     }
+    const handleChange = (prop) => (event) => {
+        // console.log('ENTRO', prop);
+        if (prop === 'emailAddress'){
+            setValues({...values, contact: {...values.contact, emailAddress: event.target.value}})
+        }else if (prop === 'firstName'){
+            setValues({...values, name: {...values.name, firstName: event.target.value}, id: currentTraveler});
+        }else if (prop === 'lastName'){
+            setValues({...values, name: {...values.name, lastName: event.target.value}})
+        }else if (prop === 'numberDocument'){
+            let updatedList;
+            updatedList = values.documents.map (item => {
+                return {...item, number: event.target.value}; //gets everything that was already in item, and updates "done"
+            })
+            // console.log(updatedList);
+            setValues({...values, documents: updatedList})
+
+        }else if (prop === 'birthPlace'){
+            // setValues({...values, documents: {...values.documents[0], birthPlace: event.target.value}})
+            let updatedList;
+            updatedList = values.documents.map (item => {
+                return {...item, birthPlace: event.target.value, issuanceLocation: event.target.value}; //gets everything that was already in item, and updates "done"
+            })
+            // console.log(updatedList);
+            setValues({...values, documents: updatedList})
+        }else if (prop === 'typeDocument'){
+            //setValues({...values, documents: {...values.documents[0], documentType: event.target.value}})
+            let updatedList;
+            updatedList = values.documents.map (item => {
+                return {...item, documentType: event.target.value}; //gets everything that was already in item, and updates "done"
+            })
+            // console.log(updatedList);
+            setValues({...values, documents: updatedList})
+        }else{
+            setValues({ ...values, [prop]: event.target.value });
+        }
+    };
+    const changeBirthday = (event) => {
+        // console.log(event.target.value);
+        setValues({ ...values, dateOfBirth: event.target.value });
+    };
+    const changeIssuance = (event) => {
+        // console.log(event.target.value);
+        // setValues({ ...values, documents:{ ...values.documents[0], issuanceDate: event.target.value}  });
+        let updatedList;
+            updatedList = values.documents.map (item => {
+                return {...item, issuanceDate: event.target.value}; //gets everything that was already in item, and updates "done"
+            })
+            setValues({...values, documents: updatedList})
+    };
+    const handleChangeNationality = (event) => {
+        const country =
+            countries[event.currentTarget.dataset.optionIndex]?.label;
+        //setValues({ ...values, documents: {...values.documents[0], nationality: countries[event.currentTarget.dataset.optionIndex]?.code}});
+        let updatedList;
+        updatedList = values.documents.map (item => {
+            return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
+        })
+        setValues({...values, documents: updatedList})
+    };
+    const handleSave = (e) => {
+        e.preventDefault();
+        // console.log('Vamos a guardar pasajero');
+        // console.log(values.name);
+        setTravelersInfo(prevState => (
+            prevState.map(
+                (el) => {
+                    if (el.id === currentTraveler){
+                        // console.log('ENTRA');
+                        
+                        return {id : values.id, 
+                                name: {
+                                    firstName: values.name.firstName,
+                                    lastName: values.name.lastName,
+                                },
+                                contact: {emailAddress: values.contact.emailAddress,
+                                            phones: [{
+                                                deviceType: 'MOBILE',
+                                                contruyCallingCode: '34',
+                                                number: '666666666'}]},
+                                gender: values.gender,
+                                dateOfBirth: values.dateOfBirth,
+                                documents: values.documents,
+                                validate: true,
+                                }
+                    }
+                    return el;
+                }
+            )
+            ))
+        setShowEditTravelerForm(false);
+        // console.log(travelersInfo);
+        //setTravelersInfo(travelersInfo => ({...travelersInfo, [0]:}))
+
+    }
     return (
         <div
             id='passengers-form'
-            className="passengers-form"
-            ref={refRegisterForm}
+            className="edit-passenger-form"
         >
-            <form id='register-form' onSubmit={handleRegister}>
+            <form id='edit-passenger-form'  onSubmit={handleSave}>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-nombre'
+                        label='Nombre'
+                        value={values.name.firstName}
+                        onChange={handleChange('firstName')}
+                        autoFocus
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-apellidos'
+                        label='Apellidos'
+                        value={values.name.lastName}
+                        onChange={handleChange('lastName')}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-number-document'
+                        label='Número documento identidad'
+                        value={values?.documents[0]?.number}
+                        onChange={handleChange('numberDocument')}
+                    />
+                </div>
+                <div>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel htmlFor="age-native-simple" id= "standard-basic-type-document">Tipo de documento</InputLabel>
+                            <Select
+                            native
+                            value={values?.documents[0]?.documentType}
+                            onChange={handleChange('typeDocument')}
+                            inputProps={{
+                                name: 'documentType',
+                                id: 'standard-basic-type-document',
+                            }}
+                            >
+                                <option aria-label="None" value="" />
+                                <option value="IDENTITY_CARD">DOCUMENTO DE IDENTIDAD</option>
+                                <option value="PASSPORT">PASAPORTE</option>
+                                <option value="VISA">VISADO</option>
+                            </Select>
+                    </FormControl>
+                </div>
+                <div>
+                    <TextField
+                            id='issuanceDate'
+                            label='Fecha de emisión'
+                            type='date'
+                            defaultValue=''
+                            className='issuanceDate'
+                            onChange={changeIssuance}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                </div>
                 <div>
                     <TextField
                         className='inputs-form'
                         id='standard-basic-email'
                         label='Correo electrónico'
-                        value={values.email}
-                        onChange={handleChange('email')}
-                        autoFocus
+                        value={values.contact.emailAddress}
+                        onChange={handleChange('emailAddress')}
                     />
                 </div>
-                <FormControl
-                    className={clsx(classes.margin, classes.textField)}
-                >
-                    <InputLabel
-                        htmlFor='standard-adornment-password'
-                        className='label'
-                    >
-                        Contraseña
-                    </InputLabel>
-                    <Input
-                        id='standard-adornment-password'
-                        type={values.showPassword ? 'text' : 'password'}
-                        value={values.password}
-                        onChange={handleChange('password')}
-                        endAdornment={
-                            <InputAdornment position='end'>
-                                <IconButton
-                                    aria-label='toggle password visibility'
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {values.showPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        onKeyPress={handleChange('password')}
-                        className='inputs-form'
-                    />
-                </FormControl>
-                <FormControl
-                    className={clsx(classes.margin, classes.textField)}
-                >
-                    <InputLabel
-                        htmlFor='standard-adornment-password'
-                        className='label'
-                    >
-                        Repite contraseña
-                    </InputLabel>
-                    <Input
-                        id='standard-adornment-repeatPassword'
-                        type={values.showRepeatPassword ? 'text' : 'password'}
-                        value={values.repeatPassword}
-                        onChange={handleChange('repeatPassword')}
-                        endAdornment={
-                            <InputAdornment position='end'>
-                                <IconButton
-                                    aria-label='toggle password visibility'
-                                    onClick={handleClickShowRepeatPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {values.showRepeatPassword ? (
-                                        <Visibility />
-                                    ) : (
-                                        <VisibilityOff />
-                                    )}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        onKeyPress={handleChange('repeatPassword')}
-                        className='inputs-form'
-                    />
-                </FormControl>
-
-                <>
+                <div>
+                    <TextField
+                            id='birthday'
+                            label='Fecha de nacimiento'
+                            type='date'
+                            defaultValue=''
+                            className='birthday'
+                            onChange={changeBirthday}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                </div>
+                <div>
                     <TextField
                         className='inputs-form label'
-                        id='standard-basic-nombre'
-                        label='Nombre'
-                        value={values.name}
-                        onChange={handleChange('name')}
+                        id='standard-basic-birthPlace'
+                        label='Lugar de nacimiento'
+                        value={values?.documents[0]?.birthPlace}
+                        onChange={handleChange('birthPlace')}
                     />
-                </>
-                <>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-apellidos'
-                        label='Apellidos'
-                        value={values.lastname}
-                        onChange={handleChange('lastname')}
-                    />
-                </>
-                <>
+                </div>
+                <div>
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">Género</FormLabel>
+                    <RadioGroup aria-label="gender" name="gender" value={values.gender} onChange={handleChange('gender')} className="d-flex">
+                        <FormControlLabel value="FEMALE" control={<Radio />} label="Mujer" />
+                        <FormControlLabel value="MALE" control={<Radio />} label="Hombre" />
+                        <FormControlLabel value="OTHER" control={<Radio />} label="Otro" />
+                    </RadioGroup>
+                </FormControl>
+                </div>
+                <div>
                     <Autocomplete
                         id='country-select'
                         style={{ width: 300, border: 0 }}
@@ -339,7 +364,7 @@ function PassengersForm({ history }) {
                                 className='textField-countries'
                                 {...params}
                                 onChange={handleChangeNationality}
-                                label='Elige un país'
+                                label='Nacionalidad'
                                 variant='standard'
                                 inputProps={{
                                     ...params.inputProps,
@@ -349,30 +374,10 @@ function PassengersForm({ history }) {
                         )}
                         /* InputLabelProps={{ required: true }} */
                     />
-                </>
-                <>
-                    <MaterialUiPhoneNumber
-                        dropdownClass='list-countries'
-                        className='input-phone inputs-form'
-                        defaultCountry={'es'}
-                        onChange={handleonChange}
-                    />
-                </>
-                <>
-                    <TextField
-                        id='birthday'
-                        label='Fecha de nacimiento'
-                        type='date'
-                        defaultValue=''
-                        className='birthday'
-                        onChange={changeBirthday}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                    />
-                </>
+                </div>
+                
                 <div id='container-button'>
-                    <button id='register-button'>Registrarse</button>
+                    <button id='save-button'>Guardar pasajero</button>
                 </div>
                 <>
                     <Snackbar
@@ -398,6 +403,7 @@ function PassengersForm({ history }) {
         </div>
     );
 }
+
 const countries = [
     { code: 'AD', label: 'Andorra', phone: '376' },
     { code: 'AE', label: 'United Arab Emirates', phone: '971' },
@@ -661,3 +667,39 @@ const countries = [
     { code: 'ZW', label: 'Zimbabwe', phone: '263' },
 ];
 export default PassengersForm;
+
+/*
+const body = {
+    idUser: localStorage.getItem('idUser'),
+    flightObject: dataResults.data.data.flightOffers[0],
+    travelers: [{
+        "id": "1",
+        "dateOfBirth": "1982-01-16",
+        "name": {
+            "firstName": "USER",
+            "lastName": "TEST"
+        },
+        "gender": "MALE",
+        "contact": {
+            "emailAddress": "jorge.gonzales833@telefonica.es",
+            "phones": [{
+            "deviceType": "MOBILE",
+            "countryCallingCode": "34",
+            "number": "480080076"
+            }]
+        },
+        "documents": [{
+            "documentType": "PASSPORT",
+            "birthPlace": "Madrid",
+            "issuanceLocation": "Madrid",
+            "issuanceDate": "2015-04-14",
+            "number": "00000000",
+            "expiryDate": "2025-04-14",
+            "issuanceCountry": "ES",
+            "validityCountry": "ES",
+            "nationality": "ES",
+            "holder": true
+        }],
+
+  }],
+};*/

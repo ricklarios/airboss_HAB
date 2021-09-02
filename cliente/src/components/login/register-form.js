@@ -286,6 +286,7 @@ function RegisterForm({ history }) {
                         className='label'
                     >
                         Repite contraseña
+                
                     </InputLabel>
                     <Input
                         id='standard-adornment-repeatPassword'
