@@ -30,7 +30,11 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
     useEffect(() => {
         setShowResults(false);
         setDataResults('');
-        setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
+        setValues({
+            ...values,
+            showInfo: true,
+            info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva',
+        });
         const getPricing = async () => {
             const flightPrincingObject = {
                 data: {
@@ -82,7 +86,7 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showInfo: false});
+        setValues({ ...values, showInfo: false });
     };
     return (
         <div id='selected-flight-info-container-all'>
@@ -92,11 +96,15 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
             {showResults && dataResults && (
                 <SelectedFlightInfo dataResults={dataResults} />
             )}
-            <Snackbar open={values.showInfo} autoHideDuration={5000} onClose={handleCloseOk}>
-                    <Alert onClose={handleCloseOk} severity="info">
+            <Snackbar
+                open={values.showInfo}
+                autoHideDuration={5000}
+                onClose={handleCloseOk}
+            >
+                <Alert onClose={handleCloseOk} severity='info'>
                     {values.info}
-                    </Alert>
-                </Snackbar>
+                </Alert>
+            </Snackbar>
         </div>
     );
 };

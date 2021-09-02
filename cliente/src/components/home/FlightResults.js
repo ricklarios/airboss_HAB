@@ -133,8 +133,6 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
         setValues({ ...values, showError: false });
     };
 
-    
-
     return (
         <ul id='results-list'>
             {dataResults.status !== 'error' ? (
@@ -150,7 +148,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                         </div>
                         <div id='carrier-container'>
                             {getMyCarrier(
-                                flight.itineraries[0].segments[0].carrierCode
+                                flight.itineraries[0]?.segments[0]?.carrierCode
                             )}
                         </div>
 
@@ -158,28 +156,15 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                         <div id='info-flight-container'>
                             <div className='date-time-container'>
                                 <b>
-                                    {' '}
-                                    {`${flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[0].segments[0].departure?.iataCode})`}{' '}
+                                    {`${flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[0]?.segments[0]?.departure?.iataCode})`}{' '}
                                 </b>
-                                {/* <b>
-                                {
-                                    flight.itineraries[0].segments[0].departure
-                                        ?.iataCode
-                                }
-                                <div>
-                                    {
-                                        flight?.itineraries[0]?.segments[0]
-                                            ?.departureCityName[0]?.City
-                                    }
-                                </div>
-                            </b> */}
 
                                 {
                                     <span>
                                         {
                                             getMyDateTime(
-                                                flight.itineraries[0]
-                                                    .segments[0].departure?.at
+                                                flight?.itineraries[0]
+                                                    ?.segments[0]?.departure?.at
                                             )[1]
                                         }
                                     </span>
@@ -251,22 +236,6 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                             ].arrival?.iataCode
                                         })`}{' '}
                                     </b>
-                                    // <b>
-                                    //     {
-                                    //         flight.itineraries[0].segments[
-                                    //             flight.itineraries[0]?.segments
-                                    //                 .length - 1
-                                    //         ].arrival?.iataCode
-                                    //     }
-                                    //     <div>
-                                    //         {
-                                    //             flight.itineraries[0]?.segments[
-                                    //                 flight.itineraries[0]?.segments
-                                    //                     .length - 1
-                                    //             ]?.arrivalCityName[0]?.City
-                                    //         }
-                                    //     </div>
-                                    // </b>
                                 }
 
                                 {
@@ -379,19 +348,6 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                             {' '}
                                             {`${flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[1]?.segments[0]?.departure?.iataCode})`}{' '}
                                         </b>
-                                        {/* <b>
-                                        {
-                                            flight.itineraries[1]?.segments[0]
-                                                ?.departure?.iataCode
-                                        }
-                                        <div>
-                                            {
-                                                flight.itineraries[1]
-                                                    ?.segments[0]
-                                                    ?.departureCityName[0]?.City
-                                            }
-                                        </div>
-                                    </b> */}
 
                                         {
                                             <span>
@@ -485,23 +441,6 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                                                 })`}
                                             </b>
                                         ) : (
-                                            // <b>
-                                            //     {
-                                            //         flight.itineraries[1]
-                                            //             ?.segments[0].arrival
-                                            //             ?.iataCode
-                                            //     }
-                                            //     <div>
-                                            //         {
-                                            //             flight.itineraries[1]
-                                            //                 ?.segments[
-                                            //                 flight.itineraries[0]
-                                            //                     ?.segments.length -
-                                            //                     1
-                                            //             ]?.arrivalCityName[0]?.City
-                                            //         }
-                                            //     </div>
-                                            // </b>
                                             <b>
                                                 {
                                                     flight.itineraries[1]
