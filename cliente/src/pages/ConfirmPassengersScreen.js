@@ -1,34 +1,51 @@
 import { useLocation } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import './css/selected-flight-details.css';
-import PasesengersForm from '../components/passengers/passengers-form';
+import './css/ConfirmPassengersScreen.css'
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import PassengersForm from '../components/passengers/passengers-form';
+import EditIcon from '@material-ui/icons/Edit';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { green, red } from '@material-ui/core/colors';
+import Tooltip from '@material-ui/core/Tooltip';
+import { Fab } from '@material-ui/core';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+require('dotenv').config();
 
+export const TravelersContext = createContext(null);
 export const ConfirmPassengersScreen = ({ history }) => {
     // const selectedFlight = useLocation().state[0];
     const [values, setValues] = useState({
         info: '',
         showInfo: false,
     });
-    /* const {
-        myCarrier,
-        myAircraft,
-        myDuration,
-        myReturnDuration,
-        myReturnCarrier,
-        myReturnAircraft,
-    } = selectedFlight; */
+    const [travelersInfo, setTravelersInfo] = useState(null);
+    const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
+    const [currentTraveler, setCurrentTraveler] = useState(null);
+    const [bookingDone, setBookingDone] = useState(false);
+    const data = useLocation();
 
-    // const [dataResults, setDataResults] = useState('');
-    // const [showResults, setShowResults] = useState(false);
-
+    if (travelersInfo === null){
+        // console.log(data);
+        // console.log(data.state[0].data.data.flightOffers[0].travelerPricings);
+        const travelers = data?.state[0]?.data?.data?.flightOffers[0].travelerPricings.map ((e) => (
+            {id: e.travelerId,
+             typePassenger: e.travelerType, 
+             typeSeat: e.fareOption,
+             validate: false,
+             documents: [],
+             name: "",
+             lastname: "",}));
+        setTravelersInfo(travelers);
+        
+    };
+    let price = data?.state[0]?.data?.data?.flightOffers[0]?.travelerPricings[0]?.price?.total;
     useEffect(() => {
         setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
-    }, [values]);
+    }, [travelersInfo]);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -48,14 +65,132 @@ export const ConfirmPassengersScreen = ({ history }) => {
         }
         setValues({...values, showOk: false});
     };
+    function editTraveler (id){
+        setCurrentTraveler(id);
+        setShowEditTravelerForm(true);
+    }
+
+
+    async function paymentSuccess (details){
+        setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
+        //Necesitamos generar la siguiente información de cada usuario
+        /* traveler.name.firstName,
+                    traveler.name.lastName,
+                    traveler.documents[0].number,
+                    traveler.dateOfBirth,
+                    traveler.gender,
+                    traveler.contact.phones[0].number,
+                    traveler.contact.emailAddress, */
+        //Es necesario guardar orden
+        try {
+            // console.log(travelersInfo);
+            const body = {
+                idUser: localStorage.getItem('idUser'),
+                flightObject: data.state[0].data.data.flightOffers[0],
+                travelers: travelersInfo,
+            };
+            // console.log(body);
+            const res = await axios.post('http://localhost:3001/booking',body);
+            console.log(res);
+            if (res.data.data.data.id){
+                setBookingDone(true);
+                setValues({...values, showInfo: true, info: 'Reserva Confirmada'});
+
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <div id='selected-flight-info-container-all'>
-            <PassengersForm />
-            <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
-                    <Alert onClose={handleCloseOk} severity="info">
-                    {values.ok}
-                    </Alert>
-            </Snackbar>
-        </div>
+        <TravelersContext.Provider 
+            value={{travelersInfo, setTravelersInfo, setShowEditTravelerForm}}>
+            <div id='selected-flight-info-container-all'>
+                {showEditTravelerForm && <PassengersForm travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
+                <div className= "passengers-form">
+                <span>Pasajeros</span>
+                    {travelersInfo?.map((e)=>{
+                        return(
+                            <div className="list-travelers" key={e.id}>
+                               {/*  {e?.documents[0]?.number} */} {e.name.firstName}
+                                <Tooltip title="Editar los datos del pasajero">
+                                    <span>
+                                        <Fab 
+                                            color="primary" 
+                                            aria-label="Añadir datos pasajero" 
+                                            size = "small"
+                                            onClick={()=> editTraveler(e.id)}
+                                        >
+
+                                            <EditIcon />
+                                        </Fab>
+                                    </span>
+                                </Tooltip>
+                                { e.validate && <Tooltip title="Pasajero guardado correctamente">
+                                    <span>
+                                        <Fab style={{ color: green[500]}} aria-label="Borrar datos pasajero" size = "small" disabled>
+                                            <CheckCircleIcon style={{ color: green[500]}}/>
+                                        </Fab>
+                                    </span>
+                                </Tooltip> }
+                                {!e.validate && <Tooltip title="Debes completar los datos del pasajero">
+                                    <span>
+                                        <Fab style={{ color: red[500]}} aria-label="Borrar datos pasajero" size = "small" disabled>
+                                            <ErrorIcon style={{ color: red[500]}}/>
+                                        </Fab>
+                                    </span>
+                                    </Tooltip>}
+                            </div>
+
+                        )})}
+                    {travelersInfo?.every(e => e.validate) && !bookingDone && <PayPalScriptProvider 
+                        className="paypal-container" 
+                        options={{ "client-id": `${process.env.REACT_APP_PAYPAL_CLIENTID}`, 
+                                "currency":  `${data?.state[0]?.data?.data?.flightOffers[0]
+                                    ?.travelerPricings[0]?.price?.currency}`,
+                                    "disable-funding": "sofort",}}>
+                        <PayPalButtons
+                            className = "paypal-container"
+                            style={{ height: 44 }}
+                            createOrder={(data, actions) => {
+                                    return actions.order.create({
+                                        purchase_units: [
+                                            {
+                                                amount: {
+                                                    value: `${price}`,
+                                                    
+                                                },
+                                            },
+                                        ],
+                                    });
+                            
+                            }}
+                            onApprove = {(data, actions) => {
+                                // This function captures the funds from the transaction.
+                                return actions.order.capture().then(function(details) {
+                                  // This function shows a transaction success message to your buyer.
+                                  paymentSuccess(details);
+                                  //alert('Transaction completed by ' + details.payer.name.given_name);
+                                });
+                            }}
+                            onCancel = { function ( data ){
+                                console.log('CANCEL');
+                            }}
+                            onError = { function ( err ) {
+                                console.log( err );
+                            } }
+                        />
+                         </PayPalScriptProvider>}
+                    {/* <div id='container-button'>
+                            <button id='payment-button' onClick={goToPayment}>Ir a Pago</button>
+                    </div> */}
+                </div>
+                <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
+                        <Alert onClose={handleCloseOk} severity="info">
+                        {values.ok}
+                        </Alert>
+                </Snackbar>
+            </div>
+        </TravelersContext.Provider>
     );
 };

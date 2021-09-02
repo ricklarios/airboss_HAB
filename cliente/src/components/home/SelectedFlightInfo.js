@@ -218,17 +218,17 @@ function SelectedFlightInfo({ dataResults }) {
         try {
             const body = {
                 idUser: localStorage.getItem('idUser'),
-                flightObjet: dataResults.data.data.flightOffers[0],
+                flightObject: dataResults.data.data.flightOffers[0],
                 travelers: [{
-                    "id": "1",
-                    "dateOfBirth": "1982-01-16",
-                    "name": {
+                    "id": "1", OKKKKKKKKKKKKKKKKKKK
+                    "dateOfBirth": "1982-01-16", OKKKKKKKKKKKKKKKKK
+                    "name": { OKKKKKKKKKKKKKKKKKKKKKKKKKKKK
                         "firstName": "USER",
                         "lastName": "TEST"
                     },
-                    "gender": "MALE",
+                    "gender": "MALE", OKKKKKKKKKKKKKKKKK
                     "contact": {
-                        "emailAddress": "jorge.gonzales833@telefonica.es",
+                        "emailAddress": "jorge.gonzales833@telefonica.es", OKKKKK
                         "phones": [{
                         "deviceType": "MOBILE",
                         "countryCallingCode": "34",
@@ -237,14 +237,14 @@ function SelectedFlightInfo({ dataResults }) {
                     },
                     "documents": [{
                         "documentType": "PASSPORT",
-                        "birthPlace": "Madrid",
+                        "birthPlace": "Madrid",OKKKKKKKK
                         "issuanceLocation": "Madrid",
-                        "issuanceDate": "2015-04-14",
-                        "number": "00000000",
+                        "issuanceDate": "2015-04-14",OKKKKKKKK
+                        "number": "00000000", OKKKKKKKKKK
                         "expiryDate": "2025-04-14",
                         "issuanceCountry": "ES",
                         "validityCountry": "ES",
-                        "nationality": "ES",
+                        "nationality": "ES", OKKKKKKKKKKK
                         "holder": true
                     }],
 
@@ -270,7 +270,7 @@ function SelectedFlightInfo({ dataResults }) {
     };
     const handleClickPassengers = () => {
         //console.log('Nos vamos a confirmar pasajeros');
-        history.push('/passengers');
+        history.push('/passengers', [dataResults]);
     }
 
     return (
