@@ -8,7 +8,10 @@
     width: 75%;
     max-width: 850px;
     font-family: Montserrat, sans-serif;
-    text-align: left;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
   }
 
   #payment-button {
@@ -27,4 +30,19 @@
     font-family: Roboto, sans-serif;
     font-weight: 400;
     font-size: 1rem;
+  }
+  #passengers{
+    font-size: 125%;
+    text-align: center;
+  }
+
+  .list-travelers{
+    display: grid;
+    grid-template-columns: 2fr 6fr 1fr 1fr;
+    padding: 10px;
+  }
+  #passengers-titles{
+    display: grid;
+    grid-template-columns: 2fr 6fr 1fr 1fr;
+    padding: 10px;
   }

@@ -13,7 +13,7 @@ const editPassenger = async (req, res, next) => {
         const { idBooking } = req.query;
         const { idPassenger } = req.params;
 
-        const { name, lastname, passport, birthDate } = req.body;
+        const { name, lastname, documentNumber, birthDate } = req.body;
 
         // Obtenemos el usuario relacionado con esta reserva:
 
@@ -38,7 +38,7 @@ const editPassenger = async (req, res, next) => {
         } */
 
         // Si no llega ningún dato lanzamos un error.
-        if (!name && !lastname && !passport && !birthDate) {
+        if (!name && !lastname && !documentNumber && !birthDate) {
             const error = new Error('Faltan campos');
             error.httpStatus = 400;
             throw error;
@@ -46,7 +46,7 @@ const editPassenger = async (req, res, next) => {
 
         // Obtenemos los datos del pasajero.
         const [passenger] = await connection.query(
-            `SELECT name, lastname, passport, birthDate FROM passengers WHERE id = ?`,
+            `SELECT name, lastname, documentType, documentNumber, birthDate FROM passengers WHERE id = ?`,
             [idPassenger]
         );
 
@@ -69,10 +69,10 @@ const editPassenger = async (req, res, next) => {
         }
 
         // En caso de que haya PASSPORT, comprobamos si es distinto al existente.
-        if (passport && passenger[0].passport !== passport) {
+        if (passport && passenger[0].documentNumber !== documentNumber) {
             await connection.query(
                 `UPDATE passengers SET passport = ?, modifiedAt = ? WHERE id = ?`,
-                [passport, formatDate(now), idPassenger]
+                [documentNumber, formatDate(now), idPassenger]
             );
         }
 

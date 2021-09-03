@@ -10,7 +10,7 @@ const getAllPassengers = async (req, res, next) => {
 
         // Obtenemos la info y los pasajeros de un idBooking en concreto
         const [passengers] = await connection.query(
-            `SELECT id, name, lastname, passport, birthDate, createdAt, modifiedAt FROM passengers WHERE idBooking = ?;`,
+            `SELECT id, name, lastname, documentNumber, birthDate, createdAt, modifiedAt FROM passengers WHERE idBooking = ?;`,
             [idBooking]
         );
         //console.log(passengers);
@@ -20,7 +20,7 @@ const getAllPassengers = async (req, res, next) => {
             const fragInfo = {
                 name: passenger.name,
                 lastname: passenger.lastname,
-                passport: passenger.passport,
+                documentNumber: passenger.documentNumber,
                 birthDate: passenger.birthDate,
                 createdAt: passenger.createdAt,
                 modifiedAt: passenger.modifiedAt,

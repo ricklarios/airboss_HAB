@@ -6,30 +6,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { green, red } from '@material-ui/core/colors';
-import InputAdornment from '@material-ui/core/InputAdornment';
+// import Input from '@material-ui/core/Input';
+// import IconButton from '@material-ui/core/IconButton';
+// import EditIcon from '@material-ui/icons/Edit';
+// import ErrorIcon from '@material-ui/icons/Error';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import { green, red } from '@material-ui/core/colors';
+// import InputAdornment from '@material-ui/core/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import clsx from 'clsx';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+// import clsx from 'clsx';
+// import Visibility from '@material-ui/icons/Visibility';
+// import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { AuthContext } from '../../App';
-import MaterialUiPhoneNumber from 'material-ui-phone-number';
-import Tooltip from '@material-ui/core/Tooltip';
-import { Fab, FormLabel } from '@material-ui/core';
+// import MaterialUiPhoneNumber from 'material-ui-phone-number';
+//import Tooltip from '@material-ui/core/Tooltip';
+import { FormLabel } from '@material-ui/core';
 import { TravelersContext } from '../../pages/ConfirmPassengersScreen';
 import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+// import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,10 +90,10 @@ function PassengersForm({ currentTraveler }) {
         id:'',
         name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
                lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
-        gender: '',
-        dateOfBirth: null,
+        gender: travelersInfo[Number(currentTraveler)-1]?.gender || '',
+        dateOfBirth: travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || '',
         contact: {
-            emailAddress: '',
+            emailAddress: travelersInfo[Number(currentTraveler)-1]?.contact?.emailAddress || '',
             phones: [{
                 deviceType: 'MOBILE',
                 contruyCallingCode: '34',
@@ -101,15 +101,15 @@ function PassengersForm({ currentTraveler }) {
             }]
         },
         documents:[{
-            documentType: '',
-            birthPlace: '',
+            documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
+            birthPlace: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.birthPlace || '',
             issuanceLocation: '',
-            issuanceDate: null,
-            number: '',
+            issuanceDate: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || '',
+            number: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.number || '',
             expiryDate: '2050-12-31',
             issuanceCountry: '',
             validityCountry: '',
-            nationality: '',
+            nationality: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.nationality || '',
             holder: true
         },],
         error: '',
@@ -128,7 +128,13 @@ function PassengersForm({ currentTraveler }) {
     
     useEffect(() => {
         //console.log(travelersInfo);
+        setOpacity({
+            opacity: 0.5,
+        });
         return () => {
+            setOpacity({
+                opacity:1,
+            })
         };
     }, []);
 
@@ -189,9 +195,6 @@ function PassengersForm({ currentTraveler }) {
             setValues({...values, documents: updatedList})
     };
     const handleChangeNationality = (event) => {
-        const country =
-            countries[event.currentTarget.dataset.optionIndex]?.label;
-        //setValues({ ...values, documents: {...values.documents[0], nationality: countries[event.currentTarget.dataset.optionIndex]?.code}});
         let updatedList;
         updatedList = values.documents.map (item => {
             return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
@@ -236,7 +239,7 @@ function PassengersForm({ currentTraveler }) {
     return (
         <div
             id='passengers-form'
-            className="edit-passenger-form"
+            className={'passengers-container animate__animated' + animation}
         >
             <form id='edit-passenger-form'  onSubmit={handleSave}>
                 <div>
@@ -291,7 +294,7 @@ function PassengersForm({ currentTraveler }) {
                             id='issuanceDate'
                             label='Fecha de emisión'
                             type='date'
-                            defaultValue=''
+                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || ''}
                             className='issuanceDate'
                             onChange={changeIssuance}
                             InputLabelProps={{
@@ -313,7 +316,7 @@ function PassengersForm({ currentTraveler }) {
                             id='birthday'
                             label='Fecha de nacimiento'
                             type='date'
-                            defaultValue=''
+                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || ''}
                             className='birthday'
                             onChange={changeBirthday}
                             InputLabelProps={{
@@ -343,6 +346,7 @@ function PassengersForm({ currentTraveler }) {
                 <div>
                     <Autocomplete
                         id='country-select'
+                        defaultValue= {{label: `${travelersInfo[Number(currentTraveler)-1]?.documents[0]?.nationality}`}}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal

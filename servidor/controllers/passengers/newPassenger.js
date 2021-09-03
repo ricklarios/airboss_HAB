@@ -10,14 +10,14 @@ const newPassenger = async (req, res, next) => {
 
         const { idBooking } = req.query;
 
-        const { name, lastname, passport, birthDate } = req.body;
+        const { name, lastname, documentNumber, birthDate } = req.body;
 
         const now = new Date();
 
         // Comprobamos si ya existe un pasajero en esa reserva con esos datos.
         const [passenger] = await connection.query(
-            `SELECT id FROM passengers WHERE passport= ? AND idBooking = ?;`,
-            [passport, idBooking]
+            `SELECT id FROM passengers WHERE documentNumber= ? AND idBooking = ?;`,
+            [documentNumber, idBooking]
         );
 
         if (passenger.length > 0) {
@@ -29,8 +29,8 @@ const newPassenger = async (req, res, next) => {
         }
 
         await connection.query(
-            `INSERT INTO passengers (name, lastname, passport, birthDate, idBooking, createdAt) VALUES (?, ?, ?, ?, ?, ?);`,
-            [name, lastname, passport, birthDate, idBooking, formatDate(now)]
+            `INSERT INTO passengers (name, lastname, documentNumber, birthDate, idBooking, createdAt) VALUES (?, ?, ?, ?, ?, ?);`,
+            [name, lastname, documentNumber, birthDate, idBooking, formatDate(now)]
         );
 
         res.send({

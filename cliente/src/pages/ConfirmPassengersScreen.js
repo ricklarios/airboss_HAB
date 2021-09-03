@@ -13,14 +13,26 @@ import { green, red } from '@material-ui/core/colors';
 import Tooltip from '@material-ui/core/Tooltip';
 import { Fab } from '@material-ui/core';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { AuthContext } from '../App';
 require('dotenv').config();
 
 export const TravelersContext = createContext(null);
 export const ConfirmPassengersScreen = ({ history }) => {
-    // const selectedFlight = useLocation().state[0];
+    const {
+        setShowForm,
+        setAnimation,
+        opacity,
+        setOpacity,
+        setShowRegisterForm,
+        setRestorePasswordForm,
+        showForm,
+        showRegisterForm,
+    } = useContext(AuthContext);
     const [values, setValues] = useState({
         info: '',
         showInfo: false,
+        ok: '',
+        showOk: false,
     });
     const [travelersInfo, setTravelersInfo] = useState(null);
     const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
@@ -65,54 +77,59 @@ export const ConfirmPassengersScreen = ({ history }) => {
         }
         setValues({...values, showOk: false});
     };
+    const handleCloseInfo = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setValues({...values, showInfo: false});
+    };
     function editTraveler (id){
+        setAnimation('animate__backInDown');
         setCurrentTraveler(id);
         setShowEditTravelerForm(true);
+        setOpacity({
+            opacity: 0.5,
+        });
     }
 
 
     async function paymentSuccess (details){
         setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
-        //Necesitamos generar la siguiente información de cada usuario
-        /* traveler.name.firstName,
-                    traveler.name.lastName,
-                    traveler.documents[0].number,
-                    traveler.dateOfBirth,
-                    traveler.gender,
-                    traveler.contact.phones[0].number,
-                    traveler.contact.emailAddress, */
-        //Es necesario guardar orden
         try {
-            // console.log(travelersInfo);
             const body = {
                 idUser: localStorage.getItem('idUser'),
                 flightObject: data.state[0].data.data.flightOffers[0],
                 travelers: travelersInfo,
             };
-            // console.log(body);
             const res = await axios.post('http://localhost:3001/booking',body);
             console.log(res);
-            if (res.data.data.data.id){
+            if (res?.data?.data?.data?.id){
                 setBookingDone(true);
-                setValues({...values, showInfo: true, info: 'Reserva Confirmada'});
-
+                setValues({...values, showOk: true, ok: 'Reserva Confirmada'});
+            }else if(res?.data?.data?.message?.code === 'ClientError'){
+                setValues({...values, showInfo: true, info: 'No se ha podido completar la reserva'});
             }
         } catch (error) {
-            console.log(error);
+            setValues({...values, showInfo: true, info: 'No se ha podido completar la reserva'});
+            // console.log(error);
         }
     }
 
     return (
         <TravelersContext.Provider 
             value={{travelersInfo, setTravelersInfo, setShowEditTravelerForm}}>
-            <div id='selected-flight-info-container-all'>
+            <div id='selected-flight-info-container-all' style={opacity}>
                 {showEditTravelerForm && <PassengersForm travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
                 <div className= "passengers-form">
-                <span>Pasajeros</span>
+                    <div id="passengers">Listado de pasajeros</div>
+                    <div id="passengers-titles">
+                        <span>Identificación</span>
+                        <span>Nombre</span>  
+                    </div> 
                     {travelersInfo?.map((e)=>{
                         return(
                             <div className="list-travelers" key={e.id}>
-                               {/*  {e?.documents[0]?.number} */} {e.name.firstName}
+                               <span>{e?.documents[0]?.number || ''}</span> <span>{e.name.firstName || 'DEBES COMPLETAR DATOS DEL PASAJERO'}</span>
                                 <Tooltip title="Editar los datos del pasajero">
                                     <span>
                                         <Fab 
@@ -121,7 +138,6 @@ export const ConfirmPassengersScreen = ({ history }) => {
                                             size = "small"
                                             onClick={()=> editTraveler(e.id)}
                                         >
-
                                             <EditIcon />
                                         </Fab>
                                     </span>
@@ -186,8 +202,13 @@ export const ConfirmPassengersScreen = ({ history }) => {
                     </div> */}
                 </div>
                 <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
-                        <Alert onClose={handleCloseOk} severity="info">
+                        <Alert onClose={handleCloseOk} severity="success">
                         {values.ok}
+                        </Alert>
+                </Snackbar>
+                <Snackbar open={values.showInfo} autoHideDuration={3000} onClose={handleCloseInfo}>
+                        <Alert onClose={handleCloseInfo} severity="info">
+                        {values.info}
                         </Alert>
                 </Snackbar>
             </div>

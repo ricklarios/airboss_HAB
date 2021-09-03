@@ -52,13 +52,14 @@ const createOrder = async (req, res, next) => {
             console.log(traveler);
             await connection.query(
                 `
-                    INSERT INTO passengers (name, lastname, passport, birthDate, gender, phoneContact, emailContact, idBooking )
+                    INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, idBooking )
                     VALUES(?, ?, ?, ?, ?, ? ,?, ?);
                 `,
                 [
                     traveler.name.firstName,
                     traveler.name.lastName,
                     traveler.documents[0].number,
+                    traveler.documents[0].documentType,
                     traveler.dateOfBirth,
                     traveler.gender,
                     traveler.contact.phones[0].number,

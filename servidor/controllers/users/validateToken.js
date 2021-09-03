@@ -61,32 +61,23 @@ const validateToken = async (req, res, next) => {
                 },
             });
         } catch (error) {
-
-            /* const error = new Error('El token no es válido');
-            error.httpStatus = 401;
-            throw error; */
             next(error);
         } finally {
             if (connection) connection.release();
         }
     }else if(typeAuth==='google' && req.headers.authorization){
+        console.log('validateToken 69');
         try {
-        
-            
             const { authorization } = req.headers;
-            //console.log(authorization);
             if (!authorization) {
                 const error = new Error('Falta la cabecera de autorización de Google');
                 error.httpStatus = 401;
                 throw error;
             }
             let err = '';
-            
             const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${authorization}`;
-            
             const response = await fetch(url);
             const data = await response.json();
-            //console.log(data);
             if (data.error){
                 const error = new Error("Token de Google invalido")
                 error.httpStatus = 401;
@@ -142,7 +133,6 @@ const validateToken = async (req, res, next) => {
             });
             
         } catch (error) {
-            console.log('DENTRO TRY GOOGLE BACK');
             console.log(error);
             next(error)
         }
@@ -222,6 +212,7 @@ const validateToken = async (req, res, next) => {
             next(error)
         }
     }
+    console.log('validateToken 215');
 };
 
 
