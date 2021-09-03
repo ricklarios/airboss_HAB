@@ -8,6 +8,7 @@ import {
 import { HomeScreen } from '../pages/HomeScreen';
 import { LoginScreen } from '../pages/LoginScreen';
 import { ProfileScreen } from '../pages/ProfileScreen';
+import { BookingHistoryScreen } from '../pages/BookingHistoryScreen';
 import { ConfirmedOrderScreen } from '../pages/ConfirmedOrderScreen';
 import { FlightSelectionScreen } from '../pages/FlightSelectionScreen';
 import { SelectedFlightDetailsScreen } from '../pages/SelectedFlightDetailsScreen';
@@ -15,12 +16,12 @@ import { ValidateScreen } from '../pages/ValidateScreen';
 import { ResetPasswordScreen } from '../pages/ResetPasswordScreen';
 import { ConfirmPassengersScreen } from '../pages/ConfirmPassengersScreen';
 import { Header } from '../components/ui/Header';
-import { createContext, useState} from 'react';
+import { createContext, useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../App';
 import LoginForm from '../components/login/login-form';
 import RegisterForm from '../components/login/register-form';
-import RestorePasswordForm from '../components/login/restore-pwd-form'
+import RestorePasswordForm from '../components/login/restore-pwd-form';
 
 export const UserContext = createContext(null);
 
@@ -73,6 +74,11 @@ export const AppRouter = () => {
                             exact
                             path='/profile'
                             component={ProfileScreen}
+                        />
+                        <Route
+                            exact
+                            path='/bookingHistory'
+                            component={BookingHistoryScreen}
                         />
                         <Route
                             exact

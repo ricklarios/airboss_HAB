@@ -1,24 +1,23 @@
 const { id } = require('date-fns/locale');
-const {getDB} = require('../../bbdd/db');
+const { getDB } = require('../../bbdd/db');
 const { savePhoto, deletePhoto, formatDate } = require('../../helpers');
-
 
 const editUser = async (req, res, next) => {
     let connection;
     try {
         connection = await getDB();
-        
+
         //const { idUser } = req.params;
         const { element, newValue } = req.body;
-        const {typeauth } = req.headers;
+        const { typeAuth } = req.headers;
         //let idUserValidation;
-        
-        if( typeauth === 'google' || typeauth === 'fb'){
+
+        if (typeAuth === 'google' || typeAuth === 'fb') {
             idUser = req.userAuth.idUser;
-        }else if(typeauth==='API'){
+        } else if (typeAuth === 'API') {
             idUser = req.params.idUser;
-        };
-        
+        }
+
         // Si no llega ningún dato lanzamos un error.
         if (!element && !newValue) {
             const error = new Error('Faltan campos');
@@ -39,7 +38,7 @@ const editUser = async (req, res, next) => {
             `UPDATE users SET ${element} = ?, modifiedAt = ? WHERE id = ?`,
             [newValue, formatDate(now), idUser]
         );
-        
+
         res.send({
             status: 'ok',
             message: 'Datos de usuario actualizados',
@@ -51,4 +50,4 @@ const editUser = async (req, res, next) => {
     }
 };
 
-module.exports = {editUser};
+module.exports = { editUser };

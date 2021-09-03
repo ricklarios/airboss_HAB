@@ -40,7 +40,8 @@ const main = async () => {
                 recoverCode VARCHAR(100),
                 createdAt DATETIME NOT NULL, 
                 modifiedAt DATETIME,
-                google BOOLEAN DEFAULT false
+                google BOOLEAN DEFAULT false,
+                typeAuth ENUM("API", "google", "fb") NOT NULL
                 );
             `);
         console.log('Tabla USERS creada');
