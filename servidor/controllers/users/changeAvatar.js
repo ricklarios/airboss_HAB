@@ -1,12 +1,11 @@
-const {getDB} = require('../../bbdd/db');
+const { getDB } = require('../../bbdd/db');
 
 const { savePhoto, formatDate } = require('../../helpers');
 
 const changeAvatar = async (req, res, next) => {
     let connection;
-    
+
     try {
-        
         connection = await getDB();
         const email = req.body.email;
         let photoName;
@@ -36,4 +35,4 @@ const changeAvatar = async (req, res, next) => {
     }
 };
 
-module.exports = {changeAvatar};
+module.exports = { changeAvatar };

@@ -1,18 +1,18 @@
-const {getDB} = require('../bbdd/db');
+const { getDB } = require('../bbdd/db');
 
 const userExists = async (req, res, next) => {
     let connection;
     try {
         connection = await getDB();
-        const {typeauth } = req.headers;
+        const { typeAuth } = req.headers;
         let idUser;
 
-        if( typeauth === 'google' || typeauth === 'fb'){
+        if (typeAuth === 'google' || typeAuth === 'fb') {
             idUser = req.userAuth.idUser;
-        }else if(typeauth==='API'){
+        } else if (typeAuth === 'API') {
             idUser = req.params.idUser;
-        };
-   
+        }
+
         const [user] = await connection.query(
             `SELECT id FROM users WHERE id = ? AND deleted = 0;`,
             [idUser]
@@ -22,12 +22,11 @@ const userExists = async (req, res, next) => {
             error.httpStatus = 404;
             throw error;
         }
-        
+
         /* if(res.headersSent){
             return next(err)
         } */
         return next();
-        
     } catch (error) {
         return next(error);
     } finally {
@@ -35,4 +34,4 @@ const userExists = async (req, res, next) => {
     }
 };
 
-module.exports = {userExists};
+module.exports = { userExists };
