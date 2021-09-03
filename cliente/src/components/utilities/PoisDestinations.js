@@ -32,11 +32,12 @@ export const PoisDestinations = ({ destinationLocationCode }) => {
                 );
 
                 if (data) {
-                    setPois(data.data.data);
+                    setPois(data?.data?.data);
                 }
             };
             apiCall();
         }
+        return setPois([]);
     }, [destinationLocationCode]);
 
     return (

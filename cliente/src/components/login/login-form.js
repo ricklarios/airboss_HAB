@@ -19,6 +19,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+import logo3 from '../../assets/isologo.png';
+
 const idFB = process.env.REACT_APP_ID_FB;
 const idGoogle = process.env.REACT_APP_ID_GOOGLE;
 const urlGoogle = `${idGoogle}-pelele5h6cbtvccnk47pourck5eq82pd.apps.googleusercontent.com`;
@@ -313,7 +315,9 @@ function LoginForm() {
             className={'login-container animate__animated ' + animation}
             ref={refLoginForm}
         >
-            <div>Logo</div>
+            <div>
+                <img src={logo3} alt='' width='30%' />
+            </div>
             <form id='form-login' onSubmit={onSubmitLogin}>
                 <div>
                     <TextField

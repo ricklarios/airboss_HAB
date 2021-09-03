@@ -14,6 +14,7 @@ import { FlightSelectionScreen } from '../pages/FlightSelectionScreen';
 import { SelectedFlightDetailsScreen } from '../pages/SelectedFlightDetailsScreen';
 import { ValidateScreen } from '../pages/ValidateScreen';
 import { ResetPasswordScreen } from '../pages/ResetPasswordScreen';
+import { ConfirmPassengersScreen } from '../pages/ConfirmPassengersScreen';
 import { Header } from '../components/ui/Header';
 import { createContext, useState } from 'react';
 import { useContext } from 'react';
@@ -57,6 +58,11 @@ export const AppRouter = () => {
                             exact
                             path='/pricing'
                             component={SelectedFlightDetailsScreen}
+                        />
+                        <Route
+                            exact
+                            path='/passengers'
+                            component={ConfirmPassengersScreen}
                         />
                         <Route
                             exact

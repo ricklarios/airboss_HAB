@@ -9,6 +9,9 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { AuthContext } from '../../App';
+import { useHistory } from 'react-router-dom';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+
 require('dotenv').config();
 
 function SelectedFlightInfo({ dataResults }) {
@@ -34,6 +37,7 @@ function SelectedFlightInfo({ dataResults }) {
         disabledPDF: true,
     });
     const { login, setShowForm } = useContext(AuthContext);
+    const history = useHistory();
 
     function getMyDateTime(resultsDate) {
         const dateTime = new Date(resultsDate);
@@ -204,52 +208,59 @@ function SelectedFlightInfo({ dataResults }) {
             ok: 'Pago realizado correctamente',
             disabledPDF: false,
         });
+        //history.push(`/passengers${}`);
+
+        //Necesitamos generar la siguiente información de cada usuario
+        /* traveler.name.firstName,
+                    traveler.name.lastName,
+                    traveler.documents[0].number,
+                    traveler.dateOfBirth,
+                    traveler.gender,
+                    traveler.contact.phones[0].number,
+                    traveler.contact.emailAddress, */
         //Es necesario guardar orden
+
+        /* 
         try {
             const body = {
                 idUser: localStorage.getItem('idUser'),
-                flightObjet: dataResults.data.data.flightOffers[0],
-                travelers: [
-                    {
-                        id: '1',
-                        dateOfBirth: '1982-01-16',
-                        name: {
-                            firstName: 'USER',
-                            lastName: 'TEST',
-                        },
-                        gender: 'MALE',
-                        contact: {
-                            emailAddress: 'jorge.gonzales833@telefonica.es',
-                            phones: [
-                                {
-                                    deviceType: 'MOBILE',
-                                    countryCallingCode: '34',
-                                    number: '480080076',
-                                },
-                            ],
-                        },
-                        documents: [
-                            {
-                                documentType: 'PASSPORT',
-                                birthPlace: 'Madrid',
-                                issuanceLocation: 'Madrid',
-                                issuanceDate: '2015-04-14',
-                                number: '00000000',
-                                expiryDate: '2025-04-14',
-                                issuanceCountry: 'ES',
-                                validityCountry: 'ES',
-                                nationality: 'ES',
-                                holder: true,
-                            },
-                        ],
+                flightObject: dataResults.data.data.flightOffers[0],
+                travelers: [{
+                    "id": "1", OKKKKKKKKKKKKKKKKKKK
+                    "dateOfBirth": "1982-01-16", OKKKKKKKKKKKKKKKKK
+                    "name": { OKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+                        "firstName": "USER",
+                        "lastName": "TEST"
                     },
-                ],
+                    "gender": "MALE", OKKKKKKKKKKKKKKKKK
+                    "contact": {
+                        "emailAddress": "jorge.gonzales833@telefonica.es", OKKKKK
+                        "phones": [{
+                        "deviceType": "MOBILE",
+                        "countryCallingCode": "34",
+                        "number": "480080076"
+                        }]
+                    },
+                    "documents": [{
+                        "documentType": "PASSPORT",
+                        "birthPlace": "Madrid",OKKKKKKKK
+                        "issuanceLocation": "Madrid",
+                        "issuanceDate": "2015-04-14",OKKKKKKKK
+                        "number": "00000000", OKKKKKKKKKK
+                        "expiryDate": "2025-04-14",
+                        "issuanceCountry": "ES",
+                        "validityCountry": "ES",
+                        "nationality": "ES", OKKKKKKKKKKK
+                        "holder": true
+                    }],
+
+              }],
             };
             const res = await axios.post('http://localhost:3001/booking', body);
             console.log(res);
         } catch (error) {
             console.log(error);
-        }
+        } */
     }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -263,6 +274,11 @@ function SelectedFlightInfo({ dataResults }) {
         }
         setValues({ ...values, showOk: false });
     };
+    const handleClickPassengers = () => {
+        //console.log('Nos vamos a confirmar pasajeros');
+        history.push('/passengers', [dataResults]);
+    };
+
     return (
         <div id='flight-info-container'>
             {!dataResults && <div>Cargando información del vuelo...</div>}
@@ -682,10 +698,11 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 BASE:{' '}
-                                {
-                                    dataResults.data.data.flightOffers[0].price
-                                        .base
-                                }
+                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                    (acu, value) =>
+                                        acu + Number(value.price.base),
+                                    0
+                                )}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency
@@ -693,15 +710,12 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 IMPUESTOS:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings
-                                    .reduce((sum, value) => {
-                                        sum += Number(
-                                            value.price.refundableTaxes
-                                        );
-
-                                        return sum;
-                                    }, 0)
-                                    .toFixed(2)}
+                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                    (acu, value) =>
+                                        acu +
+                                        Number(value.price.refundableTaxes),
+                                    0
+                                )}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
                                         .travelerPricings[0].price.currency
@@ -709,61 +723,59 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p className='total-price'>
                                 TOTAL:{' '}
-                                {
-                                    dataResults.data.data.flightOffers[0].price
-                                        .total
-                                }
+                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
+                                    (acu, value) =>
+                                        acu + Number(value.price.total),
+                                    0
+                                )}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency
                                 )}
                             </p>
-                            {values.disabledPDF && (
-                                <PayPalScriptProvider
-                                    className='paypal-container'
-                                    options={{
-                                        'client-id': `${process.env.REACT_APP_PAYPAL_CLIENTID}`,
-                                        currency: `${dataResults.data.data.flightOffers[0].travelerPricings[0].price.currency}`,
-                                        'disable-funding': 'sofort',
-                                    }}
-                                >
-                                    <PayPalButtons
-                                        className='paypal-container'
-                                        style={{ height: 44 }}
-                                        createOrder={(data, actions) => {
-                                            if (login) {
-                                                return actions.order.create({
-                                                    purchase_units: [
-                                                        {
-                                                            amount: {
-                                                                value: `${dataResults.data.data.flightOffers[0].travelerPricings[0].price.total}`,
-                                                            },
-                                                        },
-                                                    ],
-                                                });
-                                            } else {
-                                                setShowForm(true);
-                                            }
-                                        }}
-                                        onApprove={(data, actions) => {
-                                            // This function captures the funds from the transaction.
-                                            return actions.order
-                                                .capture()
-                                                .then(function (details) {
-                                                    // This function shows a transaction success message to your buyer.
-                                                    paymentSuccess(details);
-                                                    //alert('Transaction completed by ' + details.payer.name.given_name);
-                                                });
-                                        }}
-                                        onCancel={function (data) {
-                                            console.log('CANCEL');
-                                        }}
-                                        onError={function (err) {
-                                            console.log(err);
-                                        }}
-                                    />
-                                </PayPalScriptProvider>
-                            )}
+                            {/* {values.disabledPDF && <PayPalScriptProvider 
+                    className="paypal-container" 
+                    options={{ "client-id": `${process.env.REACT_APP_PAYPAL_CLIENTID}`, 
+                               "currency":  `${dataResults.data.data.flightOffers[0]
+                                .travelerPricings[0].price.currency}`,
+                                "disable-funding": "sofort",}}>
+                        <PayPalButtons
+                            className = "paypal-container"
+                            style={{ height: 44 }}
+                            createOrder={(data, actions) => {
+                                if (login){
+                                    return actions.order.create({
+                                        purchase_units: [
+                                            {
+                                                amount: {
+                                                    value: `${dataResults.data.data.flightOffers[0]
+                                                        .travelerPricings[0].price.total}`,
+                                                    
+                                                },
+                                            },
+                                        ],
+                                    });
+                                }else{
+                                    setShowForm(true);
+                                }
+                            }}
+                            onApprove = {(data, actions) => {
+                                // This function captures the funds from the transaction.
+                                return actions.order.capture().then(function(details) {
+                            
+                                  // This function shows a transaction success message to your buyer.
+                                  paymentSuccess(details);
+                                  //alert('Transaction completed by ' + details.payer.name.given_name);
+                                });
+                            }}
+                            onCancel = { function ( data ){
+                                console.log('CANCEL');
+                            }}
+                            onError = { function ( err ) {
+                                console.log( err );
+                            } }
+                        />
+                         </PayPalScriptProvider>                 } */}
                         </div>
                     )}
                 </div>
@@ -774,6 +786,15 @@ function SelectedFlightInfo({ dataResults }) {
                             Ver en PDF
                         </button>
                     )}
+                    <button
+                        className='passengers-confirm-button'
+                        onClick={() => {
+                            handleClickPassengers();
+                        }}
+                    >
+                        <CheckCircleOutlineIcon fontSize='medium' />
+                        Confirmar pasajeros
+                    </button>
                     <button
                         className='covid-info-button'
                         onClick={() => {

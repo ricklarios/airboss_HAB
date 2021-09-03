@@ -1,0 +1,82 @@
+
+#newsletter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:2rem;
+
+}
+#newsletter-container > h3 {
+    font-size: 2rem;
+    font-family: Roboto, sans-serif;
+    color: #132C33;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    
+
+}
+#newsletter-container > p {
+    padding:1rem;
+    font-weight: 400;
+    font-size: 1.5rem;
+    font-family: Roboto, sans-serif;
+    color: #132C33;
+    letter-spacing: 2px;
+}
+#newsletter-container > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#newsletter-container > div > form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 5px;
+}
+
+#newsletter-container > div > form > input:first-child {
+    padding: 1rem 2rem;
+    padding-left: 0.5rem;
+    width: 70%;
+    border: 0;
+    border: 2px solid black;
+    border-radius: 4px 0 0 4px;
+}
+
+#newsletter-container > div > form > input:first-child:focus {
+    border-radius: none;
+}
+
+
+#newsletter-container > div > form > input:last-child {
+    padding: 1rem 1rem;
+    background-color: black;
+    border: none;
+    border: 2px solid black;
+    border-radius: 0 4px 4px 0;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+   
+}
+
+
+
+#newsletter-container > div > figure {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#newsletter-container > div > figure > img {
+    width: 70%;
+
+
+}

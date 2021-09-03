@@ -1,4 +1,4 @@
-import './header.css';
+import './css/header.css';
 import logo from '../../assets/logo.png';
 import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import { CURRENCY_CODES } from '../../constants';
@@ -11,15 +11,23 @@ import { getSymbol } from '../../helpers';
 import { useHistory } from 'react-router-dom';
 
 export const Header = () => {
-    
-    const { login, setShowForm, setAnimation, opacity, setOpacity, setShowRegisterForm,setRestorePasswordForm, showForm, showRegisterForm } = useContext(AuthContext);
+    const {
+        login,
+        setShowForm,
+        setAnimation,
+        opacity,
+        setOpacity,
+        setShowRegisterForm,
+        setRestorePasswordForm,
+        showForm,
+        showRegisterForm,
+    } = useContext(AuthContext);
     const { preferredCurrency, setPreferredCurrency } = useContext(UserContext);
     const history = useHistory();
 
-    
     function launchFormLogin() {
-        if (showRegisterForm){
-            setShowRegisterForm (false);
+        if (showRegisterForm) {
+            setShowRegisterForm(false);
         } else {
             setAnimation('animate__backInDown');
             setRestorePasswordForm(false);
@@ -31,10 +39,9 @@ export const Header = () => {
     }
     function launchFormRegister() {
         //Si el formulario de login está habilitado simplemente lo deshabilitamos
-        if (showForm){
+        if (showForm) {
             setShowForm(false);
-        }else{
-
+        } else {
             setAnimation('animate__backInDown');
             setRestorePasswordForm(false);
             setShowRegisterForm(true);
@@ -44,11 +51,10 @@ export const Header = () => {
         }
     }
 
-    function goToHome(){
+    function goToHome() {
         setShowForm(false);
-        setShowRegisterForm (false);
-        history.push('/')
-
+        setShowRegisterForm(false);
+        history.push('/');
     }
     return (
         <header id='header-container' style={opacity}>
@@ -78,9 +84,17 @@ export const Header = () => {
                         ))}
                     </select>
                 </div>
-                {!login && <button id='login-button' onClick={launchFormLogin}>Inicia Sesión</button>}
-                {!login && <button id='signup-button' onClick={launchFormRegister}>Registrate</button>}
-                {login && <SimpleMenu /> }
+                {!login && (
+                    <button id='login-button' onClick={launchFormLogin}>
+                        Inicia Sesión
+                    </button>
+                )}
+                {!login && (
+                    <button id='signup-button' onClick={launchFormRegister}>
+                        Registrate
+                    </button>
+                )}
+                {login && <SimpleMenu />}
             </div>
         </header>
     );

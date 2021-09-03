@@ -135,419 +135,388 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
 
     return (
         <ul id='results-list'>
-            {dataResults?.data?.data?.map((flight) => (
-                <li
-                    key={flight.id}
-                    className={
-                        oneWay === 'true' ? 'results-li' : 'results-li-2'
-                    }
-                >
-                    <div id='id-oneway-title'>
-                        <span>IDA</span> <CgAirplane id='logo-ida' />
-                    </div>
-                    <div id='carrier-container'>
-                        {getMyCarrier(
-                            flight.itineraries[0].segments[0].carrierCode
-                        )}
-                    </div>
-
-                    <div id='price-text-container'>Precio</div>
-                    <div id='info-flight-container'>
-                        <div className='date-time-container'>
-                            <b>
-                                {' '}
-                                {`${flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[0].segments[0].departure?.iataCode})`}{' '}
-                            </b>
-                            {/* <b>
-                                {
-                                    flight.itineraries[0].segments[0].departure
-                                        ?.iataCode
-                                }
-                                <div>
-                                    {
-                                        flight?.itineraries[0]?.segments[0]
-                                            ?.departureCityName[0]?.City
-                                    }
-                                </div>
-                            </b> */}
-
-                            {
-                                <span>
-                                    {
-                                        getMyDateTime(
-                                            flight.itineraries[0].segments[0]
-                                                .departure?.at
-                                        )[1]
-                                    }
-                                </span>
-                            }
-
-                            {
-                                <span>
-                                    {
-                                        getMyDateTime(
-                                            flight.itineraries[0].segments[0]
-                                                .departure?.at
-                                        )[0]
-                                    }
-                                </span>
-                            }
-                        </div>
-                        <div id='info-flight'>
-                            <div id='duration-container'>
-                                {formatDuration(
-                                    flight.itineraries[0]?.duration
-                                )}
-                            </div>
-                            <div id='itineraries-container'>
-                                <div id='itineraries-line'></div>
-                                <img src={airplane} alt='' id='airplane-logo' />
-                            </div>
-                            <div id='itineraries-info'>
-                                {flight.itineraries[0].segments?.length ===
-                                1 ? (
-                                    <div id='non-stop-text'>Vuelo directo</div>
-                                ) : (
-                                    <div id='exist-stop-text'>
-                                        {flight.itineraries[0]?.segments
-                                            .length === 2
-                                            ? '1 escala '
-                                            : `${
-                                                  flight.itineraries[0]
-                                                      ?.segments.length - 1
-                                              } escalas `}
-                                        <div id='stops-name'>
-                                            {stopAirportsName(
-                                                flight.itineraries[0]?.segments
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className='date-time-container'>
-                            {
-                                <b>
-                                    {' '}
-                                    {`${
-                                        flight.itineraries[0]?.segments[
-                                            flight.itineraries[0]?.segments
-                                                .length - 1
-                                        ]?.arrivalCityName[0]?.City
-                                    } (${
-                                        flight.itineraries[0].segments[
-                                            flight.itineraries[0]?.segments
-                                                .length - 1
-                                        ].arrival?.iataCode
-                                    })`}{' '}
-                                </b>
-                                // <b>
-                                //     {
-                                //         flight.itineraries[0].segments[
-                                //             flight.itineraries[0]?.segments
-                                //                 .length - 1
-                                //         ].arrival?.iataCode
-                                //     }
-                                //     <div>
-                                //         {
-                                //             flight.itineraries[0]?.segments[
-                                //                 flight.itineraries[0]?.segments
-                                //                     .length - 1
-                                //             ]?.arrivalCityName[0]?.City
-                                //         }
-                                //     </div>
-                                // </b>
-                            }
-
-                            {
-                                <span>
-                                    {
-                                        getMyDateTime(
-                                            flight.itineraries[0]?.segments[
-                                                flight.itineraries[0]?.segments
-                                                    .length - 1
-                                            ].arrival?.at
-                                        )[1]
-                                    }
-                                </span>
-                            }
-
-                            {
-                                <span>
-                                    {
-                                        getMyDateTime(
-                                            flight.itineraries[0]?.segments[
-                                                flight.itineraries[0].segments
-                                                    .length - 1
-                                            ].arrival?.at
-                                        )[0]
-                                    }
-                                </span>
-                            }
-                        </div>
-                    </div>
-                    <div
-                        id={
-                            oneWay === 'true'
-                                ? 'price-container'
-                                : 'price-container-2'
+            {dataResults.status !== 'error' ? (
+                dataResults?.data?.data?.map((flight) => (
+                    <li
+                        key={flight.id}
+                        className={
+                            oneWay === 'true' ? 'results-li' : 'results-li-2'
                         }
                     >
-                        {/* aca agregar los detalles del precio */}
-                        <div id='price-details'>
-                            <p>
-                                {numAdults}{' '}
-                                {Number(numAdults) === 1
-                                    ? 'adulto: '
-                                    : 'adultos: '}
-                                {(
-                                    flight.travelerPricings[0]?.price?.total *
-                                    Number(numAdults)
-                                ).toFixed(2)}
-                                {getSymbol(preferredCurrency.currency)}
-                            </p>
-                            {numChilds > 0 && (
+                        <div id='id-oneway-title'>
+                            <span>IDA</span> <CgAirplane id='logo-ida' />
+                        </div>
+                        <div id='carrier-container'>
+                            {getMyCarrier(
+                                flight.itineraries[0]?.segments[0]?.carrierCode
+                            )}
+                        </div>
+
+                        <div id='price-text-container'>Precio</div>
+                        <div id='info-flight-container'>
+                            <div className='date-time-container'>
+                                <b>
+                                    {`${flight?.itineraries[0]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[0]?.segments[0]?.departure?.iataCode})`}{' '}
+                                </b>
+
+                                {
+                                    <span>
+                                        {
+                                            getMyDateTime(
+                                                flight?.itineraries[0]
+                                                    ?.segments[0]?.departure?.at
+                                            )[1]
+                                        }
+                                    </span>
+                                }
+
+                                {
+                                    <span>
+                                        {
+                                            getMyDateTime(
+                                                flight.itineraries[0]
+                                                    .segments[0].departure?.at
+                                            )[0]
+                                        }
+                                    </span>
+                                }
+                            </div>
+                            <div id='info-flight'>
+                                <div id='duration-container'>
+                                    {formatDuration(
+                                        flight.itineraries[0]?.duration
+                                    )}
+                                </div>
+                                <div id='itineraries-container'>
+                                    <div id='itineraries-line'></div>
+                                    <img
+                                        src={airplane}
+                                        alt=''
+                                        id='airplane-logo'
+                                    />
+                                </div>
+                                <div id='itineraries-info'>
+                                    {flight.itineraries[0].segments?.length ===
+                                    1 ? (
+                                        <div id='non-stop-text'>
+                                            Vuelo directo
+                                        </div>
+                                    ) : (
+                                        <div id='exist-stop-text'>
+                                            {flight.itineraries[0]?.segments
+                                                .length === 2
+                                                ? '1 escala '
+                                                : `${
+                                                      flight.itineraries[0]
+                                                          ?.segments.length - 1
+                                                  } escalas `}
+                                            <div id='stops-name'>
+                                                {stopAirportsName(
+                                                    flight.itineraries[0]
+                                                        ?.segments
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className='date-time-container'>
+                                {
+                                    <b>
+                                        {' '}
+                                        {`${
+                                            flight.itineraries[0]?.segments[
+                                                flight.itineraries[0]?.segments
+                                                    .length - 1
+                                            ]?.arrivalCityName[0]?.City
+                                        } (${
+                                            flight.itineraries[0].segments[
+                                                flight.itineraries[0]?.segments
+                                                    .length - 1
+                                            ].arrival?.iataCode
+                                        })`}{' '}
+                                    </b>
+                                }
+
+                                {
+                                    <span>
+                                        {
+                                            getMyDateTime(
+                                                flight.itineraries[0]?.segments[
+                                                    flight.itineraries[0]
+                                                        ?.segments.length - 1
+                                                ].arrival?.at
+                                            )[1]
+                                        }
+                                    </span>
+                                }
+
+                                {
+                                    <span>
+                                        {
+                                            getMyDateTime(
+                                                flight.itineraries[0]?.segments[
+                                                    flight.itineraries[0]
+                                                        .segments.length - 1
+                                                ].arrival?.at
+                                            )[0]
+                                        }
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <div
+                            id={
+                                oneWay === 'true'
+                                    ? 'price-container'
+                                    : 'price-container-2'
+                            }
+                        >
+                            {/* aca agregar los detalles del precio */}
+                            <div id='price-details'>
                                 <p>
-                                    {numChilds}{' '}
-                                    {Number(numChilds === 1)
-                                        ? 'niño/a: '
-                                        : 'niños/as: '}
+                                    {numAdults}{' '}
+                                    {Number(numAdults) === 1
+                                        ? 'adulto: '
+                                        : 'adultos: '}
                                     {(
-                                        flight.travelerPricings[numAdults]
-                                            ?.price?.total * Number(numChilds)
+                                        flight.travelerPricings[0]?.price
+                                            ?.total * Number(numAdults)
                                     ).toFixed(2)}
                                     {getSymbol(preferredCurrency.currency)}
                                 </p>
-                            )}
-                        </div>
-                        <p>Incluye impuestos, tasas y cargos</p>
-                        <p>
-                            {flight.price?.total}
-                            {getSymbol(preferredCurrency.currency)}
-                        </p>
-                        <div id='select-button-container'>
-                            <button
-                                id='select-button'
-                                onClick={() => {
-                                    handleSearch(flight);
-                                }}
-                            >
-                                SELECCIONAR
-                            </button>
-                            <Snackbar
-                                open={values.showError}
-                                autoHideDuration={3000}
-                                onClose={handleClose}
-                            >
-                                <Alert onClose={handleClose} severity='error'>
-                                    {values.error}
-                                </Alert>
-                            </Snackbar>
-                        </div>
-                    </div>
-
-                    {(oneWay === 'false' || !oneWay) && (
-                        <>
-                            <div id='id-no-oneway-title'>
-                                <span>VUELTA</span> <CgAirplane id='logo-ida' />
-                            </div>
-                            <div id='carrier-container'>
-                                {getMyCarrier(
-                                    flight.itineraries[1]?.segments[0]
-                                        ?.carrierCode
+                                {numChilds > 0 && (
+                                    <p>
+                                        {numChilds}{' '}
+                                        {Number(numChilds === 1)
+                                            ? 'niño/a: '
+                                            : 'niños/as: '}
+                                        {(
+                                            flight.travelerPricings[numAdults]
+                                                ?.price?.total *
+                                            Number(numChilds)
+                                        ).toFixed(2)}
+                                        {getSymbol(preferredCurrency.currency)}
+                                    </p>
                                 )}
                             </div>
+                            <p>Incluye impuestos, tasas y cargos</p>
+                            <p>
+                                {flight.price?.total}
+                                {getSymbol(preferredCurrency.currency)}
+                            </p>
+                            <div id='select-button-container'>
+                                <button
+                                    id='select-button'
+                                    onClick={() => {
+                                        handleSearch(flight);
+                                    }}
+                                >
+                                    SELECCIONAR
+                                </button>
+                                <Snackbar
+                                    open={values.showError}
+                                    autoHideDuration={3000}
+                                    onClose={handleClose}
+                                >
+                                    <Alert
+                                        onClose={handleClose}
+                                        severity='error'
+                                    >
+                                        {values.error}
+                                    </Alert>
+                                </Snackbar>
+                            </div>
+                        </div>
 
-                            <div id='info-flight-container'>
-                                <div className='date-time-container'>
-                                    <b>
-                                        {' '}
-                                        {`${flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[1]?.segments[0]?.departure?.iataCode})`}{' '}
-                                    </b>
-                                    {/* <b>
-                                        {
-                                            flight.itineraries[1]?.segments[0]
-                                                ?.departure?.iataCode
-                                        }
-                                        <div>
-                                            {
-                                                flight.itineraries[1]
-                                                    ?.segments[0]
-                                                    ?.departureCityName[0]?.City
-                                            }
-                                        </div>
-                                    </b> */}
-
-                                    {
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[0].departure
-                                                        ?.at
-                                                )[1]
-                                            }
-                                        </span>
-                                    }
-
-                                    {
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[0].departure
-                                                        ?.at
-                                                )[0]
-                                            }
-                                        </span>
-                                    }
+                        {(oneWay === 'false' || !oneWay) && (
+                            <>
+                                <div id='id-no-oneway-title'>
+                                    <span>VUELTA</span>{' '}
+                                    <CgAirplane id='logo-ida' />
                                 </div>
-                                <div id='info-flight'>
-                                    <div id='duration-container'>
-                                        {formatDuration(
-                                            flight.itineraries[1]?.duration
-                                        )}
+                                <div id='carrier-container'>
+                                    {getMyCarrier(
+                                        flight.itineraries[1]?.segments[0]
+                                            ?.carrierCode
+                                    )}
+                                </div>
+
+                                <div id='info-flight-container'>
+                                    <div className='date-time-container'>
+                                        <b>
+                                            {' '}
+                                            {`${flight.itineraries[1]?.segments[0]?.departureCityName[0]?.City} (${flight.itineraries[1]?.segments[0]?.departure?.iataCode})`}{' '}
+                                        </b>
+
+                                        {
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[0]
+                                                            .departure?.at
+                                                    )[1]
+                                                }
+                                            </span>
+                                        }
+
+                                        {
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[0]
+                                                            .departure?.at
+                                                    )[0]
+                                                }
+                                            </span>
+                                        }
                                     </div>
-                                    <div id='itineraries-container'>
-                                        <div id='itineraries-line'>
-                                            {flight.itineraries[1]?.segments
-                                                .length > 1
-                                                ? stopSpots(
-                                                      flight.itineraries[1]
-                                                          ?.segments.length
-                                                  )
-                                                : null}
+                                    <div id='info-flight'>
+                                        <div id='duration-container'>
+                                            {formatDuration(
+                                                flight.itineraries[1]?.duration
+                                            )}
                                         </div>
-                                        <img
-                                            src={airplane}
-                                            alt=''
-                                            id='airplane-logo'
-                                        />
+                                        <div id='itineraries-container'>
+                                            <div id='itineraries-line'>
+                                                {flight.itineraries[1]?.segments
+                                                    .length > 1
+                                                    ? stopSpots(
+                                                          flight.itineraries[1]
+                                                              ?.segments.length
+                                                      )
+                                                    : null}
+                                            </div>
+                                            <img
+                                                src={airplane}
+                                                alt=''
+                                                id='airplane-logo'
+                                            />
+                                        </div>
+                                        <div id='itineraries-info'>
+                                            {flight.itineraries[1]?.segments
+                                                .length === 1 ? (
+                                                <div id='non-stop-text'>
+                                                    Vuelo directo
+                                                </div>
+                                            ) : (
+                                                <div id='exist-stop-text'>
+                                                    {flight.itineraries[1]
+                                                        ?.segments.length === 2
+                                                        ? '1 escala '
+                                                        : `${
+                                                              flight
+                                                                  .itineraries[1]
+                                                                  ?.segments
+                                                                  .length - 1
+                                                          } escalas `}
+                                                    <div id='stops-name'>
+                                                        {stopAirportsName(
+                                                            flight
+                                                                .itineraries[1]
+                                                                ?.segments
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div id='itineraries-info'>
+                                    <div className='date-time-container'>
                                         {flight.itineraries[1]?.segments
                                             .length === 1 ? (
-                                            <div id='non-stop-text'>
-                                                Vuelo directo
-                                            </div>
+                                            <b>
+                                                {`${
+                                                    flight.itineraries[1]
+                                                        ?.segments[
+                                                        flight.itineraries[0]
+                                                            ?.segments.length -
+                                                            1
+                                                    ]?.arrivalCityName[0]?.City
+                                                } (${
+                                                    flight.itineraries[1]
+                                                        ?.segments[0].arrival
+                                                        ?.iataCode
+                                                })`}
+                                            </b>
                                         ) : (
-                                            <div id='exist-stop-text'>
-                                                {flight.itineraries[1]?.segments
-                                                    .length === 2
-                                                    ? '1 escala '
-                                                    : `${
-                                                          flight.itineraries[1]
-                                                              ?.segments
-                                                              .length - 1
-                                                      } escalas `}
-                                                <div id='stops-name'>
-                                                    {stopAirportsName(
+                                            <b>
+                                                {
+                                                    flight.itineraries[1]
+                                                        ?.segments[
                                                         flight.itineraries[1]
-                                                            ?.segments
-                                                    )}
-                                                </div>
-                                            </div>
+                                                            ?.segments.length -
+                                                            1
+                                                    ].arrival?.iataCode
+                                                }
+                                            </b>
+                                        )}
+
+                                        {flight.itineraries[1]?.segments
+                                            .length === 1 ? (
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[0]
+                                                            .arrival?.at
+                                                    )[1]
+                                                }
+                                            </span>
+                                        ) : (
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[
+                                                            flight
+                                                                .itineraries[1]
+                                                                .segments
+                                                                .length - 1
+                                                        ].arrival?.at
+                                                    )[1]
+                                                }
+                                            </span>
+                                        )}
+
+                                        {flight.itineraries[1]?.segments
+                                            .length === 1 ? (
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[0]
+                                                            .arrival?.at
+                                                    )[0]
+                                                }
+                                            </span>
+                                        ) : (
+                                            <span>
+                                                {
+                                                    getMyDateTime(
+                                                        flight.itineraries[1]
+                                                            ?.segments[
+                                                            flight
+                                                                .itineraries[1]
+                                                                .segments
+                                                                .length - 1
+                                                        ].arrival?.at
+                                                    )[0]
+                                                }
+                                            </span>
                                         )}
                                     </div>
                                 </div>
-                                <div className='date-time-container'>
-                                    {flight.itineraries[1]?.segments.length ===
-                                    1 ? (
-                                        <b>
-                                            {`${
-                                                flight.itineraries[1]?.segments[
-                                                    flight.itineraries[0]
-                                                        ?.segments.length - 1
-                                                ]?.arrivalCityName[0]?.City
-                                            } (${
-                                                flight.itineraries[1]
-                                                    ?.segments[0].arrival
-                                                    ?.iataCode
-                                            })`}
-                                        </b>
-                                    ) : (
-                                        // <b>
-                                        //     {
-                                        //         flight.itineraries[1]
-                                        //             ?.segments[0].arrival
-                                        //             ?.iataCode
-                                        //     }
-                                        //     <div>
-                                        //         {
-                                        //             flight.itineraries[1]
-                                        //                 ?.segments[
-                                        //                 flight.itineraries[0]
-                                        //                     ?.segments.length -
-                                        //                     1
-                                        //             ]?.arrivalCityName[0]?.City
-                                        //         }
-                                        //     </div>
-                                        // </b>
-                                        <b>
-                                            {
-                                                flight.itineraries[1]?.segments[
-                                                    flight.itineraries[1]
-                                                        ?.segments.length - 1
-                                                ].arrival?.iataCode
-                                            }
-                                        </b>
-                                    )}
-
-                                    {flight.itineraries[1]?.segments.length ===
-                                    1 ? (
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[0].arrival
-                                                        ?.at
-                                                )[1]
-                                            }
-                                        </span>
-                                    ) : (
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[
-                                                        flight.itineraries[1]
-                                                            .segments.length - 1
-                                                    ].arrival?.at
-                                                )[1]
-                                            }
-                                        </span>
-                                    )}
-
-                                    {flight.itineraries[1]?.segments.length ===
-                                    1 ? (
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[0].arrival
-                                                        ?.at
-                                                )[0]
-                                            }
-                                        </span>
-                                    ) : (
-                                        <span>
-                                            {
-                                                getMyDateTime(
-                                                    flight.itineraries[1]
-                                                        ?.segments[
-                                                        flight.itineraries[1]
-                                                            .segments.length - 1
-                                                    ].arrival?.at
-                                                )[0]
-                                            }
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </li>
-            ))}
+                            </>
+                        )}
+                    </li>
+                ))
+            ) : (
+                <div className='sin-resultados'>
+                    Lo sentimos! No hay resultados disponibles
+                </div>
+            )}
         </ul>
     );
 }
