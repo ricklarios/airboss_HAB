@@ -132,9 +132,9 @@ export const FlightSelectionScreen = ({ history }) => {
                             </Alert>
                         </Snackbar>
 
-                        {/* <PoisDestinations
+                        <PoisDestinations
                             destinationLocationCode={destinationLocationCode}
-                        /> */}
+                        />
                     </div>
                 )}
             </div>

@@ -110,3 +110,12 @@
     font-size: 0.7rem;
     margin-right: 30px;
 }
+
+
+#button-container .MuiButton-label {
+    text-transform: capitalize !important;
+    letter-spacing: 0;
+    font-size: 1rem;
+    font-weight: 400;
+ 
+}

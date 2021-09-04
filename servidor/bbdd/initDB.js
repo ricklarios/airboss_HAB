@@ -40,22 +40,11 @@ const main = async () => {
                 recoverCode VARCHAR(100),
                 createdAt DATETIME NOT NULL, 
                 modifiedAt DATETIME,
+                typeAuth ENUM('API', 'google', 'fb') DEFAULT 'API' NOT NULL,
                 google BOOLEAN DEFAULT false
                 );
             `);
         console.log('Tabla USERS creada');
-
-        await connection.query(`
-            CREATE TABLE newsletterEmails (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                email VARCHAR(100) UNIQUE NOT NULL,
-                createdAt DATETIME NOT NULL,
-                modifiedAt DATETIME,
-                active BOOLEAN,
-                newsletterCode VARCHAR(100)
-                );
-            `);
-        console.log('Tabla newsletterEmails creada');
 
         //* Creamos la tabla de SEARCHES:
         await connection.query(`
@@ -128,6 +117,17 @@ const main = async () => {
                 );   
             `);
         console.log('Tabla SEGMENTS creada');
+
+        //* Creamos la tabla de NEWSLETTER:
+        await connection.query(`
+         CREATE TABLE newsletterEmails (
+             id INT PRIMARY KEY AUTO_INCREMENT,
+             email VARCHAR(50),
+             createdAt DATETIME NOT NULL,
+             active BOOLEAN
+             );   
+         `);
+        console.log('Tabla NEWSLETTER creada');
 
         console.log('Todas las tablas creadas correctamente!');
 

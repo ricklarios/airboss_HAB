@@ -4,6 +4,8 @@ import axios from 'axios';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import './css/selected-flight-details.css';
+import SearchBox from '../components/home/SearchBox';
+import { PoisDestinations } from '../components/utilities/PoisDestinations';
 
 import SelectedFlightInfo from '../components/home/SelectedFlightInfo';
 import { Snackbar } from '@material-ui/core';
@@ -23,6 +25,8 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
         myReturnCarrier,
         myReturnAircraft,
     } = selectedFlight;
+    const destinationLocationCode =
+        selectedFlight.itineraries[0].segments[0].arrival.iataCode;
 
     const [dataResults, setDataResults] = useState('');
     const [showResults, setShowResults] = useState(false);

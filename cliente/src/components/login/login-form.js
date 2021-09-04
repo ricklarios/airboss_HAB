@@ -111,12 +111,12 @@ function LoginForm() {
     //Funciones para el manejo de respuestas de las API de Google y Facebook
     const responseGoogle = (response) => {
         //console.log('login-form 100');
-        //console.log(response);
+        // console.log(response);
         if (response?.profileObj?.name) {
             setNameUser(response?.profileObj?.givenName);
             setLastname(response?.profileObj?.familyName);
             setPicture(response?.profileObj?.imageUrl);
-            setEmail(response.profileObj.email);
+            setEmail(response?.profileObj?.email);
 
             setValues({
                 ...values,
@@ -132,7 +132,6 @@ function LoginForm() {
             localStorage.setItem('typeAuth', 'google');
             //*******************/
             async function loginGoogle() {
-                const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const myHeaders = new Headers();
 
@@ -204,7 +203,7 @@ function LoginForm() {
                     `http://localhost:3001/users/validate-token/${typeAuth}`,
                     myHeaders
                 );
-                console.log(res);
+
                 if (res.data.status === 'ok') {
                     setValues({
                         ...values,
