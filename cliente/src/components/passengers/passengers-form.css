@@ -12,9 +12,10 @@
 }
 
 #register-form > div > .MuiFormControl-root, #register-form > .MuiFormControl-root  {
-  width: 100%;
   height: 40px;
-  
+}
+.MuiFormControl-root{
+  width: 300px;
 }
 .passengers-container{
   min-height: 400px;
@@ -24,14 +25,16 @@
   border-radius: 5px;
   border: 3px solid #132C33;
   position: absolute;
-  z-index: 5000;
-  left: calc(50% - 350px);
-  top: calc(50% - 180px);
+  z-index: 99999 !important;
+  left: calc(50%);
+  top: calc(50%);
   transform: translate(-50%,-50%);
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  padding: 10px;
+  background-color: rgba(255,255,255,1);
 }
 
 #register-form > div:nth-child(7) > div >div::before {
@@ -86,3 +89,6 @@
     display: flex !important;
     flex-direction: row !important;
   }
+#edit-passenger{
+  width: 300px !important;
+}

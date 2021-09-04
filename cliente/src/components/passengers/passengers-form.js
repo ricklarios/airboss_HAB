@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import CloseIcon from '@material-ui/icons/Close';
 // import Input from '@material-ui/core/Input';
 // import IconButton from '@material-ui/core/IconButton';
 // import EditIcon from '@material-ui/icons/Edit';
@@ -196,6 +197,7 @@ function PassengersForm({ currentTraveler }) {
     };
     const handleChangeNationality = (event) => {
         let updatedList;
+        console.log(event.currentTarget.dataset.optionIndex);
         updatedList = values.documents.map (item => {
             return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
         })
@@ -241,6 +243,7 @@ function PassengersForm({ currentTraveler }) {
             id='passengers-form'
             className={'passengers-container animate__animated' + animation}
         >
+            
             <form id='edit-passenger-form'  onSubmit={handleSave}>
                 <div>
                     <TextField
@@ -346,7 +349,7 @@ function PassengersForm({ currentTraveler }) {
                 <div>
                     <Autocomplete
                         id='country-select'
-                        defaultValue= {{label: `${travelersInfo[Number(currentTraveler)-1]?.documents[0]?.nationality}`}}
+                        defaultValue= {{label: `${values?.documents[0]?.nationality}`}}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal

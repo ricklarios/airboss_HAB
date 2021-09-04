@@ -46,3 +46,7 @@
     grid-template-columns: 2fr 6fr 1fr 1fr;
     padding: 10px;
   }
+
+  #selected-flight-info-container-all{
+    position: relative;
+  }

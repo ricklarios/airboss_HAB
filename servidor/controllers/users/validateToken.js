@@ -66,7 +66,6 @@ const validateToken = async (req, res, next) => {
             if (connection) connection.release();
         }
     }else if(typeAuth==='google' && req.headers.authorization){
-        console.log('validateToken 69');
         try {
             const { authorization } = req.headers;
             if (!authorization) {
@@ -212,7 +211,6 @@ const validateToken = async (req, res, next) => {
             next(error)
         }
     }
-    console.log('validateToken 215');
 };
 
 

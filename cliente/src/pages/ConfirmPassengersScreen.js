@@ -114,12 +114,12 @@ export const ConfirmPassengersScreen = ({ history }) => {
             // console.log(error);
         }
     }
-
+    let myopacity = {backgroundColor: 'rgba(255,255,255,1)'};
     return (
         <TravelersContext.Provider 
             value={{travelersInfo, setTravelersInfo, setShowEditTravelerForm}}>
-            <div id='selected-flight-info-container-all' style={opacity}>
-                {showEditTravelerForm && <PassengersForm travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
+            <div id='selected-flight-info-container-all' style={myopacity}>
+                {showEditTravelerForm && <PassengersForm  travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
                 <div className= "passengers-form">
                     <div id="passengers">Listado de pasajeros</div>
                     <div id="passengers-titles">
