@@ -114,8 +114,8 @@ const validateToken = async (req, res, next) => {
                     `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
                     [data.email]
                 );
-                console.log(newUser);
-                console.log(data);
+                // console.log(newUser);
+                // console.log(data);
                 res.send({
                     status: 'ok',
                     data: {
@@ -133,7 +133,7 @@ const validateToken = async (req, res, next) => {
                 });
                 //console.log(user[0]);
             }
-            console.log(user);
+            // console.log(user);
             res.send({
                 status: 'ok',
                 data: {

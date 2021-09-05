@@ -1,13 +1,13 @@
 const { getDB } = require('../../bbdd/db');
 
-const getBooking = async (req, res, next) => {
+const getAllBooking = async (req, res, next) => {
     let connection;
 
     try {
         connection = await getDB();
 
-        const { idBooking } = req.params;
-        console.log(idBooking);
+        const { idUser } = req.params;
+        console.log('idUser: ', idUser);
 
         const [booking] = await connection.query(
             `   
@@ -17,12 +17,12 @@ const getBooking = async (req, res, next) => {
             ON B.id = I.idBooking
             INNER JOIN segments S
             ON I.id = S.idItineraries
-            WHERE B.id = ?
+            WHERE B.idUser = ?
             
             `,
-            [idBooking]
+            [idUser]
         );
-        console.log(booking);
+        console.log('booking: ', booking);
         res.send({
             status: 'ok',
             data: booking,
@@ -34,4 +34,4 @@ const getBooking = async (req, res, next) => {
     }
 };
 
-module.exports = getBooking;
+module.exports = getAllBooking;
