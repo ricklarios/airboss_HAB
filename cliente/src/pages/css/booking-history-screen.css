@@ -38,3 +38,15 @@ body {
     font-weight: normal;
     font-size: 1.4em;
 }
+
+#history-ul-container {
+    list-style: none;
+    margin-top: 15px;
+}
+
+#history-li {
+    background-color: #d8e3e7;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+}
