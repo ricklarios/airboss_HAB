@@ -30,6 +30,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
+import stringify from 'fast-json-stable-stringify';
 // import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme) => ({
@@ -64,9 +65,8 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
-function PassengersForm({ currentTraveler }) {
-    // console.log(currentTraveler);
-    // console.log(travelersInfo);
+function PassengersForm() {
+    // console.log('SE LANZA FORMULARIO');
     
     //Control de la alerta SnackBar
     const handleClose = (event, reason) => {
@@ -82,13 +82,11 @@ function PassengersForm({ currentTraveler }) {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm } =
+    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm,travelersInfo, setTravelersInfo, setShowEditTravelerForm, currentTraveler} =
         useContext(AuthContext);
-    const { travelersInfo, setTravelersInfo, setShowEditTravelerForm } = useContext(TravelersContext);
-    // console.log(travelersInfo);
-    // console.log(travelersInfo[Number(currentTraveler)-1]);
+    
     const [values, setValues] = useState({
-        id:'',
+        id:currentTraveler,
         name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
                lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
         gender: travelersInfo[Number(currentTraveler)-1]?.gender || '',
@@ -120,7 +118,7 @@ function PassengersForm({ currentTraveler }) {
         ok: '',
         showOk: false,
     });
-    
+    //console.log(values);
     //const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
     const classes = useStyles();
     const classesFlags = useStylesFlags();
@@ -197,7 +195,7 @@ function PassengersForm({ currentTraveler }) {
     };
     const handleChangeNationality = (event) => {
         let updatedList;
-        console.log(event.currentTarget.dataset.optionIndex);
+        console.log(event.currentTarget.dataset);
         updatedList = values.documents.map (item => {
             return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
         })
@@ -205,14 +203,16 @@ function PassengersForm({ currentTraveler }) {
     };
     const handleSave = (e) => {
         e.preventDefault();
-        // console.log('Vamos a guardar pasajero');
-        // console.log(values.name);
+        //console.log('ENTRA 206:::::::');
+        // console.log('207::::::::',travelersInfo);
         setTravelersInfo(prevState => (
             prevState.map(
                 (el) => {
-                    if (el.id === currentTraveler){
-                        // console.log('ENTRA');
-                        
+                    //console.log(el.id, currentTraveler);
+                    // console.log(typeof(el.id) , typeof(currentTraveler));
+
+                    if (el.id === currentTraveler ){
+                        // console.log('VALUES ID:',values.id);
                         return {id : values.id, 
                                 name: {
                                     firstName: values.name.firstName,
@@ -229,21 +229,22 @@ function PassengersForm({ currentTraveler }) {
                                 validate: true,
                                 }
                     }
+                    //console.log(el.id);
                     return el;
                 }
             )
             ))
+        // console.log('250:::::',travelersInfo);
         setShowEditTravelerForm(false);
-        // console.log(travelersInfo);
-        //setTravelersInfo(travelersInfo => ({...travelersInfo, [0]:}))
-
+    }
+    function handleClickExit(){
+        setShowEditTravelerForm(false)
     }
     return (
         <div
             id='passengers-form'
-            className={'passengers-container animate__animated' + animation}
+            className={'passengers-container animate__animated ' + animation}
         >
-            
             <form id='edit-passenger-form'  onSubmit={handleSave}>
                 <div>
                     <TextField
@@ -385,6 +386,7 @@ function PassengersForm({ currentTraveler }) {
                 
                 <div id='container-button'>
                     <button id='save-button'>Guardar pasajero</button>
+                    <span id='exit-button' onClick={()=>handleClickExit()}>Salir</span>
                 </div>
                 <>
                     <Snackbar

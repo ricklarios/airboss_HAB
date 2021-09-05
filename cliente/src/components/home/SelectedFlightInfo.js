@@ -38,7 +38,7 @@ function SelectedFlightInfo({ dataResults }) {
         disabledPDF: true,
     });
     // const { login, setShowForm} = useContext(AuthContext);
-    const { login, setShowForm } = useContext(AuthContext);
+    const { login, setShowForm, setTravelersInfo } = useContext(AuthContext);
     const history = useHistory();
 
     function getMyDateTime(resultsDate) {
@@ -217,6 +217,16 @@ function SelectedFlightInfo({ dataResults }) {
     };
     const handleClickPassengers = () => {
         //console.log('Nos vamos a confirmar pasajeros');
+        // console.log(dataResults);
+        const travelers = dataResults?.data?.data?.flightOffers[0].travelerPricings.map ((e) => (
+            {id: e.travelerId,
+             typePassenger: e.travelerType, 
+             typeSeat: e.fareOption,
+             validate: false,
+             documents: [],
+             name: "",
+             lastname: "",}));
+        setTravelersInfo(travelers);
         history.push('/passengers', [dataResults]);
     };
 
@@ -442,6 +452,7 @@ function SelectedFlightInfo({ dataResults }) {
                                 <div>
                                     Compañia Aérea:{' '}
                                     {dataResults.myReturnCarrier}
+        showRegisterForm,
                                 </div>
                                 <div>
                                     Aeronave: {dataResults.myReturnAircraft}

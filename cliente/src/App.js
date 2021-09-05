@@ -22,7 +22,9 @@ export const App = () => {
     });
     const [showRegisterForm, setShowRegisterForm] = useState(false);
     const [showRestorePasswordForm, setRestorePasswordForm] = useState(false);
-
+    const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
+    const [travelersInfo, setTravelersInfo] = useState(null);
+    const [currentTraveler, setCurrentTraveler] = useState('');
     const refApp = useRef(null);
 
     useEffect(() => {
@@ -87,8 +89,6 @@ export const App = () => {
                 });
         }
         if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
-            //console.log('app.js 87');
-                console.log('ENTRO EN VALIDATE TOKEN');
                 try {
                     
                     async function validateToken(){
@@ -161,7 +161,13 @@ export const App = () => {
                     showRegisterForm,
                     setShowRegisterForm,
                     setRestorePasswordForm,
-                    showRestorePasswordForm
+                    showRestorePasswordForm,
+                    showEditTravelerForm, 
+                    setShowEditTravelerForm,
+                    travelersInfo,
+                    setTravelersInfo,
+                    currentTraveler,
+                    setCurrentTraveler,
                 }}
             >
                 <AppRouter />

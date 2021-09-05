@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import './css/ConfirmPassengersScreen.css'
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import PassengersForm from '../components/passengers/passengers-form';
 import EditIcon from '@material-ui/icons/Edit';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -25,8 +24,10 @@ export const ConfirmPassengersScreen = ({ history }) => {
         setOpacity,
         setShowRegisterForm,
         setRestorePasswordForm,
-        showForm,
-        showRegisterForm,
+        setShowEditTravelerForm,
+        setTravelersInfo,
+        travelersInfo,
+        setCurrentTraveler
     } = useContext(AuthContext);
     const [values, setValues] = useState({
         info: '',
@@ -34,13 +35,11 @@ export const ConfirmPassengersScreen = ({ history }) => {
         ok: '',
         showOk: false,
     });
-    const [travelersInfo, setTravelersInfo] = useState(null);
-    const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
-    const [currentTraveler, setCurrentTraveler] = useState(null);
+    
     const [bookingDone, setBookingDone] = useState(false);
     const data = useLocation();
-
-    if (travelersInfo === null){
+    //console.log(travelersInfo);
+    /* if (travelersInfo === null){
         // console.log(data);
         // console.log(data.state[0].data.data.flightOffers[0].travelerPricings);
         const travelers = data?.state[0]?.data?.data?.flightOffers[0].travelerPricings.map ((e) => (
@@ -53,9 +52,10 @@ export const ConfirmPassengersScreen = ({ history }) => {
              lastname: "",}));
         setTravelersInfo(travelers);
         
-    };
+    }; */
     let price = data?.state[0]?.data?.data?.flightOffers[0]?.travelerPricings[0]?.price?.total;
     useEffect(() => {
+        // console.log(travelersInfo);
         setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
     }, [travelersInfo]);
 
@@ -85,6 +85,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
     };
     function editTraveler (id){
         setAnimation('animate__backInDown');
+        //{showEditTravelerForm && <PassengersForm  travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
         setCurrentTraveler(id);
         setShowEditTravelerForm(true);
         setOpacity({
@@ -114,12 +115,9 @@ export const ConfirmPassengersScreen = ({ history }) => {
             // console.log(error);
         }
     }
-    let myopacity = {backgroundColor: 'rgba(255,255,255,1)'};
     return (
-        <TravelersContext.Provider 
-            value={{travelersInfo, setTravelersInfo, setShowEditTravelerForm}}>
-            <div id='selected-flight-info-container-all' style={myopacity}>
-                {showEditTravelerForm && <PassengersForm  travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
+        
+            <div id='selected-flight-info-container-all' style={opacity}>
                 <div className= "passengers-form">
                     <div id="passengers">Listado de pasajeros</div>
                     <div id="passengers-titles">
@@ -127,10 +125,11 @@ export const ConfirmPassengersScreen = ({ history }) => {
                         <span>Nombre</span>  
                     </div> 
                     {travelersInfo?.map((e)=>{
+                        
                         return(
                             <div className="list-travelers" key={e.id}>
                                <span>{e?.documents[0]?.number || ''}</span> <span>{e.name.firstName || 'DEBES COMPLETAR DATOS DEL PASAJERO'}</span>
-                                <Tooltip title="Editar los datos del pasajero">
+                               <Tooltip title="Editar los datos del pasajero">
                                     <span>
                                         <Fab 
                                             color="primary" 
@@ -212,6 +211,6 @@ export const ConfirmPassengersScreen = ({ history }) => {
                         </Alert>
                 </Snackbar>
             </div>
-        </TravelersContext.Provider>
+        
     );
 };
