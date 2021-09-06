@@ -111,7 +111,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
 
 
     async function paymentSuccess (details){
-        setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
+        // setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
         try {
             const body = {
                 idUser: localStorage.getItem('idUser'),
@@ -122,7 +122,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
             console.log(res);
             if (res?.data?.data?.data?.id){
                 setBookingDone(true);
-                setValues({...values, showOk: true, ok: 'Reserva Confirmada'});
+                setValues({...values, showOk: true, ok: `Reserva ${res?.data?.data?.data?.id} Confirmada`});
             }else if(res?.data?.data?.message?.code === 'ClientError'){
                 setValues({...values, showInfo: true, info: 'No se ha podido completar la reserva'});
             }
@@ -136,7 +136,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
             <div id='selected-flight-info-container-all' style={opacity}>
                 <div className= "passengers-form">
                     <div className= "summary-flight">
-                        Vuelo origen: {data.state[1].address.cityName} con destino: {data.state[2].address.cityName} y fecha: {getMyDateTime(data.state[0].data.data.flightOffers[0].itineraries[0].segments[0].departure.at)[0]}
+                        Vuelo origen: {data?.state[1]?.address?.cityName} con destino: {data?.state[2]?.address?.cityName} y fecha: {getMyDateTime(data?.state[0]?.data?.data?.flightOffers[0]?.itineraries[0]?.segments[0]?.departure?.at)[0]}
                     </div>
                     <div id="passengers">Listado de pasajeros</div>
                     <div id="passengers-titles">
