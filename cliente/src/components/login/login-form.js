@@ -110,8 +110,6 @@ function LoginForm() {
 
     //Funciones para el manejo de respuestas de las API de Google y Facebook
     const responseGoogle = (response) => {
-        //console.log('login-form 100');
-        // console.log(response);
         if (response?.profileObj?.name) {
             setNameUser(response?.profileObj?.givenName);
             setLastname(response?.profileObj?.familyName);
@@ -128,7 +126,7 @@ function LoginForm() {
                 setLogin(true);
             }, 2000);
             localStorage.setItem('userToken', response.tokenObj.id_token);
-            localStorage.setItem('userName', response.profileObj.name);
+            localStorage.setItem('userName', response.profileObj.givenName);
             localStorage.setItem('typeAuth', 'google');
             //*******************/
             async function loginGoogle() {

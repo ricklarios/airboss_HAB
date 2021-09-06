@@ -53,7 +53,7 @@ const createOrder = async (req, res, next) => {
             await connection.query(
                 `
                     INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, idBooking )
-                    VALUES(?, ?, ?, ?, ?, ? ,?, ?);
+                    VALUES(?, ?, ?, ?, ?, ? ,?, ?,?);
                 `,
                 [
                     traveler.name.firstName,

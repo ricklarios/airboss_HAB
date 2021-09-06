@@ -144,7 +144,6 @@ const useStyles = makeStyles((theme) => ({
         };
         
         try {
-            console.log('DENTRO DE SAVEELEMENT');
             const {data} = await axios.put(`http://localhost:3001/users/${localStorage.getItem("idUser")}`,
             body,
             {
@@ -209,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
         setValues({ ...values, phone: event.replace(/\s/g, '') });
     };  
     const handleChangeNationality = (event) => {
-        const country = countries[event.currentTarget.dataset.optionIndex].label;
+        const country = countries[event.currentTarget.dataset.optionIndex]?.label;
         console.log(country);
         setValues({ ...values, nationality: country});
     }
