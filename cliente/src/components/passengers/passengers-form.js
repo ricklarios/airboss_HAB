@@ -1,35 +1,23 @@
 import { useContext, useState, useEffect, Fragment, useRef } from 'react';
 import './passengers-form.css';
-import validator from 'validator';
-// import 'react-datepicker/dist/react-datepicker.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { green, red } from '@material-ui/core/colors';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import validator from 'validator';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import clsx from 'clsx';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { AuthContext } from '../../App';
-import MaterialUiPhoneNumber from 'material-ui-phone-number';
-import Tooltip from '@material-ui/core/Tooltip';
-import { Fab, FormLabel } from '@material-ui/core';
+import { FormLabel } from '@material-ui/core';
 import { TravelersContext } from '../../pages/ConfirmPassengersScreen';
 import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+import stringify from 'fast-json-stable-stringify';
+// import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,9 +51,8 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
 
-function PassengersForm({ currentTraveler }) {
-    // console.log(currentTraveler);
-    // console.log(travelersInfo);
+function PassengersForm() {
+    // console.log('SE LANZA FORMULARIO');
     
     //Control de la alerta SnackBar
     const handleClose = (event, reason) => {
@@ -81,19 +68,17 @@ function PassengersForm({ currentTraveler }) {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm } =
+    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm,travelersInfo, setTravelersInfo, setShowEditTravelerForm, currentTraveler} =
         useContext(AuthContext);
-    const { travelersInfo, setTravelersInfo, setShowEditTravelerForm } = useContext(TravelersContext);
-    // console.log(travelersInfo);
-    // console.log(travelersInfo[Number(currentTraveler)-1]);
+    
     const [values, setValues] = useState({
-        id:'',
+        id:currentTraveler,
         name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
                lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
-        gender: '',
-        dateOfBirth: null,
+        gender: travelersInfo[Number(currentTraveler)-1]?.gender || '',
+        dateOfBirth: travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || '',
         contact: {
-            emailAddress: '',
+            emailAddress: travelersInfo[Number(currentTraveler)-1]?.contact?.emailAddress || '',
             phones: [{
                 deviceType: 'MOBILE',
                 contruyCallingCode: '34',
@@ -101,15 +86,15 @@ function PassengersForm({ currentTraveler }) {
             }]
         },
         documents:[{
-            documentType: '',
-            birthPlace: '',
+            documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
+            birthPlace: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.birthPlace || '',
             issuanceLocation: '',
-            issuanceDate: null,
-            number: '',
+            issuanceDate: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || '',
+            number: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.number || '',
             expiryDate: '2050-12-31',
             issuanceCountry: '',
             validityCountry: '',
-            nationality: '',
+            nationality: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.nationality || '',
             holder: true
         },],
         error: '',
@@ -119,7 +104,7 @@ function PassengersForm({ currentTraveler }) {
         ok: '',
         showOk: false,
     });
-    
+    //console.log(values);
     //const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
     const classes = useStyles();
     const classesFlags = useStylesFlags();
@@ -128,7 +113,13 @@ function PassengersForm({ currentTraveler }) {
     
     useEffect(() => {
         //console.log(travelersInfo);
+        setOpacity({
+            opacity: 0.5,
+        });
         return () => {
+            setOpacity({
+                opacity:1,
+            })
         };
     }, []);
 
@@ -189,10 +180,8 @@ function PassengersForm({ currentTraveler }) {
             setValues({...values, documents: updatedList})
     };
     const handleChangeNationality = (event) => {
-        const country =
-            countries[event.currentTarget.dataset.optionIndex]?.label;
-        //setValues({ ...values, documents: {...values.documents[0], nationality: countries[event.currentTarget.dataset.optionIndex]?.code}});
         let updatedList;
+        console.log(event.currentTarget.dataset);
         updatedList = values.documents.map (item => {
             return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
         })
@@ -200,14 +189,87 @@ function PassengersForm({ currentTraveler }) {
     };
     const handleSave = (e) => {
         e.preventDefault();
-        // console.log('Vamos a guardar pasajero');
-        // console.log(values.name);
+        //Validamos la información antes de guardarla
+        if (!validator.isEmail(values.contact.emailAddress)) {
+            setValues({
+                ...values,
+                error: 'Correo electrónico no válido',
+                showError: true,
+            });
+            return;
+        } else if (
+            validator.isEmpty(values.name.firstName) ||
+            validator.isEmpty(values.name.lastName)
+        ) {
+            setValues({
+                ...values,
+                error: 'Nombre y apellidos son necesarios',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].nationality)) {
+            setValues({
+                ...values,
+                error: 'Debes elegir tu nacionalidad',
+                showError: true,
+            });
+            return;
+        } else if (!validator.isIdentityCard(values.documents[0].number,'any') || 
+            validator.isEmpty(values.documents[0].number)){
+            setValues({
+                ...values,
+                error: 'Debes introducir un valor adecuado de documento',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].documentType)){
+        setValues({
+            ...values,
+            error: 'Debes elegir el tipo de documento',
+            showError: true,
+        });
+        return;
+        } else if (!validator.isDate(values.documents[0].issuanceDate)){
+            setValues({
+                ...values,
+                error: 'Debes introducir la fecha de emisión del documento',
+                showError: true,
+            });
+            return;
+        } else if (!validator.isDate(values.dateOfBirth)){
+            setValues({
+                ...values,
+                error: 'Debes introducir la fecha de nacimiento',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].birthPlace)){
+            setValues({
+                ...values,
+                error: 'Debes introducir lugar de nacimiento',
+                showError: true,
+            });
+            return;
+        }else if (validator.isEmpty(values.gender)){
+            setValues({
+                ...values,
+                error: 'Debes elegir género',
+                showError: true,
+            });
+            return;
+        }
+     
+
+        
+
         setTravelersInfo(prevState => (
             prevState.map(
                 (el) => {
-                    if (el.id === currentTraveler){
-                        // console.log('ENTRA');
-                        
+                    //console.log(el.id, currentTraveler);
+                    // console.log(typeof(el.id) , typeof(currentTraveler));
+
+                    if (el.id === currentTraveler ){
+                        // console.log('VALUES ID:',values.id);
                         return {id : values.id, 
                                 name: {
                                     firstName: values.name.firstName,
@@ -224,49 +286,23 @@ function PassengersForm({ currentTraveler }) {
                                 validate: true,
                                 }
                     }
+                    //console.log(el.id);
                     return el;
                 }
             )
             ))
+        // console.log('250:::::',travelersInfo);
         setShowEditTravelerForm(false);
-        // console.log(travelersInfo);
-        //setTravelersInfo(travelersInfo => ({...travelersInfo, [0]:}))
-
+    }
+    function handleClickExit(){
+        setShowEditTravelerForm(false)
     }
     return (
         <div
             id='passengers-form'
-            className="edit-passenger-form"
+            className={'passengers-container animate__animated ' + animation}
         >
             <form id='edit-passenger-form'  onSubmit={handleSave}>
-                <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-nombre'
-                        label='Nombre'
-                        value={values.name.firstName}
-                        onChange={handleChange('firstName')}
-                        autoFocus
-                    />
-                </div>
-                <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-apellidos'
-                        label='Apellidos'
-                        value={values.name.lastName}
-                        onChange={handleChange('lastName')}
-                    />
-                </div>
-                <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-number-document'
-                        label='Número documento identidad'
-                        value={values?.documents[0]?.number}
-                        onChange={handleChange('numberDocument')}
-                    />
-                </div>
                 <div>
                     <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="age-native-simple" id= "standard-basic-type-document">Tipo de documento</InputLabel>
@@ -288,10 +324,38 @@ function PassengersForm({ currentTraveler }) {
                 </div>
                 <div>
                     <TextField
+                        className='inputs-form label'
+                        id='standard-basic-number-document'
+                        label='Número documento identidad'
+                        value={values?.documents[0]?.number}
+                        onChange={handleChange('numberDocument')}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-nombre'
+                        label='Nombre'
+                        value={values.name.firstName}
+                        onChange={handleChange('firstName')}
+                        autoFocus
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-apellidos'
+                        label='Apellidos'
+                        value={values.name.lastName}
+                        onChange={handleChange('lastName')}
+                    />
+                </div>
+                <div>
+                    <TextField
                             id='issuanceDate'
                             label='Fecha de emisión'
                             type='date'
-                            defaultValue=''
+                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || ''}
                             className='issuanceDate'
                             onChange={changeIssuance}
                             InputLabelProps={{
@@ -313,7 +377,7 @@ function PassengersForm({ currentTraveler }) {
                             id='birthday'
                             label='Fecha de nacimiento'
                             type='date'
-                            defaultValue=''
+                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || ''}
                             className='birthday'
                             onChange={changeBirthday}
                             InputLabelProps={{
@@ -343,6 +407,7 @@ function PassengersForm({ currentTraveler }) {
                 <div>
                     <Autocomplete
                         id='country-select'
+                        defaultValue= {{label: `${values?.documents[0]?.nationality}`}}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal
@@ -378,6 +443,7 @@ function PassengersForm({ currentTraveler }) {
                 
                 <div id='container-button'>
                     <button id='save-button'>Guardar pasajero</button>
+                    <span id='exit-button' onClick={()=>handleClickExit()}>Salir</span>
                 </div>
                 <>
                     <Snackbar

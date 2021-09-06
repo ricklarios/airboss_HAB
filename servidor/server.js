@@ -106,22 +106,22 @@ app.post('/users/avatar', authUser, changeAvatar);
     ################################
 */
 //Inicio de alta para un usuario que no no tiene cuenta
-app.get('/newsletter', requestNL);
+app.post('/newsletter', requestNL);
 
-//Validamos el correo con el código enviado
-app.get('/newsletter/validate/:newsletterCode', validateEmail);
+// //Validamos el correo con el código enviado
+// app.get('/newsletter/validate/:newsletterCode', validateEmail);
 
-//Alta en newsletter para usuarios registrados
-app.put('/newsletter/changeNLState', authUser, changeNL);
+// //Alta en newsletter para usuarios registrados
+// app.put('/newsletter/changeNLState', authUser, changeNL);
 
 //Usuario solicita baja en la newsletter
-app.get('/newsletter/unsubscribe', unsubscribeNL);
+// app.get('/newsletter/unsubscribe', unsubscribeNL);
 
-//Validamos el correo con el código enviado para la baja en newsletter y procedemos
-app.get(
-    '/newsletter/unsubscribe/validate/:newsletterCode',
-    validateUnsubscribeNL
-);
+// //Validamos el correo con el código enviado para la baja en newsletter y procedemos
+// app.get(
+//     '/newsletter/unsubscribe/validate/:newsletterCode',
+//     validateUnsubscribeNL
+// );
 
 /*
     ################################

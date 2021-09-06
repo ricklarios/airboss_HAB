@@ -9,7 +9,7 @@ const validateToken = async (req, res, next) => {
     let connection;
     connection = await getDB();
     const { typeAuth } = req.params;
-    // console.log(typeAuth);
+
     //FALTA ORGANIZAR MEJOR EL CODIGO, PROBABLEMENTE EN FUNCIONES EN HELPERS
     if (typeAuth === 'API') {
         try {
@@ -72,7 +72,6 @@ const validateToken = async (req, res, next) => {
     } else if (typeAuth === 'google' && req.headers.authorization) {
         try {
             const { authorization } = req.headers;
-            //console.log(authorization);
             if (!authorization) {
                 const error = new Error(
                     'Falta la cabecera de autorización de Google'
@@ -86,20 +85,28 @@ const validateToken = async (req, res, next) => {
 
             const response = await fetch(url);
             const data = await response.json();
-            //console.log(data);
+            console.log('data: ', data);
             if (data.error) {
                 const error = new Error('Token de Google invalido');
                 error.httpStatus = 401;
                 throw error;
             }
             const [user] = await connection.query(
-                `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                `
+                SELECT email, name, lastname, avatar, createdAt, phoneNumber, nationality, birthDate, id
+                FROM users 
+                WHERE email = ?
+                `,
                 [data.email]
             );
+            console.log('user', user);
             if (user.length === 0) {
-                console.log('NO HAY USUARIO');
+                // console.log('NO HAY USUARIO');
                 await connection.query(
-                    `INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) VALUES (?, ?, ?, ?,?,?, ?);`,
+                    `
+                    INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    `,
                     [
                         data.email,
                         data.given_name,
@@ -110,11 +117,12 @@ const validateToken = async (req, res, next) => {
                         'password',
                     ]
                 );
+
                 const [newUser] = await connection.query(
-                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?`,
                     [data.email]
                 );
-                // console.log(newUser);
+                // console.log('newUser: ', newUser);
                 // console.log(data);
                 res.send({
                     status: 'ok',
@@ -150,8 +158,8 @@ const validateToken = async (req, res, next) => {
                 },
             });
         } catch (error) {
-            console.log('DENTRO TRY GOOGLE BACK');
-            console.log(error);
+            // console.log('DENTRO TRY GOOGLE BACK');
+            // console.log(error);
             next(error);
         }
     } else if (typeAuth === 'fb' && req.headers.authorization) {
@@ -168,21 +176,21 @@ const validateToken = async (req, res, next) => {
 
             const response = await fetch(url);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             if (data.error) {
                 const error = new Error('Token de facebook invalido');
                 error.httpStatus = 401;
                 throw error;
             }
             const [user] = await connection.query(
-                `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?`,
                 [data.email]
             );
-            console.log(user);
+            // console.log(user);
             if (user.length === 0) {
                 console.log('NO HAY USUARIO');
                 await connection.query(
-                    `INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) VALUES (?, ?, ?, ?,?,?, ?);`,
+                    `INSERT INTO users (email, name, lastname, createdAt, typeAuth, active, password) VALUES (?, ?, ?, ?,?,?, ?)`,
                     [
                         data.email,
                         data.first_name,
@@ -194,10 +202,10 @@ const validateToken = async (req, res, next) => {
                     ]
                 );
                 const [user] = await connection.query(
-                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
+                    `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?`,
                     [data.email]
                 );
-                console.log(user);
+
                 res.send({
                     status: 'ok',
                     data: {
@@ -215,7 +223,7 @@ const validateToken = async (req, res, next) => {
                 });
                 //console.log(user[0]);
             }
-            console.log(data);
+
             res.send({
                 status: 'ok',
                 data: {

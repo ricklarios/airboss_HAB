@@ -14,7 +14,7 @@ const getPassenger = async (req, res, next) => {
 
         const [passenger] = await connection.query(
             `
-        SELECT id, name, lastname, passport, birthDate, createdAt, modifiedAt FROM passengers WHERE id = ?;`,
+        SELECT id, name, lastname, documentNumber, birthDate, createdAt, modifiedAt FROM passengers WHERE id = ?;`,
             [idPassenger]
         );
 
@@ -22,7 +22,7 @@ const getPassenger = async (req, res, next) => {
         const passengerInfo = {
             name: passenger[0].name,
             lastname: passenger[0].lastname,
-            passport: passenger[0].passport,
+            documentNumber: passenger[0].documentNumber,
             birthDate: passenger[0].birthDate,
             createdAt: passenger[0].createdAt,
             modifiedAt: passenger[0].modifiedAt,
