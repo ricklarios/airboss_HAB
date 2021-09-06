@@ -407,6 +407,7 @@ function LoginForm() {
                             onSuccess={responseGoogle}
                             onFailure={responseGoogle}
                             cookiePolicy={'single_host_origin'}
+                            expires_on='50000'
                         />
                     )}
                     {!login && (

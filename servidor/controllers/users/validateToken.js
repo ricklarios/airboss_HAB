@@ -72,7 +72,6 @@ const validateToken = async (req, res, next) => {
     } else if (typeAuth === 'google' && req.headers.authorization) {
         try {
             const { authorization } = req.headers;
-            // console.log(authorization);
             if (!authorization) {
                 const error = new Error(
                     'Falta la cabecera de autorización de Google'

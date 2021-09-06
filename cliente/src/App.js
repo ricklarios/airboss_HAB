@@ -22,7 +22,9 @@ export const App = () => {
     });
     const [showRegisterForm, setShowRegisterForm] = useState(false);
     const [showRestorePasswordForm, setRestorePasswordForm] = useState(false);
-
+    const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
+    const [travelersInfo, setTravelersInfo] = useState(null);
+    const [currentTraveler, setCurrentTraveler] = useState('');
     const refApp = useRef(null);
 
     useEffect(() => {
@@ -87,35 +89,39 @@ export const App = () => {
                 });
         }
         if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
-            //console.log('app.js 87');
-
-            async function validateToken(){
-                const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, {
-                    headers:{ 'Content-Type': 'application/json',
-                    'Authorization': token,  
-                    },
-                })
-                //console.log('DENTRO GOOGLE/FB');
-                //console.log(res);
-                if (res.data.status === 'ok'){
-                    //setValues({...values, ok: "Logado Google OK!", showOk: true});
-                    // si NO hay error seteo la sesion redirect a /home
-                    setLogin(true);
-                    setNameUser(res.data.data.name);
-                    setLastname(res.data.data.lastname);
-                    setPhone(res.data.data?.phoneNumber);
-                    setNationality(res.data.data?.nationality);
-                    setCreatedAt(res.data.data.createdAt);
-                    setBirthday(res.data.data?.birthday);
-                    setEmail(res.data.data.email);
-                    setPicture(res.data.data?.avatar);
-                    localStorage.setItem('idUser', res.data.data.idUser)
-                    //console.log(res.data);
-                }else{
-                    console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
+                try {
+                    
+                    async function validateToken(){
+                        const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, {
+                            headers:{ 'Content-Type': 'application/json',
+                            'Authorization': token,  
+                            },
+                        })
+                        //console.log('DENTRO GOOGLE/FB');
+                        //console.log(res);
+                        if (res.data.status === 'ok'){
+                            //setValues({...values, ok: "Logado Google OK!", showOk: true});
+                            // si NO hay error seteo la sesion redirect a /home
+                            setLogin(true);
+                            setNameUser(res.data.data.name);
+                            setLastname(res.data.data.lastname);
+                            setPhone(res.data.data?.phoneNumber);
+                            setNationality(res.data.data?.nationality);
+                            setCreatedAt(res.data.data.createdAt);
+                            setBirthday(res.data.data?.birthday);
+                            setEmail(res.data.data.email);
+                            setPicture(res.data.data?.avatar);
+                            localStorage.setItem('idUser', res.data.data.idUser)
+                            //console.log(res.data);
+                        }else{
+                            console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
+                        }
+                    }
+                    validateToken();
+                } catch (error) {
+                    console.log('ERROR EN VALIDATE');
                 }
-            }
-            validateToken();
+            
         }
 
         return function cleanup() {
@@ -155,7 +161,13 @@ export const App = () => {
                     showRegisterForm,
                     setShowRegisterForm,
                     setRestorePasswordForm,
-                    showRestorePasswordForm
+                    showRestorePasswordForm,
+                    showEditTravelerForm, 
+                    setShowEditTravelerForm,
+                    travelersInfo,
+                    setTravelersInfo,
+                    currentTraveler,
+                    setCurrentTraveler,
                 }}
             >
                 <AppRouter />

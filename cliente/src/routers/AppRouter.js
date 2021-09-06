@@ -22,6 +22,7 @@ import { AuthContext } from '../App';
 import LoginForm from '../components/login/login-form';
 import RegisterForm from '../components/login/register-form';
 import RestorePasswordForm from '../components/login/restore-pwd-form';
+import PassengersForm from '../components/passengers/passengers-form';
 
 export const UserContext = createContext(null);
 
@@ -31,7 +32,7 @@ export const AppRouter = () => {
         symbol: '€',
     });
 
-    const { login, showForm, showRegisterForm, showRestorePasswordForm } =
+    const { login, showForm, showRegisterForm, showRestorePasswordForm, showEditTravelerForm } =
         useContext(AuthContext);
 
     return (
@@ -46,6 +47,7 @@ export const AppRouter = () => {
                     <Header />
                     {showForm && !login && <LoginForm className='TEST' />}
                     {showRegisterForm && <RegisterForm className='TEST' />}
+                    {showEditTravelerForm && <PassengersForm />}
                     {showRestorePasswordForm && <RestorePasswordForm />}
                     <Switch>
                         <Route exact path='/' component={HomeScreen} />
