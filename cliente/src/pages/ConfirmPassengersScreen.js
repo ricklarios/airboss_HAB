@@ -54,6 +54,10 @@ export const ConfirmPassengersScreen = ({ history }) => {
         
     }; */
     let price = data?.state[0]?.data?.data?.flightOffers[0]?.travelerPricings[0]?.price?.total;
+    // console.log(data.state[1].address.cityName);
+    // console.log(getMyDateTime(data.state[0].data.data.flightOffers[0].itineraries[0].segments[0].departure.at)[0]);
+    // console.log(data.state[2].address.cityName);
+    
     useEffect(() => {
         // console.log(travelersInfo);
         setValues({...values, showInfo: true, info: 'Recuerda que debes confirmar pasajeros y realizar pago para confirmar tu reserva'});
@@ -71,6 +75,18 @@ export const ConfirmPassengersScreen = ({ history }) => {
         },
     }));
     const classes = useStyles();
+
+    function getMyDateTime(resultsDate) {
+        const dateTime = new Date(resultsDate);
+        const date = dateTime.toLocaleDateString('es-ES');
+        const time = dateTime.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+
+        const myDate = [date, time];
+        return myDate;
+    }
     const handleCloseOk = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -119,6 +135,9 @@ export const ConfirmPassengersScreen = ({ history }) => {
         
             <div id='selected-flight-info-container-all' style={opacity}>
                 <div className= "passengers-form">
+                    <div className= "summary-flight">
+                        Vuelo origen: {data.state[1].address.cityName} con destino: {data.state[2].address.cityName} y fecha: {getMyDateTime(data.state[0].data.data.flightOffers[0].itineraries[0].segments[0].departure.at)[0]}
+                    </div>
                     <div id="passengers">Listado de pasajeros</div>
                     <div id="passengers-titles">
                         <span>Identificación</span>

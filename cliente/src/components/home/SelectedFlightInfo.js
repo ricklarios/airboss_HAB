@@ -227,7 +227,7 @@ function SelectedFlightInfo({ dataResults }) {
              name: "",
              lastname: "",}));
         setTravelersInfo(travelers);
-        history.push('/passengers', [dataResults]);
+        history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity]);
     };
 
     return (

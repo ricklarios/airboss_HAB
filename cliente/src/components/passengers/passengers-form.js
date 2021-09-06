@@ -1,28 +1,14 @@
 import { useContext, useState, useEffect, Fragment, useRef } from 'react';
 import './passengers-form.css';
-import validator from 'validator';
-// import 'react-datepicker/dist/react-datepicker.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import CloseIcon from '@material-ui/icons/Close';
-// import Input from '@material-ui/core/Input';
-// import IconButton from '@material-ui/core/IconButton';
-// import EditIcon from '@material-ui/icons/Edit';
-// import ErrorIcon from '@material-ui/icons/Error';
-// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-// import { green, red } from '@material-ui/core/colors';
-// import InputAdornment from '@material-ui/core/InputAdornment';
+import validator from 'validator';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-// import clsx from 'clsx';
-// import Visibility from '@material-ui/icons/Visibility';
-// import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { AuthContext } from '../../App';
-// import MaterialUiPhoneNumber from 'material-ui-phone-number';
-//import Tooltip from '@material-ui/core/Tooltip';
 import { FormLabel } from '@material-ui/core';
 import { TravelersContext } from '../../pages/ConfirmPassengersScreen';
 import React from 'react';
@@ -203,8 +189,79 @@ function PassengersForm() {
     };
     const handleSave = (e) => {
         e.preventDefault();
-        //console.log('ENTRA 206:::::::');
-        // console.log('207::::::::',travelersInfo);
+        //Validamos la información antes de guardarla
+        if (!validator.isEmail(values.contact.emailAddress)) {
+            setValues({
+                ...values,
+                error: 'Correo electrónico no válido',
+                showError: true,
+            });
+            return;
+        } else if (
+            validator.isEmpty(values.name.firstName) ||
+            validator.isEmpty(values.name.lastName)
+        ) {
+            setValues({
+                ...values,
+                error: 'Nombre y apellidos son necesarios',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].nationality)) {
+            setValues({
+                ...values,
+                error: 'Debes elegir tu nacionalidad',
+                showError: true,
+            });
+            return;
+        } else if (!validator.isIdentityCard(values.documents[0].number,'any') || 
+            validator.isEmpty(values.documents[0].number)){
+            setValues({
+                ...values,
+                error: 'Debes introducir un valor adecuado de documento',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].documentType)){
+        setValues({
+            ...values,
+            error: 'Debes elegir el tipo de documento',
+            showError: true,
+        });
+        return;
+        } else if (!validator.isDate(values.documents[0].issuanceDate)){
+            setValues({
+                ...values,
+                error: 'Debes introducir la fecha de emisión del documento',
+                showError: true,
+            });
+            return;
+        } else if (!validator.isDate(values.dateOfBirth)){
+            setValues({
+                ...values,
+                error: 'Debes introducir la fecha de nacimiento',
+                showError: true,
+            });
+            return;
+        } else if (validator.isEmpty(values.documents[0].birthPlace)){
+            setValues({
+                ...values,
+                error: 'Debes introducir lugar de nacimiento',
+                showError: true,
+            });
+            return;
+        }else if (validator.isEmpty(values.gender)){
+            setValues({
+                ...values,
+                error: 'Debes elegir género',
+                showError: true,
+            });
+            return;
+        }
+     
+
+        
+
         setTravelersInfo(prevState => (
             prevState.map(
                 (el) => {
@@ -247,34 +304,6 @@ function PassengersForm() {
         >
             <form id='edit-passenger-form'  onSubmit={handleSave}>
                 <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-nombre'
-                        label='Nombre'
-                        value={values.name.firstName}
-                        onChange={handleChange('firstName')}
-                        autoFocus
-                    />
-                </div>
-                <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-apellidos'
-                        label='Apellidos'
-                        value={values.name.lastName}
-                        onChange={handleChange('lastName')}
-                    />
-                </div>
-                <div>
-                    <TextField
-                        className='inputs-form label'
-                        id='standard-basic-number-document'
-                        label='Número documento identidad'
-                        value={values?.documents[0]?.number}
-                        onChange={handleChange('numberDocument')}
-                    />
-                </div>
-                <div>
                     <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="age-native-simple" id= "standard-basic-type-document">Tipo de documento</InputLabel>
                             <Select
@@ -292,6 +321,34 @@ function PassengersForm() {
                                 <option value="VISA">VISADO</option>
                             </Select>
                     </FormControl>
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-number-document'
+                        label='Número documento identidad'
+                        value={values?.documents[0]?.number}
+                        onChange={handleChange('numberDocument')}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-nombre'
+                        label='Nombre'
+                        value={values.name.firstName}
+                        onChange={handleChange('firstName')}
+                        autoFocus
+                    />
+                </div>
+                <div>
+                    <TextField
+                        className='inputs-form label'
+                        id='standard-basic-apellidos'
+                        label='Apellidos'
+                        value={values.name.lastName}
+                        onChange={handleChange('lastName')}
+                    />
                 </div>
                 <div>
                     <TextField
