@@ -5,7 +5,7 @@ import { CURRENCY_CODES } from '../../constants';
 import { UserContext } from '../../routers/AppRouter';
 import { AuthContext } from '../../App';
 import { useContext } from 'react';
-import SimpleMenu from '../login/menu-login';
+import SimpleMenu from '../login/SimpleMenu';
 
 import { getSymbol } from '../../helpers';
 import { useHistory } from 'react-router-dom';

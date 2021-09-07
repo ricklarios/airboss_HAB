@@ -13,6 +13,7 @@ import { FLIGHT_CLASSES, OPTIONS_SEARCH } from '../../constants';
 import { UserContext } from '../../routers/AppRouter';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { routes } from '../../routers/routes';
 
 function SearchBox({ history, vertical }) {
     // Estados de los parametros de Busqueda
@@ -74,7 +75,7 @@ function SearchBox({ history, vertical }) {
     //Manejador del boton de busqueda
     const handleSearch = (e) => {
         e.preventDefault();
-        history.push(`/searches${querysHistory}`);
+        history.push(`${routes.searches}${querysHistory}`);
     };
 
     //Manejamos el cierre de la alerta
@@ -85,20 +86,19 @@ function SearchBox({ history, vertical }) {
         setValues({ ...values, showError: false });
     };
 
-    const handleAccept = () =>{
+    const handleAccept = () => {
         // console.log('Aquí llega');
-        if ((numAdults + numChilds) > 9){
+        if (numAdults + numChilds > 9) {
             // console.log('DENTRO');
             setValues({
                 ...values,
                 error: 'No puedes solicitar más de 9 billetes en una única reserva',
                 showError: true,
             });
-        }else{
-
-            setshowTravelersOptions(false)
+        } else {
+            setshowTravelersOptions(false);
         }
-    }
+    };
     return (
         <div
             id={
@@ -270,10 +270,10 @@ function SearchBox({ history, vertical }) {
                                         <div
                                             onClick={() =>
                                                 numChilds !== 8
-                                                ? setNumChilds(
-                                                      numChilds + 1
-                                                  )
-                                                : setNumChilds(8)
+                                                    ? setNumChilds(
+                                                          numChilds + 1
+                                                      )
+                                                    : setNumChilds(8)
                                             }
                                             className='button'
                                         >
@@ -282,9 +282,7 @@ function SearchBox({ history, vertical }) {
                                     </div>
                                     <div
                                         id='finish-selection-button-class-adults'
-                                        onClick={() =>
-                                            handleAccept()
-                                        }
+                                        onClick={() => handleAccept()}
                                     >
                                         Aceptar
                                     </div>
@@ -293,8 +291,11 @@ function SearchBox({ history, vertical }) {
                                         autoHideDuration={3000}
                                         onClose={handleClose}
                                     >
-                                        <Alert onClose={handleClose} severity='error'>
-                                        {values.error}
+                                        <Alert
+                                            onClose={handleClose}
+                                            severity='error'
+                                        >
+                                            {values.error}
                                         </Alert>
                                     </Snackbar>
                                 </div>

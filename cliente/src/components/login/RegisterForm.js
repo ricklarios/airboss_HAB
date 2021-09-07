@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect, Fragment, useRef } from 'react';
-import './register-form.css';
+import './css/register-form.css';
 import validator from 'validator';
 // import 'react-datepicker/dist/react-datepicker.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -67,7 +67,7 @@ function RegisterForm({ history }) {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm } =
+    const { setShowForm, animation, setOpacity, setShowRegisterForm } =
         useContext(AuthContext);
 
     const [values, setValues] = useState({
@@ -88,7 +88,7 @@ function RegisterForm({ history }) {
     const classes = useStyles();
     const classesFlags = useStylesFlags();
 
-    const refRegisterForm = useRef (null);
+    const refRegisterForm = useRef(null);
 
     useEffect(() => {
         setShowForm(false);
@@ -96,13 +96,16 @@ function RegisterForm({ history }) {
             opacity: 0.5,
         });
 
-        document.addEventListener ( 'mousedown', handleClick);
-        function handleClick (e){
+        document.addEventListener('mousedown', handleClick);
+        function handleClick(e) {
             // console.log(e);
-            if ( refRegisterForm.current && !refRegisterForm.current.contains (e.target) ){
+            if (
+                refRegisterForm.current &&
+                !refRegisterForm.current.contains(e.target)
+            ) {
                 setShowRegisterForm(false);
             }
-        } 
+        }
 
         return () => {
             setOpacity({
@@ -223,8 +226,8 @@ function RegisterForm({ history }) {
     };
     document.addEventListener('keydown', handleKeyDown);
 
-    function handleKeyDown (e){
-        if (e.keyCode === 27){
+    function handleKeyDown(e) {
+        if (e.keyCode === 27) {
             setShowRegisterForm(false);
         }
     }
@@ -286,7 +289,6 @@ function RegisterForm({ history }) {
                         className='label'
                     >
                         Repite contraseña
-                
                     </InputLabel>
                     <Input
                         id='standard-adornment-repeatPassword'

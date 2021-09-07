@@ -4,10 +4,10 @@ import axios from 'axios';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import './css/selected-flight-details.css';
-import SearchBox from '../components/home/SearchBox';
+import SearchBox from '../components/searches/SearchBox';
 import { PoisDestinations } from '../components/utilities/PoisDestinations';
 
-import SelectedFlightInfo from '../components/home/SelectedFlightInfo';
+import SelectedFlightInfo from '../components/searches/SelectedFlightInfo';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
