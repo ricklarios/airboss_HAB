@@ -218,7 +218,7 @@ function RegisterForm({ history }) {
     };
 
     const changeBirthday = (event) => {
-        console.log(event.target.value);
+        // console.log(event.target.value);
         setValues({ ...values, birthday: event.target.value });
     };
     document.addEventListener('keydown', handleKeyDown);
