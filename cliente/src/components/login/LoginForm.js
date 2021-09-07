@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import './login-form.css';
+import './css/login-form.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -56,7 +56,6 @@ function LoginForm() {
         setRestorePasswordForm,
         setLogin,
         setNameUser,
-        refApp,
         animation,
         setOpacity,
         setPicture,

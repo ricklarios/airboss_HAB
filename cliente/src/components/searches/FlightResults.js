@@ -10,6 +10,7 @@ import { CgAirplane } from 'react-icons/cg';
 import { AuthContext } from '../../App';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import { routes } from '../../routers/routes';
 
 function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     // console.log(dataResults);
@@ -112,7 +113,7 @@ function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
                 ...flight,
             };
             //console.log(myFlightObject);
-            history.push(`/pricing`, [myFlightObject]);
+            history.push(routes.pricing, [myFlightObject]);
         } else {
             setValues({
                 ...values,

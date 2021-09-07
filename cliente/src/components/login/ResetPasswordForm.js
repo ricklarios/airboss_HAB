@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import './reset-pwd-form.css';
+import './css/reset-pwd-form.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { AuthContext } from '../../App';
@@ -44,7 +44,7 @@ function ResetPasswordForm({ code }) {
         showOk: false,
     });
     const classes = useStyles();
-    const { setShowRegisterForm, refApp, animation, setOpacity } =
+    const { setShowRegisterForm, animation, setOpacity } =
         useContext(AuthContext);
 
     useEffect(() => {

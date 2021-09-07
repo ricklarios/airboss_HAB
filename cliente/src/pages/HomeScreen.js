@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../App';
-import SearchBox from '../components/home/SearchBox';
-import { TitleHome } from '../components/home/Title';
+import SearchBox from '../components/searches/SearchBox';
+import { TitleHome } from '../components/ui/Title';
 import { Footer } from '../components/ui/Footer';
 import { NewsletterSection } from '../components/ui/NewsletterSection';
 import './css/home-screen.css';

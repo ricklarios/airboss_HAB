@@ -1,13 +1,13 @@
 import './css/flight-selection-screen.css';
 import { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import FlightResults from '../components/home/FlightResults';
+import FlightResults from '../components/searches/FlightResults';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { UserContext } from '../routers/AppRouter';
 import { formatDate } from '../helpers';
-import SearchBox from '../components/home/SearchBox';
+import SearchBox from '../components/searches/SearchBox';
 import { AuthContext } from '../App';
 import { PoisDestinations } from '../components/utilities/PoisDestinations';
 import { Snackbar } from '@material-ui/core';
