@@ -68,7 +68,9 @@ const main = async () => {
                 bookingCode VARCHAR(100) UNIQUE NOT NULL,
                 createdAt DATETIME NOT NULL, 
                 finalPrice SMALLINT UNSIGNED NOT NULL,
+                currency VARCHAR(100) NOT NULL,
                 canceled BOOLEAN DEFAULT false,
+                oneWay BOOLEAN DEFAULT false,
                 idUser INT NOT NULL
                 );
             `);
@@ -97,6 +99,7 @@ const main = async () => {
         await connection.query(`
             CREATE TABLE itineraries (
                 id INT PRIMARY KEY AUTO_INCREMENT,
+                itineraryId INT NOT NULL,                
                 duration VARCHAR(10),
                 idBooking INT NOT NULL             
                 );   
@@ -107,6 +110,7 @@ const main = async () => {
         await connection.query(`
             CREATE TABLE segments (
                 id INT PRIMARY KEY AUTO_INCREMENT,
+                segmentId INT NOT NULL,
                 origin VARCHAR(10) NOT NULL,
                 destination VARCHAR(10) NOT NULL,
                 departure_datetime DATETIME NOT NULL,

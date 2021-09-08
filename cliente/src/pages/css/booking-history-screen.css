@@ -27,7 +27,7 @@ body {
     background-color: white;
     margin: 0 auto;
     width: 900px;
-    height: 500px;
+    /* height: 500px; */
     border-radius: 5px;
     padding: 20px;
 }
@@ -45,8 +45,10 @@ body {
 }
 
 #history-li {
-    background-color: #d8e3e7;
+    background-color: #ecf1f3;
     border: 1px solid black;
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
