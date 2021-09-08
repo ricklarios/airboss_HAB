@@ -6,7 +6,6 @@ import {
     Redirect,
 } from 'react-router-dom';
 import { HomeScreen } from '../pages/HomeScreen';
-import { LoginScreen } from '../pages/LoginScreen';
 import { ProfileScreen } from '../pages/ProfileScreen';
 import { BookingHistoryScreen } from '../pages/BookingHistoryScreen';
 import { ConfirmedOrderScreen } from '../pages/ConfirmedOrderScreen';
@@ -19,10 +18,12 @@ import { Header } from '../components/ui/Header';
 import { createContext, useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../App';
-import LoginForm from '../components/login/login-form';
-import RegisterForm from '../components/login/register-form';
-import RestorePasswordForm from '../components/login/restore-pwd-form';
+import LoginForm from '../components/login/LoginForm';
+import RegisterForm from '../components/login/RegisterForm';
+import RestorePasswordForm from '../components/login/RestorePasswordForm';
 import PassengersForm from '../components/passengers/passengers-form';
+import { routes } from './routes';
+import { PrivateRoute } from './PrivateRoute';
 
 export const UserContext = createContext(null);
 
@@ -32,8 +33,13 @@ export const AppRouter = () => {
         symbol: '€',
     });
 
-    const { login, showForm, showRegisterForm, showRestorePasswordForm, showEditTravelerForm } =
-        useContext(AuthContext);
+    const {
+        login,
+        showForm,
+        showRegisterForm,
+        showRestorePasswordForm,
+        showEditTravelerForm,
+    } = useContext(AuthContext);
 
     return (
         <Router>
@@ -50,31 +56,34 @@ export const AppRouter = () => {
                     {showEditTravelerForm && <PassengersForm />}
                     {showRestorePasswordForm && <RestorePasswordForm />}
                     <Switch>
-                        <Route exact path='/' component={HomeScreen} />
                         <Route
                             exact
-                            path='/searches'
+                            path={routes.home}
+                            component={HomeScreen}
+                        />
+                        <Route
+                            exact
+                            path={routes.searches}
                             component={FlightSelectionScreen}
                         />
-                        <Route
+                        <PrivateRoute
                             exact
-                            path='/pricing'
+                            path={routes.pricing}
                             component={SelectedFlightDetailsScreen}
                         />
-                        <Route
+                        <PrivateRoute
                             exact
-                            path='/passengers'
+                            path={routes.passengers}
                             component={ConfirmPassengersScreen}
                         />
                         <Route
                             exact
-                            path='/order'
+                            path={routes.order}
                             component={ConfirmedOrderScreen}
                         />
-                        <Route exact path='/login' component={LoginScreen} />
-                        <Route
+                        <PrivateRoute
                             exact
-                            path='/profile'
+                            path={routes.profile}
                             component={ProfileScreen}
                         />
                         <Route
@@ -92,7 +101,7 @@ export const AppRouter = () => {
                             path='/users/reset-password/:recoverCode'
                             component={ResetPasswordScreen}
                         />
-                        <Redirect to='/' />
+                        <Redirect to={routes.home} />
                     </Switch>
                 </UserContext.Provider>
             </div>

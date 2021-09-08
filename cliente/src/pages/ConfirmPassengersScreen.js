@@ -136,7 +136,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 setValues({
                     ...values,
                     showOk: true,
-                    ok: 'Reserva Confirmada',
+                    ok: `Reserva ${res?.data?.data?.data?.id} Confirmada`,
                 });
                 history.push(`/`);
             } else if (res?.data?.data?.message?.code === 'ClientError') {
