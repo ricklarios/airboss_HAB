@@ -70,7 +70,7 @@ export const FlightSelectionScreen = ({ history }) => {
             );
             if (data) {
                 setDataResults(data);
-                console.log(data);
+                // console.log(data);
                 //Si no hay resultados muestro aviso en pantalla
                 if (data?.data?.data?.length === 0) {
                     setValues({

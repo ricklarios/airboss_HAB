@@ -6,7 +6,6 @@ import axios from 'axios';
 export const AuthContext = createContext(null);
 
 export const App = () => {
-    const [login, setLogin] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [name, setNameUser] = useState(null);
     const [lastname, setLastname] = useState(null);
@@ -24,8 +23,20 @@ export const App = () => {
     const [showRestorePasswordForm, setRestorePasswordForm] = useState(false);
     const [showEditTravelerForm, setShowEditTravelerForm] = useState(false);
     const [travelersInfo, setTravelersInfo] = useState(null);
+    //Hook para recoger información de pasajeros relacionados con el idUSer
+    const [saveTravelers, setSaveTravelers] = useState(null);
     const [currentTraveler, setCurrentTraveler] = useState('');
     const refApp = useRef(null);
+
+    const isLogged = () => {
+        const token = localStorage.getItem('userToken');
+        if (token) {
+            return true;
+        } 
+        return false; 
+    }
+
+    const [login, setLogin] = useState(isLogged());
 
     useEffect(() => {
         function handleKeyDown(e) {
@@ -63,18 +74,18 @@ export const App = () => {
             myHeaders.append('Authorization', token);
             myHeaders.append('idUser', idUser);
             
-            console.log(myHeaders);
-
+            // console.log(myHeaders);
             fetch(`http://localhost:3001/users/validate-token/${typeAuth}`, {
                 method: 'GET',
                 headers: myHeaders,
             })
-                .then((res) => res.json())
-                .then((response) => {
-                    if (response.status === 'error') {
-                        // error
-                        console.log(response.message);
-                    } else {
+            .then((res) => res.json())
+            .then((response) => {
+                if (response.status === 'error') {
+                    // error
+                    console.log(response.message);
+                    setLogin(false);
+                } else {
                         // si NO hay error seteo la sesion redirect a /home
                         setLogin(true);
                         setNameUser(localStorage.getItem('userName'));
@@ -97,12 +108,11 @@ export const App = () => {
                             'Authorization': token,  
                             },
                         })
-                        //console.log('DENTRO GOOGLE/FB');
-                        //console.log(res);
                         if (res.data.status === 'ok'){
                             //setValues({...values, ok: "Logado Google OK!", showOk: true});
                             // si NO hay error seteo la sesion redirect a /home
                             setLogin(true);
+                            
                             setNameUser(res.data.data.name);
                             setLastname(res.data.data.lastname);
                             setPhone(res.data.data?.phoneNumber);
@@ -112,9 +122,9 @@ export const App = () => {
                             setEmail(res.data.data.email);
                             setPicture(res.data.data?.avatar);
                             localStorage.setItem('idUser', res.data.data.idUser)
-                            //console.log(res.data);
                         }else{
                             console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
+                            setLogin(false)
                         }
                     }
                     validateToken();
@@ -128,7 +138,7 @@ export const App = () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [showForm, email]);
-
+    
     return (
         <div ref={refApp}>
             <AuthContext.Provider
@@ -168,6 +178,8 @@ export const App = () => {
                     setTravelersInfo,
                     currentTraveler,
                     setCurrentTraveler,
+                    saveTravelers,
+                    setSaveTravelers
                 }}
             >
                 <AppRouter />

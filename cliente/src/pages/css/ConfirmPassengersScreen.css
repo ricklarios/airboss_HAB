@@ -42,7 +42,7 @@
 
   .list-travelers{
     display: grid;
-    grid-template-columns: 2fr 6fr 1fr 1fr;
+    grid-template-columns: 2fr 6fr 3fr 1fr 1fr;
     padding: 10px;
   }
   #passengers-titles{

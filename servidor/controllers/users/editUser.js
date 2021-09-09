@@ -3,10 +3,11 @@ const { getDB } = require('../../bbdd/db');
 const { savePhoto, deletePhoto, formatDate } = require('../../helpers');
 
 const editUser = async (req, res, next) => {
+    console.log('ENTRO EN EDITUSER');
     let connection;
     try {
         connection = await getDB();
-        console.log('editUser 9');
+        
         //const { idUser } = req.params;
         const { element, newValue } = req.body;
         const { typeauth } = req.headers;

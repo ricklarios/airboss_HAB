@@ -3,10 +3,12 @@ const fetch = require('node-fetch');
 const { getDB } = require('../bbdd/db');
 
 const authUser = async (req, res, next) => {
+    let connection;
+    
     try {
-        let connection;
         connection = await getDB();
         const { authorization, typeauth } = req.headers;
+        console.log(req.headers);
         if (!authorization) {
             const error = new Error('Falta la cabecera de autorización');
             error.httpStatus = 401;
@@ -27,7 +29,7 @@ const authUser = async (req, res, next) => {
                         `SELECT id, email, role, active, name, lastname, phoneNumber, nationality, createdAt, birthDate, avatar, typeAuth FROM users WHERE email = ?;`,
                         [data.email]
                         );
-                        req.userAuth = { idUser: user[0].id };
+                        req.userauth = { idUser: user[0].id };
                         return next();
                     }
                 } catch (error) {
@@ -51,20 +53,19 @@ const authUser = async (req, res, next) => {
                             [data.email]
                             );
                             //console.log('authUser 55', user);
-                            req.userAuth = { idUser: user[0].id };
+                            req.userauth = { idUser: user[0].id };
                             return next();
                         }
                     } catch (error) {
                         console.log(error);
                     }
                 }
-                if (typeauth === 'API') {
-                    // Variable que almacenará la información del token.
-                    let tokenInfo;
-                    
-                    try {
-                        tokenInfo = jwt.verify(authorization, process.env.SECRET);
-                        
+            if (typeauth === 'API') {
+                // Variable que almacenará la información del token.
+                let tokenInfo;
+                // console.log('ENTRO');
+                try {
+                    tokenInfo = jwt.verify(authorization, process.env.SECRET);
             } catch (err) {
                 const error = new Error('El token no es válido');
                 error.httpStatus = 401;

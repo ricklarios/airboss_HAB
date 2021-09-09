@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, Fragment, useRef } from 'react';
+import { useContext, useState, useEffect, Fragment } from 'react';
 import './passengers-form.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -10,13 +10,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { AuthContext } from '../../App';
 import { FormLabel } from '@material-ui/core';
-import { TravelersContext } from '../../pages/ConfirmPassengersScreen';
 import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-import stringify from 'fast-json-stable-stringify';
 // import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +48,17 @@ function countryToFlag(isoCode) {
 function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
 }
+function getMyDateTime(resultsDate) {
+    const dateTime = new Date(resultsDate);
+    const date = dateTime.toLocaleDateString('en-CA');
+    const time = dateTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+
+    const myDate = [date, time];
+    return myDate;
+}
 
 function PassengersForm() {
     // console.log('SE LANZA FORMULARIO');
@@ -68,15 +77,15 @@ function PassengersForm() {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { setShowForm, refApp, animation, setOpacity, setShowRegisterForm,travelersInfo, setTravelersInfo, setShowEditTravelerForm, currentTraveler} =
+    const { animation, setOpacity, setShowRegisterForm,travelersInfo, setTravelersInfo, setShowEditTravelerForm, currentTraveler} =
         useContext(AuthContext);
-    
+    //console.log('travelersInfo:::',travelersInfo);
     const [values, setValues] = useState({
         id:currentTraveler,
         name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
                lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
         gender: travelersInfo[Number(currentTraveler)-1]?.gender || '',
-        dateOfBirth: travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || '',
+        dateOfBirth: getMyDateTime(travelersInfo[Number(currentTraveler)-1]?.dateOfBirth)[0] || '',
         contact: {
             emailAddress: travelersInfo[Number(currentTraveler)-1]?.contact?.emailAddress || '',
             phones: [{
@@ -89,7 +98,7 @@ function PassengersForm() {
             documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
             birthPlace: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.birthPlace || '',
             issuanceLocation: '',
-            issuanceDate: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || '',
+            issuanceDate: getMyDateTime(travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate)[0] || '',
             number: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.number || '',
             expiryDate: '2050-12-31',
             issuanceCountry: '',
@@ -99,8 +108,6 @@ function PassengersForm() {
         },],
         error: '',
         showError: false,
-        nationality: '',
-        phone: '',
         ok: '',
         showOk: false,
     });
@@ -121,8 +128,8 @@ function PassengersForm() {
                 opacity:1,
             })
         };
-    }, []);
-
+    }, [setOpacity, travelersInfo, values]);
+    // console.log('123::::::::::::::',travelersInfo);
     document.addEventListener('keydown', handleKeyDown);
 
     function handleKeyDown (e){
@@ -181,7 +188,7 @@ function PassengersForm() {
     };
     const handleChangeNationality = (event) => {
         let updatedList;
-        console.log(event.currentTarget.dataset);
+        //console.log(event.currentTarget.dataset);
         updatedList = values.documents.map (item => {
             return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
         })
@@ -265,11 +272,9 @@ function PassengersForm() {
         setTravelersInfo(prevState => (
             prevState.map(
                 (el) => {
-                    //console.log(el.id, currentTraveler);
-                    // console.log(typeof(el.id) , typeof(currentTraveler));
-
-                    if (el.id === currentTraveler ){
-                        // console.log('VALUES ID:',values.id);
+                    // console.log('el.id',el.id,'currentTraveler:',currentTraveler);
+                    if (el.key === currentTraveler ){
+                        // console.log('dentro del if VALUES ID:',values.id);
                         return {id : values.id, 
                                 name: {
                                     firstName: values.name.firstName,
@@ -284,6 +289,7 @@ function PassengersForm() {
                                 dateOfBirth: values.dateOfBirth,
                                 documents: values.documents,
                                 validate: true,
+                                key: values.id
                                 }
                     }
                     //console.log(el.id);
@@ -291,12 +297,14 @@ function PassengersForm() {
                 }
             )
             ))
-        // console.log('250:::::',travelersInfo);
-        setShowEditTravelerForm(false);
-    }
-    function handleClickExit(){
-        setShowEditTravelerForm(false)
-    }
+            setShowEditTravelerForm(false);
+        }
+        function handleClickExit(){
+            setShowEditTravelerForm(false)
+        }
+        
+    // console.log('250:::::',travelersInfo);
+    // console.log('296::::',values);
     return (
         <div
             id='passengers-form'
@@ -355,7 +363,7 @@ function PassengersForm() {
                             id='issuanceDate'
                             label='Fecha de emisión'
                             type='date'
-                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate || ''}
+                            defaultValue={values.documents[0]?.issuanceDate || ''}
                             className='issuanceDate'
                             onChange={changeIssuance}
                             InputLabelProps={{
@@ -377,7 +385,7 @@ function PassengersForm() {
                             id='birthday'
                             label='Fecha de nacimiento'
                             type='date'
-                            defaultValue={travelersInfo[Number(currentTraveler)-1]?.dateOfBirth || ''}
+                            defaultValue={values.dateOfBirth || ''}
                             className='birthday'
                             onChange={changeBirthday}
                             InputLabelProps={{
@@ -407,7 +415,7 @@ function PassengersForm() {
                 <div>
                     <Autocomplete
                         id='country-select'
-                        defaultValue= {{label: `${values?.documents[0]?.nationality}`}}
+                        defaultValue= {{label: `${values?.documents[0]?.nationality || 'Spain'}`}}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal
