@@ -77,8 +77,43 @@ export const BookingHistoryScreen = () => {
                                     {getMyDateTime(booking.createdAt)[0]} (
                                     {getMyDateTime(booking.createdAt)[1]})
                                 </p>
-                                <p>{`Origen: ${booking.origin}`}</p>
-                                <p>{`Destino: ${booking.destination}`}</p>
+                                <p>IDA:</p>
+                                <p>
+                                    Origen:{' '}
+                                    {booking.itineraries[0].segments[0].origin}
+                                </p>
+                                <p>
+                                    Destino:{' '}
+                                    {
+                                        booking.itineraries[0].segments[
+                                            booking.itineraries[0].segments
+                                                .length - 1
+                                        ].destination
+                                    }
+                                </p>
+                                <p>
+                                    Escalas:{' '}
+                                    {booking.itineraries[0].segments.length >= 2
+                                        ? 'Si'
+                                        : 'No'}
+                                    {/* {booking.itineraries[0].segments.length >=
+                                        2 ?? (
+                                        <ul>
+                                            {booking.itineraries[0].segments.map(
+                                                (segment) => (
+                                                    <li key={segment.segmentId}>
+                                                        <p>
+                                                            {segment.origin} '→'{' '}
+                                                            {
+                                                                segment.destination
+                                                            }
+                                                        </p>
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+                                    )} */}
+                                </p>
                                 <p>
                                     {booking.oneWay === 1
                                         ? 'Sólo Ida'
