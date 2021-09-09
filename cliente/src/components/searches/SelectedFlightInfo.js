@@ -190,7 +190,7 @@ function SelectedFlightInfo({ dataResults }) {
                 setMyReturnArrivalCity,
                 setShowReturnArrivalCity
             );
-            // covidRestrictionsSearch(arrivalCountryData);
+            covidRestrictionsSearch(arrivalCountryData);
         }
     }, [
         dataResults,

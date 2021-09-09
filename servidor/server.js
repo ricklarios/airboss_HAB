@@ -50,6 +50,7 @@ const {
 // Controladores Booking
 const {
     getBooking,
+    getAllBooking,
     createOrder,
     getOrder,
     checkInLinks,
@@ -150,7 +151,7 @@ app.post('/booking', createOrder);
 app.get('/booking/:idBooking', getBooking);
 
 // Obtiene todas las reservas de un usuario
-//app.get('/booking/:idUser', getBooking);
+app.get('/allBooking/:idUser', getAllBooking);
 
 // Devuelve el link donde hacer el check in.
 app.get('/checkInLink/:airlineCode', checkInLinks);

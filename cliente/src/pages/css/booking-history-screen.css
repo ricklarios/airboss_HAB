@@ -27,7 +27,7 @@ body {
     background-color: white;
     margin: 0 auto;
     width: 900px;
-    height: 500px;
+    /* height: 500px; */
     border-radius: 5px;
     padding: 20px;
 }
@@ -37,4 +37,18 @@ body {
     border-bottom: solid 1px rgb(19, 44, 51);
     font-weight: normal;
     font-size: 1.4em;
+}
+
+#history-ul-container {
+    list-style: none;
+    margin-top: 15px;
+}
+
+#history-li {
+    background-color: #ecf1f3;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
