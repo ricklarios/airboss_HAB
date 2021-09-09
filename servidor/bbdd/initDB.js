@@ -83,11 +83,18 @@ const main = async () => {
             lastname VARCHAR(50),
             documentNumber VARCHAR(50) NOT NULL,
             documentType VARCHAR(25) NOT NULL,
+            issuanceDate DATETIME,
+            expiryDate DATETIME,
+            issuanceCountry VARCHAR(50),
+            validityCountry VARCHAR(50),
             birthDate DATETIME NOT NULL,
+            birthPlace VARCHAR(50),
+            holder BOOLEAN,
             gender ENUM('MALE', 'FEMALE', 'UNSPECIFIED', 'UNDISCLOSED'),
             phoneContact VARCHAR(25),
             emailContact VARCHAR(50),
-            idBooking INT NOT NULL
+            nationality VARCHAR(50),
+            idBooking INT NOT NULL,
             );
         `);
 

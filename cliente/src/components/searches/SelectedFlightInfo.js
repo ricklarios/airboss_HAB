@@ -5,8 +5,6 @@ import { getSymbol } from '../../helpers';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { CgAirplane } from 'react-icons/cg';
-// import { PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js"
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { AuthContext } from '../../App';
@@ -20,7 +18,7 @@ function SelectedFlightInfo({ dataResults }) {
     const [myDepartureCity, setDepartureCity] = useState('');
     const [myReturnArrivalCity, setMyReturnArrivalCity] = useState('');
     const [myReturnDepartureCity, setReturnDepartureCity] = useState('');
-    const [covidRestrictions, setCovidRestrictions] = useState('');
+    const [covidRestrictions] = useState('');
     const [showArrivalCity, setShowArrivalCity] = useState(false);
     const [showDepartureCity, setShowDepartureCity] = useState(false);
     const [showReturnArrivalCity, setShowReturnArrivalCity] = useState(false);
@@ -38,7 +36,7 @@ function SelectedFlightInfo({ dataResults }) {
         disabledPDF: true,
     });
     // const { login, setShowForm} = useContext(AuthContext);
-    const { login, setShowForm, setTravelersInfo } = useContext(AuthContext);
+    const { setTravelersInfo, setSaveTravelers } = useContext(AuthContext);
     const history = useHistory();
 
     function getMyDateTime(resultsDate) {
@@ -77,7 +75,7 @@ function SelectedFlightInfo({ dataResults }) {
         });
     }
 
-    const covidRestrictionsSearch = async (countryData) => {
+    /* const covidRestrictionsSearch = async (countryData) => {
         const { data } = await axios.post(
             'http://localhost:3001/covidRestrictions',
             { ...countryData }
@@ -86,7 +84,7 @@ function SelectedFlightInfo({ dataResults }) {
         if (data) {
             setCovidRestrictions(data);
         }
-    };
+    }; */
     const departureCity =
         dataResults.data.data.flightOffers[0].itineraries[0].segments[0]
             .departure.iataCode;
@@ -175,7 +173,7 @@ function SelectedFlightInfo({ dataResults }) {
         };
 
         if (dataResults) {
-            console.log('dataResults:', dataResults);
+            // console.log('dataResults:', dataResults);
 
             departureCityCall(departureCity);
 
@@ -219,15 +217,62 @@ function SelectedFlightInfo({ dataResults }) {
         //console.log('Nos vamos a confirmar pasajeros');
         // console.log(dataResults);
         const travelers = dataResults?.data?.data?.flightOffers[0].travelerPricings.map ((e) => (
-            {id: e.travelerId,
+            {key: e.travelerId,
+             id: '',
              typePassenger: e.travelerType, 
              typeSeat: e.fareOption,
              validate: false,
              documents: [],
-             name: "",
-             lastname: "",}));
+             name:{
+                 firstName: '',
+                 lastName: '',
+             },
+             gender: '',
+             dateofBirth: '',
+             contact: {
+                emailAddress: '',
+                phones: [{
+                    deviceType: 'MOBILE',
+                    contruyCallingCode: '34',
+                    number: '666666666'
+                }]
+             },
+             }
+             ));
         setTravelersInfo(travelers);
-        history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity]);
+        //Extraemos información, si la hay, de los pasajeros asociados al usuario
+        const idUser = localStorage.getItem('idUser');
+        const token = localStorage.getItem('userToken');
+        const typeAuth = localStorage.getItem('typeAuth');
+        
+        //let saveTravelers;
+        
+        const getPassengers = async ()=>{
+
+            const myHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+                'idUser': idUser,
+                'typeAuth': typeAuth,
+    
+            }
+            try {
+                const res = await axios.get(
+                    `http://localhost:3001/passengers`,{
+                        headers: myHeaders
+                    }
+                );
+                // saveTravelers = res.data.data;
+                // console.log('251:::::::::::',res.data.data);
+                setSaveTravelers(res.data.data);
+                history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity]);
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getPassengers();
+        // history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity, saveTravelers]);
     };
 
     return (

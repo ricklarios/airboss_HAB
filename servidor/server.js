@@ -61,6 +61,10 @@ const {
     poisDestination,
 } = require('./controllers/utilities/index');
 
+const {
+    getAllPassengers,
+} = require('./controllers/passengers/index')
+
 const { appsactivity } = require('googleapis/build/src/apis/appsactivity');
 
 /*
@@ -161,8 +165,10 @@ app.get('/checkInLink/:airlineCode', checkInLinks);
     #########################
 */
 
-// Obtiene todos los pasajeros de una reserva:
-//app.get('/passengers/:idBooking', getAllPassengers);
+// Obtiene todos los pasajeros de una reserva
+app.get('/passengers/:idBooking', authUser, getAllPassengers);
+// Obtiene todos los pasajeros asociados a un usuario
+app.get('/passengers', authUser, getAllPassengers);
 
 /*
     ##########################

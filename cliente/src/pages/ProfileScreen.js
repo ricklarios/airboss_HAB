@@ -5,7 +5,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton } from '@material-ui/core';
-import { PhotoCamera, SettingsPhone } from '@material-ui/icons';
+import { PhotoCamera } from '@material-ui/icons';
 import axios from 'axios';
 import FormData from 'form-data';
 import EditIcon from '@material-ui/icons/Edit';
@@ -47,11 +47,9 @@ const useStyles = makeStyles((theme) => ({
   export const ProfileScreen =  ({ history, match }) => {
     const classesFlags = useStylesFlags();
     const classes = useStyles();
-    const { phone, email,name, lastname, opacity, nationality, birthday, createdAt, picture, setPicture, setNameUser, setLastname, setNationality, setPhone,setBirthday } = useContext(AuthContext);
-    // console.log(birthday);
+    const { login, phone, email,name, lastname, opacity, nationality, birthday, createdAt, picture, setPicture, setNameUser, setLastname, setNationality, setPhone,setBirthday } = useContext(AuthContext);
     const birthdayDate = new Date(birthday).toLocaleDateString();
     const createDate = new Date(createdAt).toLocaleDateString();
-
     const [values, setValues] = useState({
         email: '',
         password: '',
@@ -78,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     const inputLastname = useRef(null);
 
     useEffect(()  =>  {
-        
+        // console.log('LOGINNNNN:',login);
         return () => {
             
         }
@@ -103,38 +101,41 @@ const useStyles = makeStyles((theme) => ({
         // console.log(event);
         setPicture(URL.createObjectURL(event.target.files[0]));
         async function changeAvatar() {
-            const token = localStorage.getItem('userToken');
-            const formData = new FormData();
-            formData.append(
-                "avatar",
-                event.target.files[0]
-              );
-            formData.append("email", email);
-            
-            const res = await axios.post('http://localhost:3001/users/avatar', 
-                formData,
-                {   
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `${token}`
-                    }
-                });
-            
-            if (res.data.status === 'ok'){
-              setValues({...values, ok: "Avatar modificado!", showOk: true});
+            try {
+                const token = localStorage.getItem('userToken');
+                const typeAuth = localStorage.getItem('typeAuth');
+                const formData = new FormData();
+                formData.append(
+                    "avatar",
+                    event.target.files[0]
+                    );
+                formData.append("email", email);
+                    
+                const res = await axios.post('http://localhost:3001/users/avatar', 
+                    formData,
+                    {   
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `${token}`,
+                            'typeauth': `${typeAuth}`,
+                        }
+                    });
+                if (res.data.status === 'ok'){
+                  setValues({...values, ok: "Avatar modificado!", showOk: true});
+                }
+            } catch (error) {
+                console.log(error);                
             }
         }
         changeAvatar();
     }
-    function click(component){
-        //console.log('VAMOS BIEN', component);
-    }
-    const handleChange = (prop) => (event) => {
+    
+   /*  const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
         if(event.target.id === 'standard-adornment-password' && event.charCode === 13){
             //handleRegister(event);
         }
-    };
+    }; */
     async function saveElement(element, newValue){
         const token = localStorage.getItem('userToken');
         const typeAuth = localStorage.getItem('typeAuth');
@@ -208,6 +209,7 @@ const useStyles = makeStyles((theme) => ({
         setValues({ ...values, phone: event.replace(/\s/g, '') });
     };  
     const handleChangeNationality = (event) => {
+        console.log(event);
         const country = countries[event.currentTarget.dataset.optionIndex]?.label;
         console.log(country);
         setValues({ ...values, nationality: country});
@@ -296,10 +298,7 @@ const useStyles = makeStyles((theme) => ({
                                     onChange={handleChangeNationality}
                                     label="Elige un país"
                                     variant="standard"
-                                    /* inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
-                                }} */
+                                    
                                 />    
                             )}
                         />

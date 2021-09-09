@@ -9,7 +9,7 @@ const validateToken = async (req, res, next) => {
     let connection;
     connection = await getDB();
     const { typeAuth } = req.params;
-
+    // console.log('DENTRO DE VALIDATE TOKEN');
     //FALTA ORGANIZAR MEJOR EL CODIGO, PROBABLEMENTE EN FUNCIONES EN HELPERS
     if (typeAuth === 'API') {
         try {
