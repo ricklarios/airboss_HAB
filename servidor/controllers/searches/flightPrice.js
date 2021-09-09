@@ -18,7 +18,7 @@ const flightPrice = async (req, res, next) => {
             data: result,
         });
     } catch (error) {
-        console.log(error);
+        next();
     }
 };
 module.exports = flightPrice;

@@ -84,15 +84,15 @@ export const ConfirmPassengersScreen = ({ history }) => {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showOk: false});
+        setValues({ ...values, showOk: false });
     };
     const handleCloseInfo = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showInfo: false});
+        setValues({ ...values, showInfo: false });
     };
-    function editTraveler (id){
+    function editTraveler(id) {
         setAnimation('animate__backInDown');
         //{showEditTravelerForm && <PassengersForm  travelersInfo={travelersInfo} currentTraveler={currentTraveler}/>}
         console.log('92::::::',id);
@@ -114,7 +114,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 flightObject: data.state[0].data.data.flightOffers[0],
                 travelers: travelersInfo,
             };
-            const res = await axios.post('http://localhost:3001/booking',body);
+            const res = await axios.post('http://localhost:3001/booking', body);
             console.log(res);
             console.log(res.data.data.data.id);
             if (res?.data?.data?.data?.id){
@@ -128,7 +128,11 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 setValues({...values, showInfo: true, info: 'No se ha podido completar la reserva'});
             }
         } catch (error) {
-            setValues({...values, showInfo: true, info: 'No se ha podido completar la reserva'});
+            setValues({
+                ...values,
+                showInfo: true,
+                info: 'No se ha podido completar la reserva',
+            });
             // console.log(error);
         }
     }
@@ -228,80 +232,96 @@ export const ConfirmPassengersScreen = ({ history }) => {
                                             size = "small"
                                             onClick={()=> editTraveler(e.key)}
                                         >
-                                            <EditIcon />
+                                            <CheckCircleIcon
+                                                style={{ color: green[500] }}
+                                            />
                                         </Fab>
                                     </span>
                                 </Tooltip>
-                                { e.validate && <Tooltip title="Pasajero guardado correctamente">
+                            
+                            {!e.validate && (
+                                <Tooltip title='Debes completar los datos del pasajero'>
                                     <span>
-                                        <Fab style={{ color: green[500]}} aria-label="Borrar datos pasajero" size = "small" disabled>
-                                            <CheckCircleIcon style={{ color: green[500]}}/>
+                                        <Fab
+                                            style={{ color: red[500] }}
+                                            aria-label='Borrar datos pasajero'
+                                            size='small'
+                                            disabled
+                                        >
+                                            <ErrorIcon
+                                                style={{ color: red[500] }}
+                                            />
                                         </Fab>
                                     </span>
-                                </Tooltip> }
-                                {!e.validate && <Tooltip title="Debes completar los datos del pasajero">
-                                    <span>
-                                        <Fab style={{ color: red[500]}} aria-label="Borrar datos pasajero" size = "small" disabled>
-                                            <ErrorIcon style={{ color: red[500]}}/>
-                                        </Fab>
-                                    </span>
-                                    </Tooltip>}
-                            </div>
-
-                        )})}
-                    {travelersInfo?.every(e => e.validate) && !bookingDone && <PayPalScriptProvider 
-                        className="paypal-container" 
-                        options={{ "client-id": `${process.env.REACT_APP_PAYPAL_CLIENTID}`, 
-                                "currency":  `${data?.state[0]?.data?.data?.flightOffers[0]
-                                    ?.travelerPricings[0]?.price?.currency}`,
-                                    "disable-funding": "sofort",}}>
+                                </Tooltip>
+                            )}
+                        </div>
+                    );
+                })}
+                {travelersInfo?.every((e) => e.validate) && !bookingDone && (
+                    <PayPalScriptProvider
+                        className='paypal-container'
+                        options={{
+                            'client-id': `${process.env.REACT_APP_PAYPAL_CLIENTID}`,
+                            currency: `${data?.state[0]?.data?.data?.flightOffers[0]?.travelerPricings[0]?.price?.currency}`,
+                            'disable-funding': 'sofort',
+                        }}
+                    >
                         <PayPalButtons
-                            className = "paypal-container"
+                            className='paypal-container'
                             style={{ height: 44 }}
                             createOrder={(data, actions) => {
-                                    return actions.order.create({
-                                        purchase_units: [
-                                            {
-                                                amount: {
-                                                    value: `${price}`,
-                                                    
-                                                },
+                                return actions.order.create({
+                                    purchase_units: [
+                                        {
+                                            amount: {
+                                                value: `${price}`,
                                             },
-                                        ],
-                                    });
-                            
-                            }}
-                            onApprove = {(data, actions) => {
-                                // This function captures the funds from the transaction.
-                                return actions.order.capture().then(function(details) {
-                                  // This function shows a transaction success message to your buyer.
-                                  paymentSuccess(details);
-                                  //alert('Transaction completed by ' + details.payer.name.given_name);
+                                        },
+                                    ],
                                 });
                             }}
-                            onCancel = { function ( data ){
+                            onApprove={(data, actions) => {
+                                // This function captures the funds from the transaction.
+                                return actions.order
+                                    .capture()
+                                    .then(function (details) {
+                                        // This function shows a transaction success message to your buyer.
+                                        paymentSuccess(details);
+                                        //alert('Transaction completed by ' + details.payer.name.given_name);
+                                    });
+                            }}
+                            onCancel={function (data) {
                                 console.log('CANCEL');
                             }}
-                            onError = { function ( err ) {
-                                console.log( err );
-                            } }
+                            onError={function (err) {
+                                console.log(err);
+                            }}
                         />
-                         </PayPalScriptProvider>}
-                    {/* <div id='container-button'>
+                    </PayPalScriptProvider>
+                )}
+                {/* <div id='container-button'>
                             <button id='payment-button' onClick={goToPayment}>Ir a Pago</button>
                     </div> */}
-                </div>
-                <Snackbar open={values.showOk} autoHideDuration={5000} onClose={handleCloseOk}>
-                        <Alert onClose={handleCloseOk} severity="success">
-                        {values.ok}
-                        </Alert>
-                </Snackbar>
-                <Snackbar open={values.showInfo} autoHideDuration={3000} onClose={handleCloseInfo}>
-                        <Alert onClose={handleCloseInfo} severity="info">
-                        {values.info}
-                        </Alert>
-                </Snackbar>
             </div>
-        
+            <Snackbar
+                open={values.showOk}
+                autoHideDuration={5000}
+                onClose={handleCloseOk}
+            >
+                <Alert onClose={handleCloseOk} severity='success'>
+                    {values.ok}
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={values.showInfo}
+                autoHideDuration={3000}
+                onClose={handleCloseInfo}
+            >
+                <Alert onClose={handleCloseInfo} severity='info'>
+                    {values.info}
+                </Alert>
+            </Snackbar>
+        </div>
     );
 };

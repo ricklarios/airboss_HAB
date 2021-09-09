@@ -24,6 +24,8 @@ const createOrder = async (req, res, next) => {
             })
         );
 
+        console.log('Order Result:', result);
+
         connection = await getDB();
 
         //Extraigo el objeto data de result
@@ -36,12 +38,18 @@ const createOrder = async (req, res, next) => {
         const bookingCode = data.id;
         const createdAt = formatDate(now);
         const finalPrice = data.flightOffers[0].price.total;
+        const currency = data.flightOffers[0].price.currency;
+
+        //Me quedo con el array de itinerarios.
+        const itineraries = data.flightOffers[0].itineraries;
+        const oneWay = itineraries.length === 1 ? true : false;
+
         const [newBooking] = await connection.query(
             `
-                INSERT INTO bookings (bookingCode, createdAt, finalPrice, idUser)
-                VALUES(?, ?, ?, ?);
+                INSERT INTO booking (bookingCode, createdAt, finalPrice, currency, oneWay, idUser)
+                VALUES(?, ?, ?, ?, ?, ?);
             `,
-            [bookingCode, createdAt, finalPrice, idUser]
+            [bookingCode, createdAt, finalPrice, currency, oneWay, idUser]
         );
 
         //Recupero el nuevo idBooking para pasarlo a passengers y a itinerarios
@@ -52,8 +60,13 @@ const createOrder = async (req, res, next) => {
             console.log(traveler);
             await connection.query(
                 `
+<<<<<<< HEAD
                     INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, nationality, idBooking )
                     VALUES(?, ?, ?, ?, ?, ? ,?, ?,?,?);
+=======
+                    INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, idBooking )
+                    VALUES(?, ?, ?, ?, ?, ? ,?, ?, ?);
+>>>>>>> 9810d70ced8be3a86a8606a4842a4f04ec4cd09f
                 `,
                 [
                     traveler.name.firstName,
@@ -71,34 +84,34 @@ const createOrder = async (req, res, next) => {
         }
 
         //Insertamos itinerarios
-        //Me quedo con el array de itinerarios.
-        const itineraries = data.flightOffers[0].itineraries;
+
         for (let i = 0; i < itineraries.length; i++) {
             const [newItinerarie] = await connection.query(
                 `
-                    INSERT INTO itineraries (duration, idBooking)
+                    INSERT INTO itineraries (itineraryId, idBooking)
                     VALUES(?, ?);
                 `,
-                [itineraries[i].duration, idBooking]
+                [i, idBooking]
             );
             //Guardo el idItinerario del bucle.
             const { insertId: idItinerarie } = newItinerarie;
 
             //Me quedo con el array de segmentos.
             const segments = itineraries[i].segments;
-            for (const segment of segments) {
+            for (let i = 0; i < segments.length; i++) {
                 await connection.query(
                     `
-                        INSERT INTO segments (origin, destination, departure_datetime, arrival_datetime, carrierCode, duration, idItineraries)
-                        VALUES(?, ?, ?, ?, ?, ?, ?);
+                        INSERT INTO segments (segmentId, origin, destination, departure_datetime, arrival_datetime, carrierCode, duration, idItineraries)
+                        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
                     `,
                     [
-                        segment.departure.iataCode,
-                        segment.arrival.iataCode,
-                        segment.departure.at,
-                        segment.arrival.at,
-                        segment.carrierCode,
-                        segment.duration,
+                        i,
+                        segments[i].departure.iataCode,
+                        segments[i].arrival.iataCode,
+                        segments[i].departure.at,
+                        segments[i].arrival.at,
+                        segments[i].carrierCode,
+                        segments[i].duration,
                         idItinerarie,
                     ]
                 );
@@ -116,9 +129,7 @@ const createOrder = async (req, res, next) => {
         res.send({
             status: 'error',
             message: error,
-        }
-
-        )
+        });
     } finally {
         if (connection) connection.release;
     }
@@ -127,4 +138,3 @@ const createOrder = async (req, res, next) => {
 module.exports = createOrder;
 // id reserva
 //eJzTd9cPdTI2M7EAAAqHAhI%3D
-

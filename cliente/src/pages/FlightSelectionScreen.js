@@ -57,7 +57,7 @@ export const FlightSelectionScreen = ({ history }) => {
         preferredCurrency.currency
     }&oneWay=${oneWay}&nonStop=${nonStop}&originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${formatDate(
         departureDate
-    )}&returnDate=${returnDate}&numAdults=${numAdults}&numChilds=${numChilds}&crossBorderAllowed=${crossBorderAllowed}&travelClass=${travelClass}&maxFlightOffers=10`;
+    )}&returnDate=${returnDate}&numAdults=${numAdults}&numChilds=${numChilds}&crossBorderAllowed=${crossBorderAllowed}&travelClass=${travelClass}&maxFlightOffers=20`;
 
     useEffect(() => {
         setShowResults(false);
