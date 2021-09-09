@@ -12,6 +12,7 @@ import { AuthContext } from '../App';
 import { PoisDestinations } from '../components/utilities/PoisDestinations';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Stepper } from '../components/ui/Stepper';
 
 const queryString = require('query-string');
 
@@ -90,9 +91,10 @@ export const FlightSelectionScreen = ({ history }) => {
     const useStyles = makeStyles((theme) => ({
         root: {
             position: 'absolute',
-            top: '70px',
+            top: '65px',
             width: '100%',
             zIndex: '2000',
+            height: '0.5rem',
             '& > * + *': {
                 marginTop: theme.spacing(2),
             },
@@ -109,34 +111,39 @@ export const FlightSelectionScreen = ({ history }) => {
     };
     return (
         <div id='searches-container-all' style={opacity}>
-            <div id='searches-container'>
-                {showResults && !dataResults && (
-                    <LinearProgress className={classes.root} />
-                )}
-                {showResults && dataResults && (
-                    <div id='flight-screen-results'>
-                        <SearchBox history={history} vertical={true} />
-                        <FlightResults
-                            dataResults={dataResults}
-                            oneWay={oneWay}
-                            numAdults={numAdults}
-                            numChilds={numChilds}
-                        />
-                        <Snackbar
-                            open={values.showInfo}
-                            autoHideDuration={4000}
-                            onClose={handleCloseOk}
-                        >
-                            <Alert onClose={handleCloseOk} severity='info'>
-                                {values.info}
-                            </Alert>
-                        </Snackbar>
+            <div>
+                <div id='searches-container'>
+                    {showResults && !dataResults && (
+                        <LinearProgress className={classes.root} />
+                    )}
+                    {showResults && dataResults && (
+                        <div id='flight-screen-results'>
+                            <Stepper step='flightSelection' />
+                            <SearchBox history={history} vertical={true} />
+                            <FlightResults
+                                dataResults={dataResults}
+                                oneWay={oneWay}
+                                numAdults={numAdults}
+                                numChilds={numChilds}
+                            />
+                            <Snackbar
+                                open={values.showInfo}
+                                autoHideDuration={4000}
+                                onClose={handleCloseOk}
+                            >
+                                <Alert onClose={handleCloseOk} severity='info'>
+                                    {values.info}
+                                </Alert>
+                            </Snackbar>
 
-                        <PoisDestinations
-                            destinationLocationCode={destinationLocationCode}
-                        />
-                    </div>
-                )}
+                            <PoisDestinations
+                                destinationLocationCode={
+                                    destinationLocationCode
+                                }
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

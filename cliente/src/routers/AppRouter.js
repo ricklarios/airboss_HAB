@@ -15,7 +15,7 @@ import { ValidateScreen } from '../pages/ValidateScreen';
 import { ResetPasswordScreen } from '../pages/ResetPasswordScreen';
 import { ConfirmPassengersScreen } from '../pages/ConfirmPassengersScreen';
 import { Header } from '../components/ui/Header';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../App';
 import LoginForm from '../components/login/LoginForm';
@@ -24,6 +24,7 @@ import RestorePasswordForm from '../components/login/RestorePasswordForm';
 import PassengersForm from '../components/passengers/passengers-form';
 import { routes } from './routes';
 import { PrivateRoute } from './PrivateRoute';
+import { PrivateSearchRoute } from './PrivateSearchRoute';
 
 export const UserContext = createContext(null);
 
@@ -32,6 +33,18 @@ export const AppRouter = () => {
         currency: 'EUR',
         symbol: '€',
     });
+
+    const isSelectedFlight = () => {
+        const selectedFlightSaved = JSON.parse(
+            localStorage.getItem('selectedFlight')
+        );
+        if (selectedFlightSaved) {
+            return { ...selectedFlightSaved };
+        } else {
+            return {};
+        }
+    };
+    const [selectedFlight, setSelectedFlight] = useState(isSelectedFlight());
 
     const {
         login,
@@ -48,6 +61,8 @@ export const AppRouter = () => {
                     value={{
                         preferredCurrency,
                         setPreferredCurrency,
+                        selectedFlight,
+                        setSelectedFlight,
                     }}
                 >
                     <Header />
@@ -66,12 +81,12 @@ export const AppRouter = () => {
                             path={routes.searches}
                             component={FlightSelectionScreen}
                         />
-                        <PrivateRoute
+                        <PrivateSearchRoute
                             exact
                             path={routes.pricing}
                             component={SelectedFlightDetailsScreen}
                         />
-                        <PrivateRoute
+                        <PrivateSearchRoute
                             exact
                             path={routes.passengers}
                             component={ConfirmPassengersScreen}

@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,9 +10,13 @@ import './css/selected-flight-details.css';
 import SelectedFlightInfo from '../components/searches/SelectedFlightInfo';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { UserContext } from '../routers/AppRouter';
+import { Stepper } from '../components/ui/Stepper';
+import { PoisDestinations } from '../components/utilities/PoisDestinations';
 
 export const SelectedFlightDetailsScreen = ({ history }) => {
-    const selectedFlight = useLocation().state[0];
+    const { selectedFlight } = useContext(UserContext);
+
     const [values, setValues] = useState({
         info: '',
         showInfo: false,
@@ -77,9 +81,10 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
     const useStyles = makeStyles((theme) => ({
         root: {
             position: 'absolute',
-            top: '10%',
+            top: '65px',
             width: '100%',
             zIndex: '2000',
+            height: '0.5rem',
             '& > * + *': {
                 marginTop: theme.spacing(2),
             },
@@ -93,12 +98,28 @@ export const SelectedFlightDetailsScreen = ({ history }) => {
         setValues({ ...values, showInfo: false });
     };
     return (
-        <div id='selected-flight-info-container-all'>
+        <div>
             {showResults && !dataResults && (
                 <LinearProgress className={classes.root} />
             )}
             {showResults && dataResults && (
-                <SelectedFlightInfo dataResults={dataResults} />
+                <div id='selected-flight-info-container-all'>
+                    <Stepper step='selectedFlight' history={history} />
+                    <div className='selected-flight-info'>
+                        <SelectedFlightInfo dataResults={dataResults} />
+                        <PoisDestinations
+                            destinationLocationCode={
+                                dataResults.data.data.flightOffers[0]
+                                    .itineraries[0].segments[
+                                    [
+                                        dataResults.data.data.flightOffers[0]
+                                            .itineraries[0].segments.length - 1,
+                                    ]
+                                ].arrival.iataCode
+                            }
+                        />
+                    </div>
+                </div>
             )}
             <Snackbar
                 open={values.showInfo}

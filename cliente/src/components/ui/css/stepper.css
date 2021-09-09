@@ -1,0 +1,47 @@
+#stepper-container {
+    margin-top: 70px;
+    width: 100%;
+    grid-column: span 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+#stepper {
+    
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1rem;
+    width: 100%;
+
+
+}
+
+#stepper a {
+    color: white;
+}
+
+#stepper > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    cursor: pointer;
+}
+
+.fligh-selection {
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#stepper svg {
+    font-size: 1.2rem;
+}
+
+
+.current-step {
+    cursor:unset !important;
+    color: #51C4D3;
+}
