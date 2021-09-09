@@ -3,7 +3,7 @@ import { useState, useEffect, useContext, createContext } from 'react';
 import axios from 'axios';
 //import { makeStyles } from '@material-ui/core/styles';
 import './css/ConfirmPassengersScreen.css'
-import { Select, Snackbar, TextField } from '@material-ui/core';
+import {Snackbar, TextField } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import EditIcon from '@material-ui/icons/Edit';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -143,9 +143,9 @@ export const ConfirmPassengersScreen = ({ history }) => {
         setTravelersInfo(prevState => (
             prevState.map(
                 (el) => {
-                    console.log(el.key, key);
+                    // console.log(el.key, key);
                     if (el.key === key ){
-                        console.log('DENTRO DEL IFFFFFF');
+                        // console.log('DENTRO DEL IFFFFFF');
                         return {key: key,
                                 id : `${key}`, 
                                 name: {
@@ -226,19 +226,23 @@ export const ConfirmPassengersScreen = ({ history }) => {
                                </span>
                                <Tooltip title="Editar los datos del pasajero">
                                     <span>
-                                        <Fab 
+                                    <Fab 
                                             color="primary" 
                                             aria-label="Añadir datos pasajero" 
                                             size = "small"
                                             onClick={()=> editTraveler(e.key)}
                                         >
-                                            <CheckCircleIcon
-                                                style={{ color: green[500] }}
-                                            />
+                                            <EditIcon />
                                         </Fab>
                                     </span>
                                 </Tooltip>
-                            
+                            { e.validate && <Tooltip title="Pasajero guardado correctamente">
+                                <span>
+                                    <Fab style={{ color: green[500]}} aria-label="Borrar datos pasajero" size = "small" disabled>
+                                        <CheckCircleIcon style={{ color: green[500]}}/>
+                                    </Fab>
+                                </span>
+                            </Tooltip> }
                             {!e.validate && (
                                 <Tooltip title='Debes completar los datos del pasajero'>
                                     <span>

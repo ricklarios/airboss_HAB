@@ -60,13 +60,8 @@ const createOrder = async (req, res, next) => {
             console.log(traveler);
             await connection.query(
                 `
-<<<<<<< HEAD
                     INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, nationality, idBooking )
                     VALUES(?, ?, ?, ?, ?, ? ,?, ?,?,?);
-=======
-                    INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, idBooking )
-                    VALUES(?, ?, ?, ?, ?, ? ,?, ?, ?);
->>>>>>> 9810d70ced8be3a86a8606a4842a4f04ec4cd09f
                 `,
                 [
                     traveler.name.firstName,
