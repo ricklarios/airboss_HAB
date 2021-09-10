@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { getSymbol } from '../../helpers';
 import { UserContext } from '../../routers/AppRouter';
 import './css/flight-results.css';
@@ -15,7 +15,7 @@ import { routes } from '../../routers/routes';
 function FlightResults({ dataResults, oneWay, numAdults, numChilds }) {
     // console.log(dataResults);
 
-    const { preferredCurrency, selectedFlight, setSelectedFlight } =
+    const { preferredCurrency, setSelectedFlight } =
         useContext(UserContext);
     const { login, setShowForm } = useContext(AuthContext);
 

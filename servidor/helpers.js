@@ -63,6 +63,43 @@ async function sendMail({ to, subject, body }) {
     }
 }
 
+
+/**
+ * #############################################
+ * ## Enviar email de confirmación de reserva ##
+ * #############################################
+ */
+
+ async function sendMailBooking({ to, subject, body, passengers }) {
+    try {
+        console.log('DENTRO DE SENDMAIL**************************************');
+        console.log('to:::',to);
+        console.log('body:::',body);
+        console.log('passengers:::', passengers);
+        let passengersList;
+        for (const passenger of passengers){
+            passengersList += `- ${passenger.name.firstName} ${passenger.name.lastName} <br>`; 
+        }
+        const msg = {
+            to,
+            from: process.env.SENDGRID_FROM,
+            subject,
+            text: body,
+            html: `
+                <div>
+                    <h1>${subject}</h1>
+                    <p>${body}</p>
+                    <p>${passengersList}</p>
+                </div>
+            `,
+        };
+        await sgMail.send(msg);
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error enviando email');
+    }
+}
+
 /**
  * #####################
  * ## Validar esquema ##
@@ -175,6 +212,7 @@ const googleVerify = async(idToken='') =>{
 module.exports = {
     formatDate,
     sendMail,
+    sendMailBooking,
     validate,
     generateRandomString,
     savePhoto,

@@ -6,14 +6,12 @@ const amadeus = new Amadeus({
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
 });
+const { sendMailBooking } = require('../../helpers');
 
 const createOrder = async (req, res, next) => {
     let connection;
     try {
         const { flightObject, travelers, idUser } = req.body;
-        // console.log(flightObject);
-        // console.log('travelers:', travelers);
-        // console.log('idUser: ', idUser);
         const { result } = await amadeus.booking.flightOrders.post(
             JSON.stringify({
                 data: {
@@ -112,6 +110,26 @@ const createOrder = async (req, res, next) => {
                 );
             }
         }
+        //Vamos a generar el envío del mail de confirmación de reserva
+
+        //Obtenemos el correo del usuario
+        const [user] = await connection.query(
+            `
+                SELECT email FROM users WHERE id = ?;
+            `,
+            [idUser]
+        );
+        const emailto = user[0].email;
+        const emailBody = ` Tu reserva ${bookingCode} ha sido realizada con éxito. Gracias por confiar en airboss. A continuación te mostramos la lista de pasajeros:`
+
+        await sendMailBooking({
+            to: emailto,
+            subject: `Reserva confirmada con airboss`,
+            body: emailBody    ,
+            passengers: travelers,
+        })
+
+
         //console.log('todo guay');
         res.send({
             status: 'ok',
