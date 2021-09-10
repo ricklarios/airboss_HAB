@@ -107,7 +107,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
     async function paymentSuccess (details){
         // console.log('TRAVELERS PAYMENT:',travelersInfo);
         // setValues({...values, showOk: true, ok: 'Pago realizado correctamente', disabledPDF: false});
-        console.log('DATA::',data.state[0].data.data.flightOffers[0]);
+        // console.log('DATA::',data.state[0].data.data.flightOffers[0]);
         try {
             const body = {
                 idUser: localStorage.getItem('idUser'),
@@ -115,11 +115,12 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 travelers: travelersInfo,
             };
             const res = await axios.post('http://localhost:3001/booking', body);
-            console.log(res);
-            console.log(res.data.data.data.id);
+            // console.log(res);
+            // console.log(res.data.data.data.id);
             if (res?.data?.data?.data?.id){
                 setBookingDone(true);
                 setValues({...values, showOk: true, ok: `Reserva ${res?.data?.data?.data?.id} Confirmada`});
+
                 setTimeout(() => {
                     <Redirect to={routes.home} />
                     history.push('/');
@@ -133,7 +134,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 showInfo: true,
                 info: 'No se ha podido completar la reserva',
             });
-            // console.log(error);
+            console.log(error);
         }
     }
     const handleChangePassenger = (event, key) => {
@@ -178,7 +179,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 }
             )
         ))
-        console.log('154:::::::',travelersInfo);
+        // console.log('154:::::::',travelersInfo);
     }
     return (
         
@@ -296,7 +297,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                                     });
                             }}
                             onCancel={function (data) {
-                                console.log('CANCEL');
+                                setValues({...values, showInfo: true, info: 'Has cancelado el pago, si no realizas el mismo no tendrás confirmación de tu reserva.'});
                             }}
                             onError={function (err) {
                                 console.log(err);

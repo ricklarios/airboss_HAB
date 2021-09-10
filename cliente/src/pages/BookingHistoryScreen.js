@@ -18,6 +18,7 @@ export const BookingHistoryScreen = () => {
     });
 
     function getMyDateTime(resultsDate) {
+        // console.log(resultsDate);
         const dateTime = new Date(resultsDate);
         const date = dateTime.toLocaleDateString('es-ES');
         const time = dateTime.toLocaleTimeString([], {
@@ -38,7 +39,7 @@ export const BookingHistoryScreen = () => {
             );
             if (data) {
                 setDataResults(data);
-                console.log(data);
+                console.log('data:::',data);
                 // Si no hay resultados muestro aviso en pantalla
                 if (data?.data?.length === 0) {
                     console.log('No hay datos!!');
@@ -130,13 +131,13 @@ export const BookingHistoryScreen = () => {
                                     Salida:{' '}
                                     {
                                         getMyDateTime(
-                                            booking.departure_datetime
+                                            booking.itineraries[0].segments[0].departure_datetime
                                         )[0]
                                     }{' '}
                                     (
                                     {
                                         getMyDateTime(
-                                            booking.departure_datetime
+                                            booking.itineraries[0].segments[0].departure_datetime
                                         )[1]
                                     }
                                     )

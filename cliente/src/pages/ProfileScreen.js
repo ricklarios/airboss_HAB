@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   export const ProfileScreen =  ({ history, match }) => {
     const classesFlags = useStylesFlags();
     const classes = useStyles();
-    const { login, phone, email,name, lastname, opacity, nationality, birthday, createdAt, picture, setPicture, setNameUser, setLastname, setNationality, setPhone,setBirthday } = useContext(AuthContext);
+    const { phone, email,name, lastname, opacity, nationality, birthday, createdAt, picture, setPicture, setNameUser, setLastname, setNationality, setPhone,setBirthday } = useContext(AuthContext);
     const birthdayDate = new Date(birthday).toLocaleDateString();
     const createDate = new Date(createdAt).toLocaleDateString();
     const [values, setValues] = useState({
@@ -124,7 +124,8 @@ const useStyles = makeStyles((theme) => ({
                   setValues({...values, ok: "Avatar modificado!", showOk: true});
                 }
             } catch (error) {
-                console.log(error);                
+                // console.log(error);
+                setValues({...values, error: error.message, showError: true})                
             }
         }
         changeAvatar();
@@ -153,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
                     'typeAuth': `${typeAuth}`
                 }
             });
-            console.log(data);
+            // console.log(data);
             if (data.status === 'ok'){
                 
                 if (element==="name"){
@@ -180,7 +181,7 @@ const useStyles = makeStyles((theme) => ({
             }
         } catch (error) {
             setValues({...values, error: error.message, showError: true})
-            console.log(error);
+            // console.log(error);
         }
     };
 
