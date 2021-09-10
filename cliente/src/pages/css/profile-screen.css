@@ -5,11 +5,7 @@
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
   }
-  
-body {
-  
-    height: 100vh;
-}
+
 
 #profile-container {
     
@@ -19,38 +15,24 @@ body {
     justify-content: center;
     flex-direction: column;
     font-family: Montserrat, sans-serif;
-    position: absolute;
-    top: 0;
+    
     width: 100%;
     background-image: linear-gradient( #126E82, #00c3ff );
 }
 
 
-@media only screen and (max-width: 700px) {
-  #hohome-screen copyme-container {
-    
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    font-family: Montserrat, sans-serif;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-  } 
-}
+
 
 #profile{
   background-color: white;
   margin: 0 auto;
-  width: 900px;
+  min-width: 700px;
   height: 500px;
   border-radius: 5px;
   display: grid;
   grid-template-columns: 1fr 3fr;
+  margin-top: 80px;
+  
 }
 #titles{
   background-color: #126E82;

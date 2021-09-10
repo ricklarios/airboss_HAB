@@ -35,11 +35,13 @@ export const Stepper = ({ step, history }) => {
                     <>
                         <Link to={routes.home}>Home</Link>
                         <RiArrowRightSLine />
-                        <div>Selección de vuelo</div>
+                        <div className='no-link'>Selección de vuelo</div>
                         <RiArrowRightSLine />
-                        <div>Detalles del vuelo</div>
+                        <div className='no-link'>Detalles del vuelo</div>
                         <RiArrowRightSLine />
-                        <div className='current-step'>Confirmar pasajeros</div>
+                        <div className='current-step'>
+                            Confirmar pasajeros y realizar el pago
+                        </div>
                     </>
                 )}
             </div>

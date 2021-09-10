@@ -1,15 +1,31 @@
-#passengers-formd {
+#passengers-form {
   background-color: white;
   color: black;
   border-radius: 15px;
   padding: 20px;
   box-shadow: -1px 1px 2px rgb(129, 129, 129);
-  margin: 100px auto;
+  position: absolute;
+  top: 70px;
   width: 75%;
   max-width: 850px;
   font-family: Montserrat, sans-serif;
   text-align: left;
 }
+.passengers-form .summary-flight {
+  padding: 1rem;
+}
+
+#passengers {
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+#passengers-titles {
+  font-weight: 500;
+}
+
+
+
 
 #register-form > div > .MuiFormControl-root, #register-form > .MuiFormControl-root  {
   height: 40px;
