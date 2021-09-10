@@ -1,7 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
-
-
 #history-container {
     min-height: calc(100vh - 70px);
     display: flex;
@@ -49,4 +47,14 @@
 #history-li:hover {
     box-shadow: 0px 0px 0px;
     background-color: #ccecf7;
+}
+#escales-li {
+    list-style: none;
+}
+
+#ida-vuelta-container {
+    /* background-color: #51c4d3; */
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
 }
