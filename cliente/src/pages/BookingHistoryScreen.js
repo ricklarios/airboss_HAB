@@ -34,12 +34,14 @@ export const BookingHistoryScreen = () => {
         setShowResults(false);
         setDataResults('');
         const getUserBooking = async () => {
+            // console.log('DENTRO DE USEFFECT:::', idUser);
             const { data } = await axios.get(
                 `http://localhost:3001/allBooking/${idUser}`
             );
+            console.log('booking history screen 40');
             if (data) {
                 setDataResults(data);
-                console.log('data:', data);
+                // console.log('data:::',data);
                 // Si no hay resultados muestro aviso en pantalla
                 if (data?.data?.length === 0) {
                     console.log('No hay datos!!');

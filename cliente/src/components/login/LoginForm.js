@@ -131,24 +131,39 @@ function LoginForm() {
             async function loginGoogle() {
                 const typeAuth = localStorage.getItem('typeAuth');
                 const myHeaders = new Headers();
-
-                myHeaders.append('Content-Type', 'application/json');
+                
+                /* myHeaders.append('Content-Type', 'application/json');
                 myHeaders.append('authorization', response.tokenObj.id_token);
                 myHeaders.append('email', email);
                 myHeaders.append('name', name);
-                myHeaders.append('lastname', lastname);
+                myHeaders.append('lastname', lastname); */
 
+                
+                
+                // console.log('ENTRO EN LOGINGOOGLE');
                 const res = await axios.get(
-                    `http://localhost:3001/users/validate-token/${typeAuth}`,
-                    myHeaders
-                );
-                //console.log(res);
-                if (res.data.status === 'ok') {
+                    `http://localhost:3001/users/validate-token/${typeAuth}`,{
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'authorization': `${response.tokenObj.id_token}`,
+                            'typeauth': `${typeAuth}`,
+                            'email': `${email}`,
+                            'name': `${name}`,
+                            'lastname': `${lastname}`,
+                        }
+                    }
+                    );
+                // console.log('ENTRO EN LOGINGOOGLE tras axios');
+                
+                // console.log('RES:::',res);
+                if (res?.data?.status === 'ok') {
+                    // console.log(res);
                     setValues({
                         ...values,
                         ok: 'Logado Google OK!',
                         showOk: true,
                     });
+                    localStorage.setItem('idUser', res?.data?.data?.idUser)
                 }
             }
 

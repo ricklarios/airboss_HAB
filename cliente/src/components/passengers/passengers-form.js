@@ -114,32 +114,17 @@ function PassengersForm() {
                 },
             ],
         },
-        documents: [
-            {
-                documentType:
-                    travelersInfo[Number(currentTraveler) - 1]?.documents[0]
-                        ?.documentType || '',
-                birthPlace:
-                    travelersInfo[Number(currentTraveler) - 1]?.documents[0]
-                        ?.birthPlace || '',
-
-                issuanceDate:
-                    getMyDateTime(
-                        travelersInfo[Number(currentTraveler) - 1]?.documents[0]
-                            ?.issuanceDate
-                    )[0] || '',
-                number:
-                    travelersInfo[Number(currentTraveler) - 1]?.documents[0]
-                        ?.number || '',
-                expiryDate: '2050-12-31',
-                issuanceCountry: '',
-                validityCountry: '',
-                nationality:
-                    travelersInfo[Number(currentTraveler) - 1]?.documents[0]
-                        ?.nationality || '',
-                holder: true,
-            },
-        ],
+        documents:[{
+            documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
+            birthPlace: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.birthPlace || '',
+            issuanceDate: getMyDateTime(travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate)[0] || '',
+            number: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.number || '',
+            expiryDate: '2050-12-31',
+            issuanceCountry: '',
+            validityCountry: '',
+            nationality: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.nationality || '',
+            holder: true
+        },],
         error: '',
         showError: false,
         ok: '',
@@ -202,9 +187,9 @@ function PassengersForm() {
         } else if (prop === 'birthPlace') {
             // setValues({...values, documents: {...values.documents[0], birthPlace: event.target.value}})
             let updatedList;
-            updatedList = values.documents.map((item) => {
-                return { ...item, birthPlace: event.target.value }; //gets everything that was already in item, and updates "done"
-            });
+            updatedList = values.documents.map (item => {
+                return {...item, birthPlace: event.target.value}; //gets everything that was already in item, and updates "done"
+            })
             // console.log(updatedList);
             setValues({ ...values, documents: updatedList });
         } else if (prop === 'typeDocument') {
