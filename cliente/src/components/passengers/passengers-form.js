@@ -497,11 +497,11 @@ function PassengersForm() {
                 <div>
                     <Autocomplete
                         id='country-select'
-                        defaultValue={{
-                            label: `${
-                                values?.documents[0]?.nationality || 'Spain'
-                            }`,
-                        }}
+                        // defaultValue={{
+                        //     label: `${
+                        //         values?.documents[0]?.nationality || 'Spain'
+                        //     }`,
+                        // }}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal
