@@ -2,7 +2,7 @@ import './css/booking-history-screen.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSymbol } from '../helpers';
-
+import AirlineSeatReclineExtraIcon  from '@material-ui/icons/AirlineSeatReclineExtra';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -11,6 +11,8 @@ export const BookingHistoryScreen = () => {
 
     const [showResults, setShowResults] = useState(false);
     const [dataHistoryResults, setDataResults] = useState('');
+    const [showPassengersComp, setShowPassengersComp ] = useState(false);
+    const [idBooking, setIdBooking] =useState('');
 
     const [values, setValues] = useState({
         info: '',
@@ -41,7 +43,7 @@ export const BookingHistoryScreen = () => {
             console.log('booking history screen 40');
             if (data) {
                 setDataResults(data);
-                // console.log('data:::',data);
+                console.log('data:::',data);
                 // Si no hay resultados muestro aviso en pantalla
                 if (data?.data?.length === 0) {
                     console.log('No hay datos!!');
@@ -63,6 +65,11 @@ export const BookingHistoryScreen = () => {
         }
         setValues({ ...values, showInfo: false });
     };
+    const showPassengers = (passengers, idBooking) =>{
+        showPassengersComp ? setShowPassengersComp(false) : setShowPassengersComp(true);
+        setIdBooking(idBooking);
+        // console.log(passengers, idBooking);
+    }
 
     return (
         <div id='history-container'>
@@ -213,8 +220,7 @@ export const BookingHistoryScreen = () => {
                                                                     .segments[0]
                                                                     .departure_datetime
                                                             )[1]
-                                                        }
-                                                        )
+                                                        }pasajeros
                                                     </p>
                                                     <p>
                                                         Destino:{' '}
@@ -273,6 +279,11 @@ export const BookingHistoryScreen = () => {
                                     {booking.finalPrice}
                                     {getSymbol(booking.currency)}
                                 </p>
+                                <span className='span-passengers' onClick={() => showPassengers(booking.passengers[0], booking.bookingCode)}><AirlineSeatReclineExtraIcon /> Ver pasajeros del vuelo</span>
+                                {showPassengersComp && booking.bookingCode===idBooking &&<ul id ='ul-passengers'>
+                                        {booking.passengers[0].map ((passenger) =>
+                                            (<li key={passenger.id}> {passenger.name} {passenger.lastname}</li>))}
+                                    </ul>}
                             </li>
                         ))
                     ) : (
