@@ -2,7 +2,7 @@ const { getDB } = require('../../bbdd/db');
 
 const getAllBooking = async (req, res, next) => {
     let connection;
-    console.log('DENTRO DE GETALLBOOKING');
+    // console.log('DENTRO DE GETALLBOOKING');
     try {
         connection = await getDB();
 
@@ -11,7 +11,7 @@ const getAllBooking = async (req, res, next) => {
 
         const [booking] = await connection.query(
             `   
-            SELECT S.id, B.bookingCode, B.createdAt, B.finalPrice, B.currency, B.oneWay, I.itineraryId as 'Itinerario', I.duration, S.segmentId as 'Segmento', S.origin, S.destination, S.departure_datetime, S.arrival_datetime, S.carrierCode, S.duration
+            SELECT S.id, B.id, B.bookingCode, B.createdAt, B.finalPrice, B.currency, B.oneWay, I.itineraryId as 'Itinerario', I.duration, S.segmentId as 'Segmento', S.origin, S.destination, S.departure_datetime, S.arrival_datetime, S.carrierCode, S.duration
             FROM booking B 
             INNER JOIN itineraries I
             ON B.id = I.idBooking
@@ -25,7 +25,7 @@ const getAllBooking = async (req, res, next) => {
         console.log('booking: ', booking);
 
         const myHistoryObject = await historyObjectConstructor(booking);
-        console.log('historyObject: ', myHistoryObject);
+        // console.log('historyObject: ', myHistoryObject);
 
         res.send({
             status: 'ok',
@@ -43,6 +43,10 @@ module.exports = getAllBooking;
 async function historyObjectConstructor(array) {
     const historyObject = [];
     for (let i = 0; i < array.length; i++) {
+        const passengers = [];
+        const idBooking = array[i].id
+        passengers.push (await getPassengers(idBooking));
+        //console.log(travelers);
         if (i === 0) {
             historyObject.push({
                 id: i,
@@ -66,11 +70,12 @@ async function historyObjectConstructor(array) {
                         ],
                     },
                 ],
+                passengers,
             });
         } else if (
             i !== 0 &&
             array[i].bookingCode === array[i - 1].bookingCode
-        ) {
+        ) {// 
             if (array[i].Itinerario === array[i - 1].Itinerario) {
                 historyObject[historyObject.length - 1].itineraries[
                     array[i].Itinerario
@@ -102,7 +107,7 @@ async function historyObjectConstructor(array) {
             array[i].bookingCode !== array[i - 1].bookingCode
         ) {
             historyObject.push({
-                id: historyObject[historyObject.length],
+                id: historyObject.length,
                 bookingCode: array[i].bookingCode,
                 createdAt: array[i].createdAt,
                 finalPrice: array[i].finalPrice,
@@ -123,8 +128,22 @@ async function historyObjectConstructor(array) {
                         ],
                     },
                 ],
+                passengers,
             });
         }
     }
     return historyObject;
+}
+
+async function getPassengers(idBooking){
+    let connection;
+    try {
+        connection = await getDB();
+        const [travelers] = await connection.query(`SELECT * FROM passengers WHERE idBooking = ?`,[idBooking]);
+        //console.log(travelers);
+        return travelers;
+    } catch (error) {
+        console.log(error);    
+    }
+    
 }
