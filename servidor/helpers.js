@@ -76,7 +76,7 @@ async function sendMail({ to, subject, body }) {
         console.log('to:::',to);
         console.log('body:::',body);
         console.log('passengers:::', passengers);
-        let passengersList;
+        let passengersList='';
         for (const passenger of passengers){
             passengersList += `- ${passenger.name.firstName} ${passenger.name.lastName} <br>`; 
         }

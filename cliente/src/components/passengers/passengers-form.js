@@ -97,7 +97,6 @@ function PassengersForm() {
         documents:[{
             documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
             birthPlace: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.birthPlace || '',
-            issuanceLocation: '',
             issuanceDate: getMyDateTime(travelersInfo[Number(currentTraveler)-1]?.documents[0]?.issuanceDate)[0] || '',
             number: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.number || '',
             expiryDate: '2050-12-31',
@@ -157,7 +156,7 @@ function PassengersForm() {
             // setValues({...values, documents: {...values.documents[0], birthPlace: event.target.value}})
             let updatedList;
             updatedList = values.documents.map (item => {
-                return {...item, birthPlace: event.target.value, issuanceLocation: event.target.value}; //gets everything that was already in item, and updates "done"
+                return {...item, birthPlace: event.target.value}; //gets everything that was already in item, and updates "done"
             })
             // console.log(updatedList);
             setValues({...values, documents: updatedList})

@@ -2,7 +2,7 @@ const { getDB } = require('../../bbdd/db');
 
 const getAllBooking = async (req, res, next) => {
     let connection;
-
+    console.log('DENTRO DE GETALLBOOKING');
     try {
         connection = await getDB();
 
@@ -24,7 +24,7 @@ const getAllBooking = async (req, res, next) => {
         );
         console.log('booking: ', booking);
 
-        const myHistoryObject = historyObjectConstructor(booking);
+        const myHistoryObject = await historyObjectConstructor(booking);
         console.log('historyObject: ', myHistoryObject);
 
         res.send({
@@ -40,7 +40,7 @@ const getAllBooking = async (req, res, next) => {
 
 module.exports = getAllBooking;
 
-function historyObjectConstructor(array) {
+async function historyObjectConstructor(array) {
     const historyObject = [];
     for (let i = 0; i < array.length; i++) {
         if (i === 0) {
