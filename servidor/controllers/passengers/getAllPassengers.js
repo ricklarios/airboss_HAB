@@ -1,4 +1,4 @@
-const {getDB} = require('../../bbdd/db');
+const { getDB } = require('../../bbdd/db');
 
 const getAllPassengers = async (req, res, next) => {
     let connection;
@@ -9,12 +9,12 @@ const getAllPassengers = async (req, res, next) => {
         const { idBooking } = req.query;
         // Obtenemos la info y los pasajeros de un idBooking en concreto
         let passengerInfo = [];
-        if(idBooking){
+        if (idBooking) {
             const [passengers] = await connection.query(
                 `SELECT id, name, lastname, documentNumber, birthDate, documentType, nationality, issuanceDate, issuanceCountry, gender FROM passengers WHERE idBooking = ?;`,
                 [idBooking]
-                );
-                for (const passenger of passengers) {
+            );
+            for (const passenger of passengers) {
                 const fragInfo = {
                     id: passenger.id,
                     name: passenger.name,
@@ -26,13 +26,12 @@ const getAllPassengers = async (req, res, next) => {
                     gender: passenger.gender,
                     emailAddress: passenger.emailContact,
                     issuanceDate: passenger.issuanceDate,
-
                 };
                 passengerInfo.push(fragInfo);
             }
-        }else{
+        } else {
             const [passengers] = await connection.query(
-                `SELECT p.id, p.name, p.lastname, p.documentNumber, p.birthDate, p.documentType, p.nationality, p.issuanceDate, p.issuanceCountry, p.gender, p.emailContact, p.birthPlace, p.issuanceCountry FROM passengers p, bookings b WHERE p.idBooking = b.id AND b.idUser= ?;`,
+                `SELECT p.id, p.name, p.lastname, p.documentNumber, p.birthDate, p.documentType, p.nationality, p.issuanceDate, p.issuanceCountry, p.gender, p.emailContact, p.birthPlace, p.issuanceCountry FROM passengers p, booking b WHERE p.idBooking = b.id AND b.idUser= ?;`,
                 [iduser]
             );
             for (const passenger of passengers) {
@@ -49,14 +48,12 @@ const getAllPassengers = async (req, res, next) => {
                     issuanceDate: passenger.issuanceDate,
                     birthPlace: passenger.birthPlace,
                     issuanceCountry: passenger.issuanceCountry,
-
                 };
                 // console.log(fragInfo);
                 passengerInfo.push(fragInfo);
             }
-        };
+        }
 
-        
         //console.log(passengers);
         // Creamos un array vacío y pusheamos la info de cada pasajero
         /* for (const passenger of passengers) {

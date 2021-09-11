@@ -25,6 +25,7 @@ import PassengersForm from '../components/passengers/passengers-form';
 import { routes } from './routes';
 import { PrivateRoute } from './PrivateRoute';
 import { PrivateSearchRoute } from './PrivateSearchRoute';
+import { Footer } from '../components/ui/Footer';
 
 export const UserContext = createContext(null);
 

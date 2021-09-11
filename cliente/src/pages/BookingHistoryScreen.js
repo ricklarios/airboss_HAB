@@ -71,57 +71,201 @@ export const BookingHistoryScreen = () => {
                 <ul id='history-ul-container'>
                     {dataHistoryResults &&
                     showResults &&
-                    dataHistoryResults.status === 'ok' ? (
+                    dataHistoryResults.status === 'ok' &&
+                    dataHistoryResults.data.length > 0 ? (
                         dataHistoryResults?.data?.map((booking) => (
-                            <li key={booking.id} id='history-li'>
+                            <li key={booking.bookingCode} id='history-li'>
                                 {/* <p>{`Booking Code: ${booking.bookingCode}`}</p> */}
                                 <p>
                                     Fecha compra:{' '}
                                     {getMyDateTime(booking.createdAt)[0]} (
                                     {getMyDateTime(booking.createdAt)[1]})
                                 </p>
-                                <p>IDA:</p>
-                                <p>
-                                    Origen:{' '}
-                                    {booking.itineraries[0].segments[0].origin}
-                                </p>
-                                <p>
-                                    Destino:{' '}
-                                    {
-                                        booking.itineraries[0].segments[
-                                            booking.itineraries[0].segments
-                                                .length - 1
-                                        ].destination
-                                    }
-                                </p>
-                                <p>
-                                    Escalas:{' '}
-                                    {booking.itineraries[0].segments.length >= 2
-                                        ? 'Si'
-                                        : 'No'}
-                                    {/* {booking.itineraries[0].segments.length >=
-                                        2 ?? (
-                                        <ul>
-                                            {booking.itineraries[0].segments.map(
-                                                (segment) => (
-                                                    <li key={segment.segmentId}>
-                                                        <p>
-                                                            {segment.origin} '→'{' '}
-                                                            {
-                                                                segment.destination
-                                                            }
-                                                        </p>
-                                                    </li>
-                                                )
-                                            )}
-                                        </ul>
-                                    )} */}
-                                </p>
                                 <p>
                                     {booking.oneWay === 1
                                         ? 'Sólo Ida'
                                         : `Ida/Vuelta`}
                                 </p>
+                                <br />
+                                <div id='ida-vuelta-container'>
+                                    <div id='datos-ida'>
+                                        <p>
+                                            <b>Datos IDA:</b>
+                                        </p>
+                                        <p>
+                                            Origen:{' '}
+                                            {
+                                                booking.itineraries[0]
+                                                    .segments[0].origin
+                                            }{' '}
+                                            {
+                                                getMyDateTime(
+                                                    booking.itineraries[0]
+                                                        .segments[0]
+                                                        .departure_datetime
+                                                )[0]
+                                            }
+                                            (
+                                            {
+                                                getMyDateTime(
+                                                    booking.itineraries[0]
+                                                        .segments[0]
+                                                        .departure_datetime
+                                                )[1]
+                                            }
+                                            )
+                                        </p>
+                                        <p>
+                                            Destino:{' '}
+                                            {
+                                                booking.itineraries[0].segments[
+                                                    booking.itineraries[0]
+                                                        .segments.length - 1
+                                                ].destination
+                                            }{' '}
+                                            {
+                                                getMyDateTime(
+                                                    booking.itineraries[0]
+                                                        .segments[
+                                                        booking.itineraries[0]
+                                                            .segments.length - 1
+                                                    ].arrival_datetime
+                                                )[0]
+                                            }
+                                            (
+                                            {
+                                                getMyDateTime(
+                                                    booking.itineraries[0]
+                                                        .segments[
+                                                        booking.itineraries[0]
+                                                            .segments.length - 1
+                                                    ].arrival_datetime
+                                                )[1]
+                                            }
+                                            )
+                                        </p>
+                                        <div>
+                                            Escalas:{' '}
+                                            {booking.itineraries[0].segments
+                                                .length >= 2
+                                                ? 'Si'
+                                                : 'No'}
+                                            {booking.itineraries[0].segments
+                                                .length >= 2 ? (
+                                                <div>
+                                                    <ul>
+                                                        {booking.itineraries[0].segments.map(
+                                                            (segment) => (
+                                                                <li
+                                                                    id='escales-li'
+                                                                    key={
+                                                                        segment.segmentId
+                                                                    }
+                                                                >
+                                                                    <p>
+                                                                        {
+                                                                            segment.origin
+                                                                        }{' '}
+                                                                        →{' '}
+                                                                        {
+                                                                            segment.destination
+                                                                        }
+                                                                    </p>
+                                                                </li>
+                                                            )
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            ) : (
+                                                ''
+                                            )}
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div id='datos-vuelta'>
+                                        <p>
+                                            {booking.oneWay === 0 && (
+                                                <div>
+                                                    <p>
+                                                        <b>Datos VUELTA:</b>
+                                                    </p>
+                                                    <p>
+                                                        Origen:{' '}
+                                                        {
+                                                            booking
+                                                                .itineraries[1]
+                                                                .segments[0]
+                                                                .origin
+                                                        }{' '}
+                                                        {
+                                                            getMyDateTime(
+                                                                booking
+                                                                    .itineraries[1]
+                                                                    .segments[0]
+                                                                    .departure_datetime
+                                                            )[0]
+                                                        }
+                                                        (
+                                                        {
+                                                            getMyDateTime(
+                                                                booking
+                                                                    .itineraries[1]
+                                                                    .segments[0]
+                                                                    .departure_datetime
+                                                            )[1]
+                                                        }
+                                                        )
+                                                    </p>
+                                                    <p>
+                                                        Destino:{' '}
+                                                        {
+                                                            booking
+                                                                .itineraries[1]
+                                                                .segments[
+                                                                booking
+                                                                    .itineraries[1]
+                                                                    .segments
+                                                                    .length - 1
+                                                            ].destination
+                                                        }{' '}
+                                                        {
+                                                            getMyDateTime(
+                                                                booking
+                                                                    .itineraries[1]
+                                                                    .segments[
+                                                                    booking
+                                                                        .itineraries[1]
+                                                                        .segments
+                                                                        .length -
+                                                                        1
+                                                                ]
+                                                                    .arrival_datetime
+                                                            )[0]
+                                                        }
+                                                        (
+                                                        {
+                                                            getMyDateTime(
+                                                                booking
+                                                                    .itineraries[1]
+                                                                    .segments[
+                                                                    booking
+                                                                        .itineraries[1]
+                                                                        .segments
+                                                                        .length -
+                                                                        1
+                                                                ]
+                                                                    .arrival_datetime
+                                                            )[1]
+                                                        }
+                                                        )
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <br />
+
                                 <p>
                                     {booking.oneWay === 1
                                         ? 'Precio Final: '
@@ -129,34 +273,12 @@ export const BookingHistoryScreen = () => {
                                     {booking.finalPrice}
                                     {getSymbol(booking.currency)}
                                 </p>
-                                <p>
-                                    Salida:{' '}
-                                    {
-                                        getMyDateTime(
-                                            booking.itineraries[0].segments[0].departure_datetime
-                                        )[0]
-                                    }{' '}
-                                    (
-                                    {
-                                        getMyDateTime(
-                                            booking.itineraries[0].segments[0].departure_datetime
-                                        )[1]
-                                    }
-                                    )
-                                </p>
-                                <p>
-                                    Llegada:{' '}
-                                    {getMyDateTime(booking.arrival_datetime)[0]}{' '}
-                                    (
-                                    {getMyDateTime(booking.arrival_datetime)[1]}
-                                    )
-                                </p>
                             </li>
                         ))
                     ) : (
-                        <div className='sin-resultados'>
+                        <li id='sin-resultados'>
                             No hay vuelos que mostrar para este usuario
-                        </div>
+                        </li>
                     )}
                 </ul>
             </div>

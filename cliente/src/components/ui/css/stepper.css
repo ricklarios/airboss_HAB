@@ -30,6 +30,10 @@
     cursor: pointer;
 }
 
+.no-link {
+    cursor: unset !important;
+}
+
 .fligh-selection {
     color: white;
     text-decoration: underline;

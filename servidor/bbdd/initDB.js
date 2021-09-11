@@ -96,7 +96,7 @@ const main = async () => {
             phoneContact VARCHAR(25),
             emailContact VARCHAR(50),
             nationality VARCHAR(50),
-            idBooking INT NOT NULL,
+            idBooking INT NOT NULL
             );
         `);
 

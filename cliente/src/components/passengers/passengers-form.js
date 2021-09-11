@@ -62,7 +62,7 @@ function getMyDateTime(resultsDate) {
 
 function PassengersForm() {
     // console.log('SE LANZA FORMULARIO');
-    
+
     //Control de la alerta SnackBar
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -77,22 +77,42 @@ function PassengersForm() {
         setValues({ ...values, showOk: false });
     };
     // Estados de los parametros de Busqueda
-    const { animation, setOpacity, setShowRegisterForm,travelersInfo, setTravelersInfo, setShowEditTravelerForm, currentTraveler} =
-        useContext(AuthContext);
+    const {
+        animation,
+        setOpacity,
+        setShowRegisterForm,
+        travelersInfo,
+        setTravelersInfo,
+        setShowEditTravelerForm,
+        currentTraveler,
+    } = useContext(AuthContext);
     //console.log('travelersInfo:::',travelersInfo);
     const [values, setValues] = useState({
-        id:currentTraveler,
-        name: {firstName: travelersInfo[Number(currentTraveler)-1]?.name?.firstName || '',
-               lastName: travelersInfo[Number(currentTraveler)-1]?.name?.lastName || ''},
-        gender: travelersInfo[Number(currentTraveler)-1]?.gender || '',
-        dateOfBirth: getMyDateTime(travelersInfo[Number(currentTraveler)-1]?.dateOfBirth)[0] || '',
+        id: currentTraveler,
+        name: {
+            firstName:
+                travelersInfo[Number(currentTraveler) - 1]?.name?.firstName ||
+                '',
+            lastName:
+                travelersInfo[Number(currentTraveler) - 1]?.name?.lastName ||
+                '',
+        },
+        gender: travelersInfo[Number(currentTraveler) - 1]?.gender || '',
+        dateOfBirth:
+            getMyDateTime(
+                travelersInfo[Number(currentTraveler) - 1]?.dateOfBirth
+            )[0] || '',
         contact: {
-            emailAddress: travelersInfo[Number(currentTraveler)-1]?.contact?.emailAddress || '',
-            phones: [{
-                deviceType: 'MOBILE',
-                contruyCallingCode: '34',
-                number: '666666666'
-            }]
+            emailAddress:
+                travelersInfo[Number(currentTraveler) - 1]?.contact
+                    ?.emailAddress || '',
+            phones: [
+                {
+                    deviceType: 'MOBILE',
+                    contruyCallingCode: '34',
+                    number: '666666666',
+                },
+            ],
         },
         documents:[{
             documentType: travelersInfo[Number(currentTraveler)-1]?.documents[0]?.documentType || '',
@@ -116,7 +136,7 @@ function PassengersForm() {
     const classesFlags = useStylesFlags();
 
     // const refRegisterForm = useRef (null);
-    
+
     useEffect(() => {
         //console.log(travelersInfo);
         setOpacity({
@@ -124,51 +144,63 @@ function PassengersForm() {
         });
         return () => {
             setOpacity({
-                opacity:1,
-            })
+                opacity: 1,
+            });
         };
     }, [setOpacity, travelersInfo, values]);
     // console.log('123::::::::::::::',travelersInfo);
     document.addEventListener('keydown', handleKeyDown);
 
-    function handleKeyDown (e){
-        if (e.keyCode === 27){
+    function handleKeyDown(e) {
+        if (e.keyCode === 27) {
             setShowRegisterForm(false);
         }
     }
     const handleChange = (prop) => (event) => {
         // console.log('ENTRO', prop);
-        if (prop === 'emailAddress'){
-            setValues({...values, contact: {...values.contact, emailAddress: event.target.value}})
-        }else if (prop === 'firstName'){
-            setValues({...values, name: {...values.name, firstName: event.target.value}, id: currentTraveler});
-        }else if (prop === 'lastName'){
-            setValues({...values, name: {...values.name, lastName: event.target.value}})
-        }else if (prop === 'numberDocument'){
+        if (prop === 'emailAddress') {
+            setValues({
+                ...values,
+                contact: {
+                    ...values.contact,
+                    emailAddress: event.target.value,
+                },
+            });
+        } else if (prop === 'firstName') {
+            setValues({
+                ...values,
+                name: { ...values.name, firstName: event.target.value },
+                id: currentTraveler,
+            });
+        } else if (prop === 'lastName') {
+            setValues({
+                ...values,
+                name: { ...values.name, lastName: event.target.value },
+            });
+        } else if (prop === 'numberDocument') {
             let updatedList;
-            updatedList = values.documents.map (item => {
-                return {...item, number: event.target.value}; //gets everything that was already in item, and updates "done"
-            })
+            updatedList = values.documents.map((item) => {
+                return { ...item, number: event.target.value }; //gets everything that was already in item, and updates "done"
+            });
             // console.log(updatedList);
-            setValues({...values, documents: updatedList})
-
-        }else if (prop === 'birthPlace'){
+            setValues({ ...values, documents: updatedList });
+        } else if (prop === 'birthPlace') {
             // setValues({...values, documents: {...values.documents[0], birthPlace: event.target.value}})
             let updatedList;
             updatedList = values.documents.map (item => {
                 return {...item, birthPlace: event.target.value}; //gets everything that was already in item, and updates "done"
             })
             // console.log(updatedList);
-            setValues({...values, documents: updatedList})
-        }else if (prop === 'typeDocument'){
+            setValues({ ...values, documents: updatedList });
+        } else if (prop === 'typeDocument') {
             //setValues({...values, documents: {...values.documents[0], documentType: event.target.value}})
             let updatedList;
-            updatedList = values.documents.map (item => {
-                return {...item, documentType: event.target.value}; //gets everything that was already in item, and updates "done"
-            })
+            updatedList = values.documents.map((item) => {
+                return { ...item, documentType: event.target.value }; //gets everything that was already in item, and updates "done"
+            });
             // console.log(updatedList);
-            setValues({...values, documents: updatedList})
-        }else{
+            setValues({ ...values, documents: updatedList });
+        } else {
             setValues({ ...values, [prop]: event.target.value });
         }
     };
@@ -180,18 +212,26 @@ function PassengersForm() {
         // console.log(event.target.value);
         // setValues({ ...values, documents:{ ...values.documents[0], issuanceDate: event.target.value}  });
         let updatedList;
-            updatedList = values.documents.map (item => {
-                return {...item, issuanceDate: event.target.value}; //gets everything that was already in item, and updates "done"
-            })
-            setValues({...values, documents: updatedList})
+        updatedList = values.documents.map((item) => {
+            return { ...item, issuanceDate: event.target.value }; //gets everything that was already in item, and updates "done"
+        });
+        setValues({ ...values, documents: updatedList });
     };
     const handleChangeNationality = (event) => {
         let updatedList;
         //console.log(event.currentTarget.dataset);
-        updatedList = values.documents.map (item => {
-            return {...item, nationality: countries[event.currentTarget.dataset.optionIndex]?.code, issuanceCountry: countries[event.currentTarget.dataset.optionIndex]?.code, validityCountry:countries[event.currentTarget.dataset.optionIndex]?.code }; 
-        })
-        setValues({...values, documents: updatedList})
+        updatedList = values.documents.map((item) => {
+            return {
+                ...item,
+                nationality:
+                    countries[event.currentTarget.dataset.optionIndex]?.code,
+                issuanceCountry:
+                    countries[event.currentTarget.dataset.optionIndex]?.code,
+                validityCountry:
+                    countries[event.currentTarget.dataset.optionIndex]?.code,
+            };
+        });
+        setValues({ ...values, documents: updatedList });
     };
     const handleSave = (e) => {
         e.preventDefault();
@@ -220,43 +260,45 @@ function PassengersForm() {
                 showError: true,
             });
             return;
-        } else if (!validator.isIdentityCard(values.documents[0].number,'any') || 
-            validator.isEmpty(values.documents[0].number)){
+        } else if (
+            !validator.isIdentityCard(values.documents[0].number, 'any') ||
+            validator.isEmpty(values.documents[0].number)
+        ) {
             setValues({
                 ...values,
                 error: 'Debes introducir un valor adecuado de documento',
                 showError: true,
             });
             return;
-        } else if (validator.isEmpty(values.documents[0].documentType)){
-        setValues({
-            ...values,
-            error: 'Debes elegir el tipo de documento',
-            showError: true,
-        });
-        return;
-        } else if (!validator.isDate(values.documents[0].issuanceDate)){
+        } else if (validator.isEmpty(values.documents[0].documentType)) {
+            setValues({
+                ...values,
+                error: 'Debes elegir el tipo de documento',
+                showError: true,
+            });
+            return;
+        } else if (!validator.isDate(values.documents[0].issuanceDate)) {
             setValues({
                 ...values,
                 error: 'Debes introducir la fecha de emisión del documento',
                 showError: true,
             });
             return;
-        } else if (!validator.isDate(values.dateOfBirth)){
+        } else if (!validator.isDate(values.dateOfBirth)) {
             setValues({
                 ...values,
                 error: 'Debes introducir la fecha de nacimiento',
                 showError: true,
             });
             return;
-        } else if (validator.isEmpty(values.documents[0].birthPlace)){
+        } else if (validator.isEmpty(values.documents[0].birthPlace)) {
             setValues({
                 ...values,
                 error: 'Debes introducir lugar de nacimiento',
                 showError: true,
             });
             return;
-        }else if (validator.isEmpty(values.gender)){
+        } else if (validator.isEmpty(values.gender)) {
             setValues({
                 ...values,
                 error: 'Debes elegir género',
@@ -264,44 +306,45 @@ function PassengersForm() {
             });
             return;
         }
-     
 
-        
-
-        setTravelersInfo(prevState => (
-            prevState.map(
-                (el) => {
-                    // console.log('el.id',el.id,'currentTraveler:',currentTraveler);
-                    if (el.key === currentTraveler ){
-                        // console.log('dentro del if VALUES ID:',values.id);
-                        return {id : values.id, 
-                                name: {
-                                    firstName: values.name.firstName,
-                                    lastName: values.name.lastName,
+        setTravelersInfo((prevState) =>
+            prevState.map((el) => {
+                // console.log('el.id',el.id,'currentTraveler:',currentTraveler);
+                if (el.key === currentTraveler) {
+                    // console.log('dentro del if VALUES ID:',values.id);
+                    return {
+                        id: values.id,
+                        name: {
+                            firstName: values.name.firstName,
+                            lastName: values.name.lastName,
+                        },
+                        contact: {
+                            emailAddress: values.contact.emailAddress,
+                            phones: [
+                                {
+                                    deviceType: 'MOBILE',
+                                    contruyCallingCode: '34',
+                                    number: '666666666',
                                 },
-                                contact: {emailAddress: values.contact.emailAddress,
-                                            phones: [{
-                                                deviceType: 'MOBILE',
-                                                contruyCallingCode: '34',
-                                                number: '666666666'}]},
-                                gender: values.gender,
-                                dateOfBirth: values.dateOfBirth,
-                                documents: values.documents,
-                                validate: true,
-                                key: values.id
-                                }
-                    }
-                    //console.log(el.id);
-                    return el;
+                            ],
+                        },
+                        gender: values.gender,
+                        dateOfBirth: values.dateOfBirth,
+                        documents: values.documents,
+                        validate: true,
+                        key: values.id,
+                    };
                 }
-            )
-            ))
-            setShowEditTravelerForm(false);
-        }
-        function handleClickExit(){
-            setShowEditTravelerForm(false)
-        }
-        
+                //console.log(el.id);
+                return el;
+            })
+        );
+        setShowEditTravelerForm(false);
+    };
+    function handleClickExit() {
+        setShowEditTravelerForm(false);
+    }
+
     // console.log('250:::::',travelersInfo);
     // console.log('296::::',values);
     return (
@@ -309,11 +352,16 @@ function PassengersForm() {
             id='passengers-form'
             className={'passengers-container animate__animated ' + animation}
         >
-            <form id='edit-passenger-form'  onSubmit={handleSave}>
+            <form id='edit-passenger-form' onSubmit={handleSave}>
                 <div>
                     <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="age-native-simple" id= "standard-basic-type-document">Tipo de documento</InputLabel>
-                            <Select
+                        <InputLabel
+                            htmlFor='age-native-simple'
+                            id='standard-basic-type-document'
+                        >
+                            Tipo de documento
+                        </InputLabel>
+                        <Select
                             native
                             value={values?.documents[0]?.documentType}
                             onChange={handleChange('typeDocument')}
@@ -321,12 +369,14 @@ function PassengersForm() {
                                 name: 'documentType',
                                 id: 'standard-basic-type-document',
                             }}
-                            >
-                                <option aria-label="None" value="" />
-                                <option value="IDENTITY_CARD">DOCUMENTO DE IDENTIDAD</option>
-                                <option value="PASSPORT">PASAPORTE</option>
-                                <option value="VISA">VISADO</option>
-                            </Select>
+                        >
+                            <option aria-label='None' value='' />
+                            <option value='IDENTITY_CARD'>
+                                DOCUMENTO DE IDENTIDAD
+                            </option>
+                            <option value='PASSPORT'>PASAPORTE</option>
+                            <option value='VISA'>VISADO</option>
+                        </Select>
                     </FormControl>
                 </div>
                 <div>
@@ -359,16 +409,16 @@ function PassengersForm() {
                 </div>
                 <div>
                     <TextField
-                            id='issuanceDate'
-                            label='Fecha de emisión'
-                            type='date'
-                            defaultValue={values.documents[0]?.issuanceDate || ''}
-                            className='issuanceDate'
-                            onChange={changeIssuance}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
+                        id='issuanceDate'
+                        label='Fecha de emisión'
+                        type='date'
+                        defaultValue={values.documents[0]?.issuanceDate || ''}
+                        className='issuanceDate'
+                        onChange={changeIssuance}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
                 <div>
                     <TextField
@@ -381,16 +431,16 @@ function PassengersForm() {
                 </div>
                 <div>
                     <TextField
-                            id='birthday'
-                            label='Fecha de nacimiento'
-                            type='date'
-                            defaultValue={values.dateOfBirth || ''}
-                            className='birthday'
-                            onChange={changeBirthday}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
+                        id='birthday'
+                        label='Fecha de nacimiento'
+                        type='date'
+                        defaultValue={values.dateOfBirth || ''}
+                        className='birthday'
+                        onChange={changeBirthday}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </div>
                 <div>
                     <TextField
@@ -402,19 +452,41 @@ function PassengersForm() {
                     />
                 </div>
                 <div>
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">Género</FormLabel>
-                    <RadioGroup aria-label="gender" name="gender" value={values.gender} onChange={handleChange('gender')} className="d-flex">
-                        <FormControlLabel value="FEMALE" control={<Radio />} label="Mujer" />
-                        <FormControlLabel value="MALE" control={<Radio />} label="Hombre" />
-                        <FormControlLabel value="OTHER" control={<Radio />} label="Otro" />
-                    </RadioGroup>
-                </FormControl>
+                    <FormControl component='fieldset'>
+                        <FormLabel component='legend'>Género</FormLabel>
+                        <RadioGroup
+                            aria-label='gender'
+                            name='gender'
+                            value={values.gender}
+                            onChange={handleChange('gender')}
+                            className='d-flex'
+                        >
+                            <FormControlLabel
+                                value='FEMALE'
+                                control={<Radio />}
+                                label='Mujer'
+                            />
+                            <FormControlLabel
+                                value='MALE'
+                                control={<Radio />}
+                                label='Hombre'
+                            />
+                            <FormControlLabel
+                                value='OTHER'
+                                control={<Radio />}
+                                label='Otro'
+                            />
+                        </RadioGroup>
+                    </FormControl>
                 </div>
                 <div>
                     <Autocomplete
                         id='country-select'
-                        defaultValue= {{label: `${values?.documents[0]?.nationality || 'Spain'}`}}
+                        // defaultValue={{
+                        //     label: `${
+                        //         values?.documents[0]?.nationality || 'Spain'
+                        //     }`,
+                        // }}
                         style={{ width: 300, border: 0 }}
                         options={countries}
                         disablePortal
@@ -447,10 +519,12 @@ function PassengersForm() {
                         /* InputLabelProps={{ required: true }} */
                     />
                 </div>
-                
+
                 <div id='container-button'>
                     <button id='save-button'>Guardar pasajero</button>
-                    <span id='exit-button' onClick={()=>handleClickExit()}>Salir</span>
+                    <span id='exit-button' onClick={() => handleClickExit()}>
+                        Salir
+                    </span>
                 </div>
                 <>
                     <Snackbar
