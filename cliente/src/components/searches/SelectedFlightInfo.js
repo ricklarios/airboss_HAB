@@ -173,7 +173,7 @@ function SelectedFlightInfo({ dataResults }) {
         };
 
         if (dataResults) {
-            // console.log('dataResults:', dataResults);
+            console.log('dataResults:', dataResults);
 
             departureCityCall(departureCity);
 
@@ -306,9 +306,13 @@ function SelectedFlightInfo({ dataResults }) {
                                 Emisiones CO2:{' '}
                                 {dataResults.data.data.flightOffers[0].itineraries[0].segments.reduce(
                                     (acc, segment) => {
-                                        return (acc += Number(
-                                            segment.co2Emissions[0].weight
-                                        ));
+                                        if (!segment.co2Emissions) {
+                                            return (acc += 0);
+                                        } else {
+                                            return (acc += Number(
+                                                segment.co2Emissions[0].weight
+                                            ));
+                                        }
                                     },
                                     0
                                 )}
@@ -514,9 +518,14 @@ function SelectedFlightInfo({ dataResults }) {
                                     Emisiones CO2:{' '}
                                     {dataResults.data.data.flightOffers[0].itineraries[1].segments.reduce(
                                         (acc, segment) => {
-                                            return (acc += Number(
-                                                segment.co2Emissions[0].weight
-                                            ));
+                                            if (!segment.co2Emissions) {
+                                                return (acc += 0);
+                                            } else {
+                                                return (acc += Number(
+                                                    segment.co2Emissions[0]
+                                                        .weight
+                                                ));
+                                            }
                                         },
                                         0
                                     )}
@@ -631,12 +640,12 @@ function SelectedFlightInfo({ dataResults }) {
                                 <p>
                                     Paradas:{' '}
                                     {dataResults.data.data.flightOffers[0]
-                                        .itineraries[0].segments.length === 1
+                                        .itineraries[1].segments.length === 1
                                         ? 'No'
                                         : `${
                                               dataResults.data.data
                                                   .flightOffers[0]
-                                                  .itineraries[0].segments
+                                                  .itineraries[1].segments
                                                   .length - 1
                                           }`}
                                 </p>
@@ -703,11 +712,13 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 BASE:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu + Number(value.price.base),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu + Number(value.price.base),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency
@@ -715,12 +726,14 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 IMPUESTOS:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu +
-                                        Number(value.price.refundableTaxes),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu +
+                                            Number(value.price.refundableTaxes),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
                                         .travelerPricings[0].price.currency
@@ -728,11 +741,13 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p className='total-price'>
                                 TOTAL:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu + Number(value.price.total),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu + Number(value.price.total),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency

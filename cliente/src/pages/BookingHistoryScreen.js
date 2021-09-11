@@ -18,8 +18,9 @@ export const BookingHistoryScreen = () => {
     });
 
     function getMyDateTime(resultsDate) {
-        // console.log(resultsDate);
+        console.log(resultsDate);
         const dateTime = new Date(resultsDate);
+        console.log(dateTime);
         const date = dateTime.toLocaleDateString('es-ES');
         const time = dateTime.toLocaleTimeString([], {
             hour: '2-digit',
@@ -34,20 +35,22 @@ export const BookingHistoryScreen = () => {
         setShowResults(false);
         setDataResults('');
         const getUserBooking = async () => {
-            const { data } = await axios.get(
-                `http://localhost:3001/allBooking/${idUser}`
-            );
-            if (data) {
-                setDataResults(data);
-                console.log('data:', data);
-                // Si no hay resultados muestro aviso en pantalla
-                if (data?.data?.length === 0) {
-                    console.log('No hay datos!!');
-                    setValues({
-                        ...values,
-                        info: 'No hay resultados con la búsqueda indicada.',
-                        showInfo: true,
-                    });
+            if (idUser) {
+                const { data } = await axios.get(
+                    `http://localhost:3001/allBooking/${idUser}`
+                );
+                if (data) {
+                    setDataResults(data);
+                    console.log('data:', data);
+                    // Si no hay resultados muestro aviso en pantalla
+                    if (data?.data?.length === 0) {
+                        console.log('No hay datos!!');
+                        setValues({
+                            ...values,
+                            info: 'No hay resultados con la búsqueda indicada.',
+                            showInfo: true,
+                        });
+                    }
                 }
             }
         };
@@ -181,7 +184,7 @@ export const BookingHistoryScreen = () => {
                                     </div>
                                     <br />
                                     <div id='datos-vuelta'>
-                                        <p>
+                                        <div>
                                             {booking.oneWay === 0 && (
                                                 <div>
                                                     <p>
@@ -257,9 +260,49 @@ export const BookingHistoryScreen = () => {
                                                         }
                                                         )
                                                     </p>
+                                                    <div>
+                                                        Escalas:{' '}
+                                                        {booking.itineraries[1]
+                                                            .segments.length >=
+                                                        2
+                                                            ? 'Si'
+                                                            : 'No'}
+                                                        {booking.itineraries[1]
+                                                            .segments.length >=
+                                                        2 ? (
+                                                            <div>
+                                                                <ul>
+                                                                    {booking.itineraries[1].segments.map(
+                                                                        (
+                                                                            segment
+                                                                        ) => (
+                                                                            <li
+                                                                                id='escales-li'
+                                                                                key={
+                                                                                    segment.segmentId
+                                                                                }
+                                                                            >
+                                                                                <p>
+                                                                                    {
+                                                                                        segment.origin
+                                                                                    }{' '}
+                                                                                    →{' '}
+                                                                                    {
+                                                                                        segment.destination
+                                                                                    }
+                                                                                </p>
+                                                                            </li>
+                                                                        )
+                                                                    )}
+                                                                </ul>
+                                                            </div>
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <br />

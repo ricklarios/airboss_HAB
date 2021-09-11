@@ -29,12 +29,13 @@
     margin: 0 auto;
     max-width: 1500px;
     min-width: 800px;
-    min-height: 500px;
+    height: 60vh;
+    /* min-height: 500px;
+    max-height: 800px; */
     border-radius: 5px;
     padding: 20px;
     margin-top: 100px;
-    overflow-y:scroll;
-    
+    overflow-y: scroll;
 }
 
 #history-header {
@@ -61,7 +62,7 @@
 
 #history-li:hover {
     box-shadow: 0px 0px 0px;
-    background-color: #ccecf7;
+    /* background-color: #ccecf7; */
 }
 #escales-li {
     list-style: none;
