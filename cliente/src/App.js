@@ -99,20 +99,23 @@ export const App = () => {
                     }
                 });
         }
-        if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
+        if ((token && typeAuth === 'google') || typeAuth === 'fb') {
+            try {
+                async function validateToken() {
+                    const res = await axios.get(
+                        `http://localhost:3001/users/validate-token/${typeAuth}`,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: token,
+                            },
+                        }
+                    );
 
-                try {
-                    async function validateToken(){
-                        const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, {
-                            headers:{ 'Content-Type': 'application/json',
-                            'Authorization': token,  
-                        },
-                    })
-                    if (res.data.status === 'ok'){
+                    if (res.data.status === 'ok') {
                         //setValues({...values, ok: "Logado Google OK!", showOk: true});
                         // si NO hay error seteo la sesion redirect a /home
                         setLogin(true);
-                        
 
                         setNameUser(res.data.data.name);
                         setLastname(res.data.data.lastname);
@@ -124,18 +127,16 @@ export const App = () => {
                         setPicture(res.data.data?.avatar);
 
                         console.log('DENTRO DE GOOGLE EN APP');
-                        localStorage.setItem('idUser', res.data.data.idUser)
-                    }else{
-                            console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
-                            setLogin(false)
-                    }
-
+                        localStorage.setItem('idUser', res.data.data.idUser);
+                    } else {
+                        console.log(
+                            'HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS'
+                        );
+                        setLogin(false);
                     }
                 }
                 validateToken();
-            } catch (error) {
-                console.log('ERROR EN VALIDATE');
-            }
+            } catch (error) {}
         }
 
         return function cleanup() {
