@@ -79,3 +79,6 @@
     /* background-color: blue; */
     color: black;
 }
+.span-passengers{
+    cursor: pointer;
+}

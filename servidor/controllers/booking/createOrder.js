@@ -56,25 +56,35 @@ const createOrder = async (req, res, next) => {
 
         //Inserto pasajeros
         for (const traveler of travelers) {
-            console.log(traveler);
-            await connection.query(
-                `
-                    INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, nationality, idBooking )
-                    VALUES(?, ?, ?, ?, ?, ? ,?, ?,?,?);
-                `,
-                [
-                    traveler.name.firstName,
-                    traveler.name.lastName,
-                    traveler.documents[0].number,
-                    traveler.documents[0].documentType,
-                    traveler.dateOfBirth,
-                    traveler.gender,
-                    traveler.contact.phones[0].number,
-                    traveler.contact.emailAddress,
-                    traveler.documents[0].nationality,
-                    idBooking,
-                ]
-            );
+            // console.log(traveler);
+            //Si el pasajero ya existe no lo guarda
+            const [passenger] = await connection.query(`SELECT name 
+                                    FROM passengers 
+                                    WHERE documentNumber = ? AND 
+                                        documentType = ? AND
+                                        nationality = ?`,
+            [traveler.documents[0].number,traveler.documents[0].documentType,traveler.documents[0].nationality])
+            //Si no hay registros procedo a guardar
+            if(passenger.length>0){
+                await connection.query(
+                    `
+                        INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, nationality, idBooking )
+                        VALUES(?, ?, ?, ?, ?, ? ,?, ?,?,?);
+                    `,
+                    [
+                        traveler.name.firstName,
+                        traveler.name.lastName,
+                        traveler.documents[0].number,
+                        traveler.documents[0].documentType,
+                        traveler.dateOfBirth,
+                        traveler.gender,
+                        traveler.contact.phones[0].number,
+                        traveler.contact.emailAddress,
+                        traveler.documents[0].nationality,
+                        idBooking,
+                    ]
+                );
+            }
         }
 
         //Insertamos itinerarios

@@ -75,9 +75,13 @@ async function sendMailBooking({ to, subject, body, passengers }) {
         console.log('to:::', to);
         console.log('body:::', body);
         console.log('passengers:::', passengers);
-        let passengersList;
-        for (const passenger of passengers) {
-            passengersList += `- ${passenger.name.firstName} ${passenger.name.lastName} <br>`;
+
+       
+
+        let passengersList='';
+        for (const passenger of passengers){
+            passengersList += `- ${passenger.name.firstName} ${passenger.name.lastName} <br>`; 
+
         }
         const msg = {
             to,
