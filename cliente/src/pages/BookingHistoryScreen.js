@@ -69,7 +69,8 @@ export const BookingHistoryScreen = () => {
                 <ul id='history-ul-container'>
                     {dataHistoryResults &&
                     showResults &&
-                    dataHistoryResults.status === 'ok' ? (
+                    dataHistoryResults.status === 'ok' &&
+                    dataHistoryResults.data.length > 0 ? (
                         dataHistoryResults?.data?.map((booking) => (
                             <li key={booking.bookingCode} id='history-li'>
                                 {/* <p>{`Booking Code: ${booking.bookingCode}`}</p> */}
@@ -273,9 +274,9 @@ export const BookingHistoryScreen = () => {
                             </li>
                         ))
                     ) : (
-                        <div className='sin-resultados'>
+                        <li id='sin-resultados'>
                             No hay vuelos que mostrar para este usuario
-                        </div>
+                        </li>
                     )}
                 </ul>
             </div>

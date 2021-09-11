@@ -18,7 +18,7 @@ function SelectedFlightInfo({ dataResults }) {
     const [myDepartureCity, setDepartureCity] = useState('');
     const [myReturnArrivalCity, setMyReturnArrivalCity] = useState('');
     const [myReturnDepartureCity, setReturnDepartureCity] = useState('');
-    const [covidRestrictions] = useState('');
+    const [covidRestrictions, setCovidRestrictions] = useState('');
     const [showArrivalCity, setShowArrivalCity] = useState(false);
     const [showDepartureCity, setShowDepartureCity] = useState(false);
     const [showReturnArrivalCity, setShowReturnArrivalCity] = useState(false);
@@ -75,16 +75,16 @@ function SelectedFlightInfo({ dataResults }) {
         });
     }
 
-    /* const covidRestrictionsSearch = async (countryData) => {
+    const covidRestrictionsSearch = async (countryData) => {
         const { data } = await axios.post(
             'http://localhost:3001/covidRestrictions',
             { ...countryData }
         );
-        console.log('Covid Restrictions: ', data);
+        // console.log('Covid Restrictions: ', data);
         if (data) {
             setCovidRestrictions(data);
         }
-    }; */
+    };
     const departureCity =
         dataResults.data.data.flightOffers[0].itineraries[0].segments[0]
             .departure.iataCode;
@@ -188,7 +188,7 @@ function SelectedFlightInfo({ dataResults }) {
                 setMyReturnArrivalCity,
                 setShowReturnArrivalCity
             );
-            /* covidRestrictionsSearch(arrivalCountryData); */
+            covidRestrictionsSearch(arrivalCountryData);
         }
     }, [
         dataResults,
@@ -198,9 +198,7 @@ function SelectedFlightInfo({ dataResults }) {
         returnDepartureCity,
         returnArrivalCity,
     ]);
-    
 
-    
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -216,61 +214,69 @@ function SelectedFlightInfo({ dataResults }) {
     const handleClickPassengers = () => {
         //console.log('Nos vamos a confirmar pasajeros');
         // console.log(dataResults);
-        const travelers = dataResults?.data?.data?.flightOffers[0].travelerPricings.map ((e) => (
-            {key: e.travelerId,
-             id: '',
-             typePassenger: e.travelerType, 
-             typeSeat: e.fareOption,
-             validate: false,
-             documents: [],
-             name:{
-                 firstName: '',
-                 lastName: '',
-             },
-             gender: '',
-             dateofBirth: '',
-             contact: {
-                emailAddress: '',
-                phones: [{
-                    deviceType: 'MOBILE',
-                    contruyCallingCode: '34',
-                    number: '666666666'
-                }]
-             },
-             }
-             ));
+        const travelers =
+            dataResults?.data?.data?.flightOffers[0].travelerPricings.map(
+                (e) => ({
+                    key: e.travelerId,
+                    id: '',
+                    typePassenger: e.travelerType,
+                    typeSeat: e.fareOption,
+                    validate: false,
+                    documents: [],
+                    name: {
+                        firstName: '',
+                        lastName: '',
+                    },
+                    gender: '',
+                    dateofBirth: '',
+                    contact: {
+                        emailAddress: '',
+                        phones: [
+                            {
+                                deviceType: 'MOBILE',
+                                contruyCallingCode: '34',
+                                number: '666666666',
+                            },
+                        ],
+                    },
+                })
+            );
         setTravelersInfo(travelers);
         //Extraemos información, si la hay, de los pasajeros asociados al usuario
         const idUser = localStorage.getItem('idUser');
         const token = localStorage.getItem('userToken');
         const typeAuth = localStorage.getItem('typeAuth');
-        
-        //let saveTravelers;
-        
-        const getPassengers = async ()=>{
 
+        //let saveTravelers;
+
+        const getPassengers = async () => {
             const myHeaders = {
                 'Content-Type': 'application/json',
-                'Authorization': token,
-                'idUser': idUser,
-                'typeAuth': typeAuth,
-    
-            }
+                Authorization: token,
+                idUser: idUser,
+                typeAuth: typeAuth,
+            };
             try {
                 const res = await axios.get(
-                    `http://localhost:3001/passengers`,{
-                        headers: myHeaders
+                    `http://localhost:3001/passengers`,
+                    {
+                        headers: myHeaders,
                     }
                 );
                 // saveTravelers = res.data.data;
                 // console.log('251:::::::::::',res.data.data);
                 setSaveTravelers(res.data.data);
-                history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity]);
-                
+                history.push('/passengers', [
+                    dataResults,
+                    myDepartureCity,
+                    myArrivalCity,
+                    myReturnDepartureCity,
+                    myReturnArrivalCity,
+                ]);
             } catch (error) {
                 console.log(error);
             }
-        }
+        };
         getPassengers();
         // history.push('/passengers', [dataResults, myDepartureCity, myArrivalCity, myReturnDepartureCity, myReturnArrivalCity, saveTravelers]);
     };
@@ -287,7 +293,7 @@ function SelectedFlightInfo({ dataResults }) {
                         </h3>
                     </div>
                 )}
-                {dataResults && (
+                {dataResults && showDepartureCity && showArrivalCity && (
                     <div>
                         <div className='departure-info-container'>
                             <br />
@@ -486,6 +492,8 @@ function SelectedFlightInfo({ dataResults }) {
                     </div>
                 )}
                 {dataResults &&
+                    showReturnDepartureCity &&
+                    showReturnArrivalCity &&
                     dataResults.data.data.flightOffers[0].itineraries.length >
                         1 && (
                         <div>
@@ -497,7 +505,7 @@ function SelectedFlightInfo({ dataResults }) {
                                 <div>
                                     Compañia Aérea:{' '}
                                     {dataResults.myReturnCarrier}
-        showRegisterForm,
+                                    showRegisterForm,
                                 </div>
                                 <div>
                                     Aeronave: {dataResults.myReturnAircraft}
@@ -730,7 +738,6 @@ function SelectedFlightInfo({ dataResults }) {
                                         .currency
                                 )}
                             </p>
-      
                         </div>
                     )}
                 </div>
