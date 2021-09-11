@@ -11,7 +11,9 @@ const getAllBooking = async (req, res, next) => {
 
         const [booking] = await connection.query(
             `   
-            SELECT S.id, B.id, B.bookingCode, B.createdAt, B.finalPrice, B.currency, B.oneWay, I.itineraryId as 'Itinerario', I.duration, S.segmentId as 'Segmento', S.origin, S.destination, S.departure_datetime, S.arrival_datetime, S.carrierCode, S.duration
+
+            SELECT S.id, B.bookingCode, CONVERT_TZ(B.createdAt, '+00:00','-02:00') AS createdAt, B.finalPrice, B.currency, B.oneWay, I.itineraryId as 'Itinerario', I.duration, S.segmentId as 'Segmento', S.origin, S.destination, S.departure_datetime, S.arrival_datetime, S.carrierCode, S.duration
+
             FROM booking B 
             INNER JOIN itineraries I
             ON B.id = I.idBooking

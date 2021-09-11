@@ -116,6 +116,7 @@ export const FlightSelectionScreen = ({ history }) => {
                     {showResults && !dataResults && (
                         <LinearProgress className={classes.root} />
                     )}
+                    {/* {showResults && !dataResults && <h1>Buscando vuelos...</h1>} */}
                     {showResults && dataResults && (
                         <div id='flight-screen-results'>
                             <Stepper step='flightSelection' />
