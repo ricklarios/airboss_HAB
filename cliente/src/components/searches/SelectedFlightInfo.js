@@ -33,7 +33,7 @@ function SelectedFlightInfo({ dataResults }) {
         showError: false,
         ok: '',
         showOk: false,
-        disabledPDF: true,
+        disabledPDF: false,
     });
     // const { login, setShowForm} = useContext(AuthContext);
     const { setTravelersInfo, setSaveTravelers } = useContext(AuthContext);
@@ -498,8 +498,8 @@ function SelectedFlightInfo({ dataResults }) {
                 {dataResults &&
                     showReturnDepartureCity &&
                     showReturnArrivalCity &&
-                    dataResults.data.data.flightOffers[0].itineraries.length >
-                        1 && (
+                    dataResults?.data?.data?.flightOffers[0].itineraries
+                        .length > 1 && (
                         <div>
                             <div className='return-info-container'>
                                 <br />
@@ -509,7 +509,6 @@ function SelectedFlightInfo({ dataResults }) {
                                 <div>
                                     Compañia Aérea:{' '}
                                     {dataResults.myReturnCarrier}
-                                    showRegisterForm,
                                 </div>
                                 <div>
                                     Aeronave: {dataResults.myReturnAircraft}
@@ -588,52 +587,55 @@ function SelectedFlightInfo({ dataResults }) {
 
                                 <div className='flight-info-segment'>
                                     <h5>DESTINO: </h5>
-                                    {dataResults && showReturnArrivalCity ? (
-                                        <div>
-                                            <div className='flight-info-time'>
-                                                {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[1]
-                                                            .segments[
+                                    {dataResults &&
+                                        showReturnArrivalCity &&
+                                        myReturnArrivalCity && (
+                                            <div>
+                                                <div className='flight-info-time'>
+                                                    {
+                                                        getMyDateTime(
                                                             dataResults.data
                                                                 .data
                                                                 .flightOffers[0]
                                                                 .itineraries[1]
-                                                                .segments
-                                                                .length - 1
-                                                        ].arrival.at
-                                                    )[1]
-                                                }
+                                                                .segments[
+                                                                dataResults.data
+                                                                    .data
+                                                                    .flightOffers[0]
+                                                                    .itineraries[1]
+                                                                    .segments
+                                                                    .length - 1
+                                                            ].arrival.at
+                                                        )[1]
+                                                    }
+                                                </div>
+                                                <div>
+                                                    {
+                                                        myReturnArrivalCity
+                                                            .address.cityName
+                                                    }{' '}
+                                                    (
+                                                    {
+                                                        myReturnArrivalCity
+                                                            .address.countryName
+                                                    }
+                                                    )
+                                                </div>
+                                                <div>
+                                                    {myReturnArrivalCity.name}
+                                                </div>
+                                                <div>
+                                                    Terminal:{' '}
+                                                    {
+                                                        dataResults.data.data
+                                                            .flightOffers[0]
+                                                            .itineraries[1]
+                                                            .segments[0].arrival
+                                                            .terminal
+                                                    }
+                                                </div>
                                             </div>
-                                            <div>
-                                                {
-                                                    myReturnArrivalCity.address
-                                                        .cityName
-                                                }{' '}
-                                                (
-                                                {
-                                                    myReturnArrivalCity.address
-                                                        .countryName
-                                                }
-                                                )
-                                            </div>
-                                            <div>
-                                                {myReturnArrivalCity.name}
-                                            </div>
-                                            <div>
-                                                Terminal:{' '}
-                                                {
-                                                    dataResults.data.data
-                                                        .flightOffers[0]
-                                                        .itineraries[1]
-                                                        .segments[0].arrival
-                                                        .terminal
-                                                }
-                                            </div>
-                                        </div>
-                                    ) : null}
+                                        )}
                                 </div>
                             </div>
                             <div>
@@ -757,12 +759,6 @@ function SelectedFlightInfo({ dataResults }) {
                     )}
                 </div>
                 <div className='buttons-container not-to-pdf'>
-                    {/* <button className='buy-button'>Comprar</button> */}
-                    {!values.disabledPDF && (
-                        <button onClick={() => generatePDF()}>
-                            Ver en PDF
-                        </button>
-                    )}
                     <button
                         className='passengers-confirm-button'
                         onClick={() => {
@@ -780,6 +776,11 @@ function SelectedFlightInfo({ dataResults }) {
                     >
                         🦠 Información Covid-19
                     </button>
+                    {!values.disabledPDF && (
+                        <button onClick={() => generatePDF()}>
+                            Ver en PDF
+                        </button>
+                    )}
                 </div>
 
                 {dataResults && covidRestrictions && showCovidRestrictions && (
