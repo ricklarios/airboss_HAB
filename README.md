@@ -75,4 +75,8 @@ Distribuido bajo licencia del MIT.
 
 <!-- Recursos para el Readme-->
 [product-screenshot]: images/home.png
+<<<<<<< HEAD
 [payment-screenshot]: images/payment.png
+=======
+[payment-screenshot]: images/payment.png
+>>>>>>> 370991611328e474ddb6cd40dd9b9cc77f06e236

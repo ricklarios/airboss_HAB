@@ -2,7 +2,7 @@ import './css/booking-history-screen.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSymbol } from '../helpers';
-import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
+// import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -11,8 +11,8 @@ export const BookingHistoryScreen = () => {
 
     const [showResults, setShowResults] = useState(false);
     const [dataHistoryResults, setDataResults] = useState('');
-    const [showPassengersComp, setShowPassengersComp] = useState(false);
-    const [idBooking, setIdBooking] = useState('');
+    // const [showPassengersComp, setShowPassengersComp] = useState(false);
+    // const [idBooking, setIdBooking] = useState('');
 
     const [values, setValues] = useState({
         info: '',
@@ -42,7 +42,7 @@ export const BookingHistoryScreen = () => {
                 );
                 if (data) {
                     setDataResults(data);
-                    console.log('data:', data);
+                    // console.log('data:', data);
                     // Si no hay resultados muestro aviso en pantalla
                     if (data?.data?.length === 0) {
                         console.log('No hay datos!!');

@@ -142,12 +142,17 @@ export const App = () => {
                             );
 
                             const currentUser = data.data;
-
+                            console.log(currentUser[0].lastname);
                             if (currentUser.length === 1) {
                                 // console.log('CURRENTUSER:::',currentUser);
                                 setNameUser(currentUser[0].name);
-                                setLastname(currentUser[0].lastname)
-                                // setPicture(currentUser[0].avatar);
+                                setLastname(currentUser[0].lastname);
+                                setPhone(currentUser[0].phoneNumber);
+                                setNationality(currentUser[0].nationality);
+                                setCreatedAt(currentUser[0].createdAt);
+                                setBirthday(currentUser[0].birthday);
+                                setEmail(currentUser[0].email);
+                                setPicture(currentUser[0].avatar);
                                 setLogin(true);
                             }
                         } catch (error) {
