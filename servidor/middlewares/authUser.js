@@ -8,7 +8,7 @@ const authUser = async (req, res, next) => {
     try {
         connection = await getDB();
         const { authorization, typeauth } = req.headers;
-        // console.log('authUser', req.headers);
+        // console.log('req.headers', req.headers);
         if (!authorization) {
             const error = new Error('Falta la cabecera de autorización');
             error.httpStatus = 401;
@@ -30,7 +30,7 @@ const authUser = async (req, res, next) => {
                         [data.email]
                     );
                     req.userauth = { idUser: user[0].id };
-
+                    // console.log('req.userauth: ', req.userauth);
                     return next();
                 }
             } catch (error) {
@@ -77,6 +77,8 @@ const authUser = async (req, res, next) => {
             req.userAuth = tokenInfo;
             next();
         }
+        console.log('authUser: ususario autorizado');
+        next();
     } catch (error) {
         next(error);
     }

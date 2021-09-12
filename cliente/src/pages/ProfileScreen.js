@@ -1,6 +1,6 @@
 import './css/profile-screen.css';
-import {useContext, useEffect, useRef, useState} from 'react'
-import { AuthContext } from '../App'
+import { useContext, useEffect, useRef, useState } from 'react';
+import { AuthContext } from '../App';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,37 +17,53 @@ import MaterialUiPhoneNumber from 'material-ui-phone-number';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-      display: 'flex',
-      '& > *': {
-        margin: theme.spacing(1),
-      },
+        display: 'flex',
+        '& > *': {
+            margin: theme.spacing(1),
+        },
     },
     small: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
+        width: theme.spacing(3),
+        height: theme.spacing(3),
     },
     large: {
-      width: theme.spacing(7),
-      height: theme.spacing(7),
+        width: theme.spacing(7),
+        height: theme.spacing(7),
     },
     input: {
         display: 'none',
-    }
-  }));
-  const useStylesFlags = makeStyles({
-    option: {
-      fontSize: 15,
-      '& > span': {
-        marginRight: 10,
-        fontSize: 18,
-      },
     },
-  });
-  
-  export const ProfileScreen =  ({ history, match }) => {
+}));
+const useStylesFlags = makeStyles({
+    option: {
+        fontSize: 15,
+        '& > span': {
+            marginRight: 10,
+            fontSize: 18,
+        },
+    },
+});
+
+export const ProfileScreen = ({ history, match }) => {
     const classesFlags = useStylesFlags();
     const classes = useStyles();
-    const { phone, email,name, lastname, opacity, nationality, birthday, createdAt, picture, setPicture, setNameUser, setLastname, setNationality, setPhone,setBirthday } = useContext(AuthContext);
+    const {
+        phone,
+        email,
+        name,
+        lastname,
+        opacity,
+        nationality,
+        birthday,
+        createdAt,
+        picture,
+        setPicture,
+        setNameUser,
+        setLastname,
+        setNationality,
+        setPhone,
+        setBirthday,
+    } = useContext(AuthContext);
     const birthdayDate = new Date(birthday).toLocaleDateString();
     const createDate = new Date(createdAt).toLocaleDateString();
     const [values, setValues] = useState({
@@ -69,35 +85,33 @@ const useStyles = makeStyles((theme) => ({
         disabledLastname: true,
         disabledNationality: true,
         disabledPhone: true,
-        disabledBirthday: true,    
+        disabledBirthday: true,
     });
 
     const inputName = useRef(null);
     const inputLastname = useRef(null);
 
-    useEffect(()  =>  {
+    useEffect(() => {
         // console.log('LOGINNNNN:',login);
-        return () => {
-            
-        }
-    }, [])
-    
-      function Alert(props) {
-        return <MuiAlert elevation={6} variant="filled" {...props} />;
-      }
+        return () => {};
+    }, []);
+
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant='filled' {...props} />;
+    }
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showError: false});
+        setValues({ ...values, showError: false });
     };
     const handleCloseOk = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setValues({...values, showOk: false});
+        setValues({ ...values, showOk: false });
     };
-    const onChangeAvatar = (event) =>{
+    const onChangeAvatar = (event) => {
         // console.log(event);
         setPicture(URL.createObjectURL(event.target.files[0]));
         async function changeAvatar() {
@@ -105,246 +119,414 @@ const useStyles = makeStyles((theme) => ({
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const formData = new FormData();
-                formData.append(
-                    "avatar",
-                    event.target.files[0]
-                    );
-                formData.append("email", email);
-                    
-                const res = await axios.post('http://localhost:3001/users/avatar', 
+                formData.append('avatar', event.target.files[0]);
+                formData.append('email', email);
+
+                const res = await axios.post(
+                    'http://localhost:3001/users/avatar',
                     formData,
-                    {   
+                    {
                         headers: {
                             'Content-Type': 'multipart/form-data',
-                            'Authorization': `${token}`,
-                            'typeauth': `${typeAuth}`,
-                        }
+                            Authorization: `${token}`,
+                            typeauth: `${typeAuth}`,
+                        },
+                    }
+                );
+                if (res.data.status === 'ok') {
+                    setValues({
+                        ...values,
+                        ok: 'Avatar modificado!',
+                        showOk: true,
                     });
-                if (res.data.status === 'ok'){
-                  setValues({...values, ok: "Avatar modificado!", showOk: true});
                 }
             } catch (error) {
                 // console.log(error);
-                setValues({...values, error: error.message, showError: true})                
+                setValues({ ...values, error: error.message, showError: true });
             }
         }
         changeAvatar();
-    }
-    
-   /*  const handleChange = (prop) => (event) => {
+    };
+
+    /*  const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
         if(event.target.id === 'standard-adornment-password' && event.charCode === 13){
             //handleRegister(event);
         }
     }; */
-    async function saveElement(element, newValue){
+    async function saveElement(element, newValue) {
         const token = localStorage.getItem('userToken');
         const typeAuth = localStorage.getItem('typeAuth');
         const body = {
             element,
             newValue,
         };
-        
+
         try {
-            const {data} = await axios.put(`http://localhost:3001/users/${localStorage.getItem("idUser")}`,
-            body,
-            {
-                headers: {
-                    'Authorization': `${token}`,
-                    'typeAuth': `${typeAuth}`
+            const { data } = await axios.put(
+                `http://localhost:3001/users/${localStorage.getItem('idUser')}`,
+                body,
+                {
+                    headers: {
+                        Authorization: `${token}`,
+                        typeAuth: `${typeAuth}`,
+                    },
                 }
-            });
+            );
             // console.log(data);
-            if (data.status === 'ok'){
-                
-                if (element==="name"){
-                    setValues({...values, ok: `Nombre actualizado`, name: newValue, showOk: true, disabledName:true});
+            if (data.status === 'ok') {
+                if (element === 'name') {
+                    setValues({
+                        ...values,
+                        ok: `Nombre actualizado`,
+                        name: newValue,
+                        showOk: true,
+                        disabledName: true,
+                    });
                     setNameUser(newValue);
-                    localStorage.setItem('userName', newValue)
+                    localStorage.setItem('userName', newValue);
                 }
-                if (element==="lastname"){
-                    setValues({...values, ok: `Apellido actualizado`, lastname: newValue ,showOk: true, disabledLastname:true});
+                if (element === 'lastname') {
+                    setValues({
+                        ...values,
+                        ok: `Apellido actualizado`,
+                        lastname: newValue,
+                        showOk: true,
+                        disabledLastname: true,
+                    });
                     setLastname(newValue);
                 }
-                if (element==="nationality"){
-                    setValues({...values, ok: `Nacionalidad actualizada`, nationality: newValue ,showOk: true, disabledNationality:true});
+                if (element === 'nationality') {
+                    setValues({
+                        ...values,
+                        ok: `Nacionalidad actualizada`,
+                        nationality: newValue,
+                        showOk: true,
+                        disabledNationality: true,
+                    });
                     setNationality(newValue);
                 }
-                if (element==="phoneNumber"){
-                    setValues({...values, ok: `Teléfono actualizado`, phone: newValue, showOk:true, disabledPhone: true})
-                    setPhone(newValue.replace(/\s/g, ''))
+                if (element === 'phoneNumber') {
+                    setValues({
+                        ...values,
+                        ok: `Teléfono actualizado`,
+                        phone: newValue,
+                        showOk: true,
+                        disabledPhone: true,
+                    });
+                    setPhone(newValue.replace(/\s/g, ''));
                 }
-                if (element==="birthDate"){
-                    setValues({...values, ok: `Fecha de nacimiento actualizada`, birthday: newValue, showOk:true, disabledBirthday: true})
+                if (element === 'birthDate') {
+                    setValues({
+                        ...values,
+                        ok: `Fecha de nacimiento actualizada`,
+                        birthday: newValue,
+                        showOk: true,
+                        disabledBirthday: true,
+                    });
                     setBirthday(newValue);
                 }
             }
         } catch (error) {
-            setValues({...values, error: error.message, showError: true})
+            setValues({ ...values, error: error.message, showError: true });
             // console.log(error);
         }
-    };
+    }
 
-    function changeValue(prop, value){
+    function changeValue(prop, value) {
         //console.log('ENTRO');
-        setValues({...values, [prop]: value});
+        setValues({ ...values, [prop]: value });
     }
     const changeBirthday = (event) => {
         //console.log(event.target.value);
         setValues({ ...values, birthday: event.target.value });
     };
-    function focus(element){
-        
-        element.current.disabled=false;
+    function focus(element) {
+        element.current.disabled = false;
         element.current.focus();
     }
 
     function countryToFlag(isoCode) {
         return typeof String.fromCodePoint !== 'undefined'
-          ? isoCode
-              .toUpperCase()
-              .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-          : isoCode;
-      }
-      const handleonChangePhone = (event) => {
+            ? isoCode
+                  .toUpperCase()
+                  .replace(/./g, (char) =>
+                      String.fromCodePoint(char.charCodeAt(0) + 127397)
+                  )
+            : isoCode;
+    }
+    const handleonChangePhone = (event) => {
         setValues({ ...values, phone: event.replace(/\s/g, '') });
-    };  
+    };
     const handleChangeNationality = (event) => {
         console.log(event);
-        const country = countries[event.currentTarget.dataset.optionIndex]?.label;
+        const country =
+            countries[event.currentTarget.dataset.optionIndex]?.label;
         console.log(country);
-        setValues({ ...values, nationality: country});
-    }
+        setValues({ ...values, nationality: country });
+    };
     return (
         <div id='profile-container' style={opacity}>
             {/* <TitleHome /> */}
             <div id='profile'>
-                <div id="titles">
-                    <div className={classes.root} id="avatar-container">
+                <div id='titles'>
+                    <div className={classes.root} id='avatar-container'>
                         <div>
-                            <input accept="image/*" className={classes.input} id="icon-button-file" type="file" onChange={onChangeAvatar}/>
-                            <label htmlFor="icon-button-file" id="camera-icon">
-                               <IconButton color="primary" aria-label="cargar imagen" component="span">
-                                  <PhotoCamera className="camera"/>
-                               </IconButton>
+                            <input
+                                accept='image/*'
+                                className={classes.input}
+                                id='icon-button-file'
+                                type='file'
+                                onChange={onChangeAvatar}
+                            />
+                            <label htmlFor='icon-button-file' id='camera-icon'>
+                                <IconButton
+                                    color='primary'
+                                    aria-label='cargar imagen'
+                                    component='span'
+                                >
+                                    <PhotoCamera className='camera' />
+                                </IconButton>
                             </label>
                         </div>
                         <div>
-                        {picture && <img alt={name} src={picture} className="pictureProfile"/>}
-                        {!picture && <img alt={name}  className="no-picture-Profile"/>}
-
+                            {picture && (
+                                <img
+                                    alt={name}
+                                    src={picture}
+                                    className='pictureProfile'
+                                />
+                            )}
+                            {!picture && (
+                                <img
+                                    alt={name}
+                                    className='no-picture-Profile'
+                                />
+                            )}
                         </div>
                     </div>
-                    <div className="item-1">Nombre</div>
-                    <div className="item-2">Apellidos</div>  
-                    <div className="item-3">Email asociado</div>  
-                    <div className="item-4">Nacionalidad</div>
-                    <div className="item-5">Teléfono</div>
-                    <div className="item-6">Fecha de nacimiento</div>
-                    <div className="item-7">Fecha alta usuario</div>
+                    <div className='item-1'>Nombre</div>
+                    <div className='item-2'>Apellidos</div>
+                    <div className='item-3'>Email asociado</div>
+                    <div className='item-4'>Nacionalidad</div>
+                    <div className='item-5'>Teléfono</div>
+                    <div className='item-6'>Fecha de nacimiento</div>
+                    <div className='item-7'>Fecha alta usuario</div>
                 </div>
-                <div id="data">
-                    <div className="info-account">Tu perfil</div>
-                    <div className="data-1">
-                        <input type="text" 
+                <div id='data'>
+                    <div className='info-account'>Tu perfil</div>
+                    <div className='data-1'>
+                        <input
+                            type='text'
                             disabled={values.disabledName}
                             autoFocus
-                            id="name"
-                            className="inputs-profile" 
+                            id='name'
+                            className='inputs-profile'
                             ref={inputName}
-                            defaultValue={name} 
-                            onChange={(event) => changeValue("name", event.target.value)}>
-                        </input>
-                        {values.disabledName && <EditIcon onClick={()=>{setValues({...values, disabledName:false}); focus(inputName)}}  className="icon-edit" />}
-                        {!values.disabledName && <SaveIcon onClick={()=>saveElement("name", values.name)} className="icon-edit"/>}
+                            defaultValue={name}
+                            onChange={(event) =>
+                                changeValue('name', event.target.value)
+                            }
+                        ></input>
+                        {values.disabledName && (
+                            <EditIcon
+                                onClick={() => {
+                                    setValues({
+                                        ...values,
+                                        disabledName: false,
+                                    });
+                                    focus(inputName);
+                                }}
+                                className='icon-edit'
+                            />
+                        )}
+                        {!values.disabledName && (
+                            <SaveIcon
+                                onClick={() => saveElement('name', values.name)}
+                                className='icon-edit'
+                            />
+                        )}
                     </div>
                     {/* {<TextField className="inputs-form label" id="standard-basic-nombre" label="nombre" value={values.name} onChange={handleChange('name')}/>} */}
-                    <div className="data-2">
-                        <input type="text" 
-                            disabled={values.disabledLastname} 
-                            id="lastname" 
-                            className="inputs-profile" 
+                    <div className='data-2'>
+                        <input
+                            type='text'
+                            disabled={values.disabledLastname}
+                            id='lastname'
+                            className='inputs-profile'
                             ref={inputLastname}
-                            defaultValue={lastname} 
-                            onChange={(event) => changeValue("lastname", event.target.value)}>
-                        </input>
-                        {values.disabledLastname && <EditIcon onClick={()=>{setValues({...values, disabledLastname:false}); focus(inputLastname)}}  className="icon-edit" />}
-                        {!values.disabledLastname && <SaveIcon onClick={()=>saveElement("lastname", values.lastname)} className="icon-edit"/>}
+                            defaultValue={lastname}
+                            onChange={(event) =>
+                                changeValue('lastname', event.target.value)
+                            }
+                        ></input>
+                        {values.disabledLastname && (
+                            <EditIcon
+                                onClick={() => {
+                                    setValues({
+                                        ...values,
+                                        disabledLastname: false,
+                                    });
+                                    focus(inputLastname);
+                                }}
+                                className='icon-edit'
+                            />
+                        )}
+                        {!values.disabledLastname && (
+                            <SaveIcon
+                                onClick={() =>
+                                    saveElement('lastname', values.lastname)
+                                }
+                                className='icon-edit'
+                            />
+                        )}
                     </div>
-                    <div className="data-3">{email} </div>
-                    {values.disabledNationality && <div className="data-4">{nationality} <EditIcon onClick={()=>setValues({...values, disabledNationality:false})}  className="icon-edit"/></div>}
-                    {!values.disabledNationality && <div className="data-4"> 
-                        <Autocomplete
-                            id="country-select"
-                            style={{ width: 300, zIndex: 10000 }}
-                            options={countries}
-                            disablePortal
-                            classes={{
-                                option: classesFlags.option,
-                            }}
-                            className="inputs-form-country"
-                            onChange={handleChangeNationality}
-                            autoHighlight
-                            getOptionLabel={(option) => option.label}
-                            renderOption={(option) => (
-                                <Fragment>
-                                <span>{countryToFlag(option.code)}</span>
-                                {option.label} ({option.code}) +{option.phone}
-                                </Fragment>
-                            )}
-                            renderInput={(params) => (
-                                <TextField
-                                    className="textField-countries"
-                                    {...params}
-                                    onChange={handleChangeNationality}
-                                    label="Elige un país"
-                                    variant="standard"
-                                    
-                                />    
-                            )}
-                        />
-                        <SaveIcon onClick={()=>saveElement("nationality", values.nationality)} className="icon-edit"/>
-                    </div>}
+                    <div className='data-3'>{email} </div>
+                    {values.disabledNationality && (
+                        <div className='data-4'>
+                            {nationality}{' '}
+                            <EditIcon
+                                onClick={() =>
+                                    setValues({
+                                        ...values,
+                                        disabledNationality: false,
+                                    })
+                                }
+                                className='icon-edit'
+                            />
+                        </div>
+                    )}
+                    {!values.disabledNationality && (
+                        <div className='data-4'>
+                            <Autocomplete
+                                id='country-select'
+                                style={{ width: 300, zIndex: 10000 }}
+                                options={countries}
+                                disablePortal
+                                classes={{
+                                    option: classesFlags.option,
+                                }}
+                                className='inputs-form-country'
+                                onChange={handleChangeNationality}
+                                autoHighlight
+                                getOptionLabel={(option) => option.label}
+                                renderOption={(option) => (
+                                    <Fragment>
+                                        <span>
+                                            {countryToFlag(option.code)}
+                                        </span>
+                                        {option.label} ({option.code}) +
+                                        {option.phone}
+                                    </Fragment>
+                                )}
+                                renderInput={(params) => (
+                                    <TextField
+                                        className='textField-countries'
+                                        {...params}
+                                        onChange={handleChangeNationality}
+                                        label='Elige un país'
+                                        variant='standard'
+                                    />
+                                )}
+                            />
+                            <SaveIcon
+                                onClick={() =>
+                                    saveElement(
+                                        'nationality',
+                                        values.nationality
+                                    )
+                                }
+                                className='icon-edit'
+                            />
+                        </div>
+                    )}
 
-                    {values.disabledPhone && <div className="data-5">{phone} <EditIcon onClick={()=>setValues({...values, disabledPhone:false})}  className="icon-edit"/> </div>}
-                    {!values.disabledPhone && <div className="data-5">
-                    <MaterialUiPhoneNumber
-                        dropdownClass='list-countries'
-                        className='input-phone inputs-form'
-                        defaultCountry={'es'}
-                        onChange={handleonChangePhone}
-                    />
-                        <SaveIcon onClick={()=>saveElement("phoneNumber", values.phone)} className="icon-edit"/> 
-                    </div>}
-                    
-                    {values.disabledBirthday && <div className="data-6">{birthdayDate} <EditIcon onClick={()=>setValues({...values, disabledBirthday:false})}  className="icon-edit"/> </div>}
-                    {!values.disabledBirthday && <div className="data-6">
-                        <TextField
-                            id='birthday'
-                            label='Fecha de nacimiento'
-                            type='date'
-                            defaultValue=''
-                            className='birthday'
-                            onChange={changeBirthday}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                        <SaveIcon onClick={()=>saveElement("birthDate", values.birthday)} className="icon-edit"/> 
-                    </div>}
-                    {createdAt && <div className="data-7">{createDate}</div>}
-                    
+                    {values.disabledPhone && (
+                        <div className='data-5'>
+                            {phone}{' '}
+                            <EditIcon
+                                onClick={() =>
+                                    setValues({
+                                        ...values,
+                                        disabledPhone: false,
+                                    })
+                                }
+                                className='icon-edit'
+                            />{' '}
+                        </div>
+                    )}
+                    {!values.disabledPhone && (
+                        <div className='data-5'>
+                            <MaterialUiPhoneNumber
+                                dropdownClass='list-countries'
+                                className='input-phone inputs-form'
+                                defaultCountry={'es'}
+                                onChange={handleonChangePhone}
+                            />
+                            <SaveIcon
+                                onClick={() =>
+                                    saveElement('phoneNumber', values.phone)
+                                }
+                                className='icon-edit'
+                            />
+                        </div>
+                    )}
+
+                    {values.disabledBirthday && (
+                        <div className='data-6'>
+                            {birthdayDate}{' '}
+                            <EditIcon
+                                onClick={() =>
+                                    setValues({
+                                        ...values,
+                                        disabledBirthday: false,
+                                    })
+                                }
+                                className='icon-edit'
+                            />{' '}
+                        </div>
+                    )}
+                    {!values.disabledBirthday && (
+                        <div className='data-6'>
+                            <TextField
+                                id='birthday'
+                                label='Fecha de nacimiento'
+                                type='date'
+                                defaultValue=''
+                                className='birthday'
+                                onChange={changeBirthday}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                            <SaveIcon
+                                onClick={() =>
+                                    saveElement('birthDate', values.birthday)
+                                }
+                                className='icon-edit'
+                            />
+                        </div>
+                    )}
+                    {createdAt && <div className='data-7'>{createDate}</div>}
                 </div>
             </div>
             <>
-                <Snackbar open={values.showError} autoHideDuration={3000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="error">
-                    {values.error}
+                <Snackbar
+                    open={values.showError}
+                    autoHideDuration={3000}
+                    onClose={handleClose}
+                >
+                    <Alert onClose={handleClose} severity='error'>
+                        {values.error}
                     </Alert>
                 </Snackbar>
-                <Snackbar open={values.showOk} autoHideDuration={3000} onClose={handleCloseOk}>
-                    <Alert onClose={handleClose} severity="success">
-                    {values.ok}
+                <Snackbar
+                    open={values.showOk}
+                    autoHideDuration={3000}
+                    onClose={handleCloseOk}
+                >
+                    <Alert onClose={handleClose} severity='success'>
+                        {values.ok}
                     </Alert>
                 </Snackbar>
             </>
@@ -440,7 +622,11 @@ const countries = [
     { code: 'GP', label: 'Guadeloupe', phone: '590' },
     { code: 'GQ', label: 'Equatorial Guinea', phone: '240' },
     { code: 'GR', label: 'Greece', phone: '30' },
-    { code: 'GS', label: 'South Georgia and the South Sandwich Islands', phone: '500' },
+    {
+        code: 'GS',
+        label: 'South Georgia and the South Sandwich Islands',
+        phone: '500',
+    },
     { code: 'GT', label: 'Guatemala', phone: '502' },
     { code: 'GU', label: 'Guam', phone: '1-671' },
     { code: 'GW', label: 'Guinea-Bissau', phone: '245' },
@@ -471,7 +657,11 @@ const countries = [
     { code: 'KI', label: 'Kiribati', phone: '686' },
     { code: 'KM', label: 'Comoros', phone: '269' },
     { code: 'KN', label: 'Saint Kitts and Nevis', phone: '1-869' },
-    { code: 'KP', label: "Korea, Democratic People's Republic of", phone: '850' },
+    {
+        code: 'KP',
+        label: "Korea, Democratic People's Republic of",
+        phone: '850',
+    },
     { code: 'KR', label: 'Korea, Republic of', phone: '82' },
     { code: 'KW', label: 'Kuwait', phone: '965' },
     { code: 'KY', label: 'Cayman Islands', phone: '1-345' },
@@ -494,7 +684,11 @@ const countries = [
     { code: 'MF', label: 'Saint Martin (French part)', phone: '590' },
     { code: 'MG', label: 'Madagascar', phone: '261' },
     { code: 'MH', label: 'Marshall Islands', phone: '692' },
-    { code: 'MK', label: 'Macedonia, the Former Yugoslav Republic of', phone: '389' },
+    {
+        code: 'MK',
+        label: 'Macedonia, the Former Yugoslav Republic of',
+        phone: '389',
+    },
     { code: 'ML', label: 'Mali', phone: '223' },
     { code: 'MM', label: 'Myanmar', phone: '95' },
     { code: 'MN', label: 'Mongolia', phone: '976' },
@@ -600,4 +794,4 @@ const countries = [
     { code: 'ZA', label: 'South Africa', phone: '27' },
     { code: 'ZM', label: 'Zambia', phone: '260' },
     { code: 'ZW', label: 'Zimbabwe', phone: '263' },
-  ];
+];

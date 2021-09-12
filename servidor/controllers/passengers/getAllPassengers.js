@@ -5,9 +5,10 @@ const getAllPassengers = async (req, res, next) => {
 
     try {
         connection = await getDB();
-        const { iduser } = req.headers;
+        const { idUser } = req.userauth;
         const { idBooking } = req.query;
         // Obtenemos la info y los pasajeros de un idBooking en concreto
+        // console.log(idUser, idBooking);
         let passengerInfo = [];
         if (idBooking) {
             const [passengers] = await connection.query(
@@ -30,27 +31,33 @@ const getAllPassengers = async (req, res, next) => {
                 passengerInfo.push(fragInfo);
             }
         } else {
-            const [passengers] = await connection.query(
-                `SELECT p.id, p.name, p.lastname, p.documentNumber, p.birthDate, p.documentType, p.nationality, p.issuanceDate, p.issuanceCountry, p.gender, p.emailContact, p.birthPlace, p.issuanceCountry FROM passengers p, booking b WHERE p.idBooking = b.id AND b.idUser= ?;`,
-                [iduser]
+            const [myPassengerBookings] = await connection.query(
+                `SELECT b.id FROM booking b WHERE b.idUser= ?;`,
+                [idUser]
             );
-            for (const passenger of passengers) {
-                const fragInfo = {
-                    id: passenger.id,
-                    name: passenger.name,
-                    lastname: passenger.lastname,
-                    documentNumber: passenger.documentNumber,
-                    documentType: passenger.documentType,
-                    birthDate: passenger.birthDate,
-                    nationality: passenger.nationality,
-                    gender: passenger.gender,
-                    emailAddress: passenger.emailContact,
-                    issuanceDate: passenger.issuanceDate,
-                    birthPlace: passenger.birthPlace,
-                    issuanceCountry: passenger.issuanceCountry,
-                };
-                // console.log(fragInfo);
-                passengerInfo.push(fragInfo);
+            for (const booking of myPassengerBookings) {
+                const [passengers] = await connection.query(
+                    `SELECT p.id, p.name, p.lastname, p.documentNumber, p.birthDate, p.documentType, p.nationality, p.issuanceDate, p.issuanceCountry, p.gender, p.emailContact, p.birthPlace, p.issuanceCountry FROM passengers p WHERE p.idBooking= ?;`,
+                    [booking.id]
+                );
+                for (const passenger of passengers) {
+                    const fragInfo = {
+                        id: passenger.id,
+                        name: passenger.name,
+                        lastname: passenger.lastname,
+                        documentNumber: passenger.documentNumber,
+                        documentType: passenger.documentType,
+                        birthDate: passenger.birthDate,
+                        nationality: passenger.nationality,
+                        gender: passenger.gender,
+                        emailAddress: passenger.emailContact,
+                        issuanceDate: passenger.issuanceDate,
+                        birthPlace: passenger.birthPlace,
+                        issuanceCountry: passenger.issuanceCountry,
+                    };
+                    // console.log(fragInfo);
+                    passengerInfo.push(fragInfo);
+                }
             }
         }
 

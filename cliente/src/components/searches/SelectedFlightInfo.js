@@ -137,38 +137,42 @@ function SelectedFlightInfo({ dataResults }) {
         };
         const arrivalCityCall = async (iataCityCode) => {
             setShowArrivalCity(false);
-            const { data } = await axios.get(
-                'http://localhost:3001/citySearch',
-                {
-                    params: {
-                        keyword: iataCityCode,
-                        view: 'LIGHT',
-                    },
+            if (iataCityCode) {
+                const { data } = await axios.get(
+                    'http://localhost:3001/citySearch',
+                    {
+                        params: {
+                            keyword: iataCityCode,
+                            view: 'LIGHT',
+                        },
+                    }
+                );
+                if (data) {
+                    const myCity = data.data.data[0];
+                    setMyArrivalCity(myCity);
+                    setShowArrivalCity(true);
                 }
-            );
-            if (data) {
-                const myCity = data.data.data[0];
-                setMyArrivalCity(myCity);
-                setShowArrivalCity(true);
             }
         };
 
         const departureCityCall = async (iataCityCode) => {
             setShowDepartureCity(false);
-            const { data } = await axios.get(
-                'http://localhost:3001/citySearch',
-                {
-                    params: {
-                        keyword: iataCityCode,
-                        view: 'LIGHT',
-                    },
-                }
-            );
+            if (iataCityCode) {
+                const { data } = await axios.get(
+                    'http://localhost:3001/citySearch',
+                    {
+                        params: {
+                            keyword: iataCityCode,
+                            view: 'LIGHT',
+                        },
+                    }
+                );
 
-            if (data) {
-                const myCity = data.data.data[0];
-                setDepartureCity(myCity);
-                setShowDepartureCity(true);
+                if (data) {
+                    const myCity = data.data.data[0];
+                    setDepartureCity(myCity);
+                    setShowDepartureCity(true);
+                }
             }
         };
 
@@ -256,30 +260,37 @@ function SelectedFlightInfo({ dataResults }) {
                 idUser: idUser,
                 typeAuth: typeAuth,
             };
+
             try {
+                // console.log('myHeaders: ', myHeaders);
                 const res = await axios.get(
-                    `http://localhost:3001/passengers`,
+                    `http://localhost:3001/passengers/`,
                     {
                         headers: myHeaders,
                     }
                 );
                 // saveTravelers = res.data.data;
-                // console.log('251:::::::::::',res.data.data);
+                console.log('251:::::::::::', res.data.data);
 
-                let passengers =[];
-                res.data.data.map((traveler) => {
+                let passengers = [];
+                res.data.data?.map((traveler) => {
                     let exist = false;
-                    for (const passenger of passengers){
-                        if (passenger.nationality === traveler.nationality && passenger.documentNumber === traveler.documentNumber && passenger.documentType === traveler.documentType) {
-                            exist =true;
+                    for (const passenger of passengers) {
+                        if (
+                            passenger.nationality === traveler.nationality &&
+                            passenger.documentNumber ===
+                                traveler.documentNumber &&
+                            passenger.documentType === traveler.documentType
+                        ) {
+                            exist = true;
                         }
                     }
-                    if (!exist){
-                        passengers.push(traveler)
+                    if (!exist) {
+                        passengers.push(traveler);
                     }
-                    return traveler;
-                })
-                // console.log(passengers);
+                    return passengers;
+                });
+                // console.log('passengers: ', passengers);
 
                 setSaveTravelers(passengers);
                 history.push('/passengers', [
