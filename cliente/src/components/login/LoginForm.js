@@ -52,9 +52,15 @@ function LoginForm() {
         setRestorePasswordForm,
         setLogin,
         setNameUser,
+        setLastname,
+        setEmail,
         animation,
         setOpacity,
         setPicture,
+        setNationality,
+        setPhone,
+        setBirthday,
+        setCreatedAt,
     } = useContext(AuthContext);
 
     const refLoginForm = useRef(null);
@@ -132,9 +138,16 @@ function LoginForm() {
 
                                     setShowForm(false);
                                     setLogin(true);
+                                    // console.log(currentUser[0]);
                                     setNameUser(currentUser[0].name);
+                                    setLastname(currentUser[0].lastname)
                                     setPicture(currentUser[0].avatar);
-
+                                    setEmail(currentUser[0].email)
+                                    setNationality(currentUser[0].nationality)
+                                    setPhone(currentUser[0].phoneNumber)
+                                    setBirthday(currentUser[0].birthDate)
+                                    setCreatedAt(currentUser[0].createdAt)
+                                    // console.log('CURRENT:::',currentUser[0]);
                                     localStorage.setItem(
                                         'userToken',
                                         response.tokenObj.id_token
@@ -279,7 +292,6 @@ function LoginForm() {
             email: values.email,
             password: values.password,
         };
-
         if (!body.email || !body.password) {
             setValues({
                 ...values,
@@ -311,6 +323,7 @@ function LoginForm() {
                     setNameUser(data.data.name);
                     if (data.data.avatar) {
                         setPicture(data.data.avatar);
+                        console.log('avatar:::', data.data.avatar);
                     }
                     setTimeout(() => {
                         setShowForm(false);

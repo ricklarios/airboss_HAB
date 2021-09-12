@@ -92,10 +92,17 @@ export const App = () => {
                             const currentUser = data.data;
 
                             if (currentUser.length === 1) {
-                                console.log(currentUser[0].avatar);
+                                // console.log(currentUser[0].avatar);
                                 setNameUser(currentUser[0].name);
+                                setLastname(currentUser[0].lastname)
+                                setEmail(currentUser[0].email)
+                                setNationality(currentUser[0].nationality)
+                                setPhone(currentUser[0].phoneNumber)
+                                setBirthday(currentUser[0].birthDate)
+                                setCreatedAt(currentUser[0].createdAt)
                                 if (currentUser[0].avatar) {
                                     setPicture(currentUser[0].avatar);
+                                    // console.log('FIJAMOS AVATAR:::', currentUser[0].avatar);
                                 }
                                 setLogin(true);
                             }
@@ -137,8 +144,10 @@ export const App = () => {
                             const currentUser = data.data;
 
                             if (currentUser.length === 1) {
+                                // console.log('CURRENTUSER:::',currentUser);
                                 setNameUser(currentUser[0].name);
-                                setPicture(currentUser[0].avatar);
+                                setLastname(currentUser[0].lastname)
+                                // setPicture(currentUser[0].avatar);
                                 setLogin(true);
                             }
                         } catch (error) {

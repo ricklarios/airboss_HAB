@@ -9,7 +9,7 @@ const getUserByEmail = async (req, res, next) => {
 
         // Obtenemos el email del usuario actual.
         const [user] = await connection.query(
-            `SELECT id, avatar, name, lastname, nationality, birthDate, createdAt FROM users WHERE email = ?`,
+            `SELECT id, avatar, name, lastname, nationality, birthDate, createdAt, email, phoneNumber  FROM users WHERE email = ?`,
             [email]
         );
 

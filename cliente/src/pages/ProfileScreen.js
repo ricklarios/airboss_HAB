@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
         setPicture(URL.createObjectURL(event.target.files[0]));
         async function changeAvatar() {
             try {
+                console.log('entro en avatar');
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const formData = new FormData();
@@ -110,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
                     event.target.files[0]
                     );
                 formData.append("email", email);
-                    
+                console.log('email:::',email);
                 const res = await axios.post('http://localhost:3001/users/avatar', 
                     formData,
                     {   
