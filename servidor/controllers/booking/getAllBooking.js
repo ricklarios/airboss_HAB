@@ -7,7 +7,7 @@ const getAllBooking = async (req, res, next) => {
         connection = await getDB();
 
         const { idUser } = req.params;
-        console.log('idUser: ', idUser);
+        // console.log('idUser: ', idUser);
 
         const [booking] = await connection.query(
             `   
