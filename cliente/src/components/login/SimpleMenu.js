@@ -66,7 +66,7 @@ export default function SimpleMenu() {
                 aria-haspopup='true'
                 onClick={handleClick}
             >
-                <Avatar alt={name} src={picture} className={classes.rounded} />{' '}
+                <Avatar alt={name} src={picture} className={classes.rounded} />
                 {name}
             </Button>
             <Menu

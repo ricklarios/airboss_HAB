@@ -69,41 +69,7 @@ export const App = () => {
 
         if (token && typeAuth === 'API') {
             const idUser = localStorage.getItem('idUser');
-            const myHeaders = new Headers();
-            myHeaders.append('Content-Type', 'application/json');
-            myHeaders.append('Authorization', token);
-            myHeaders.append('idUser', idUser);
 
-            // console.log(myHeaders);
-            fetch(`http://localhost:3001/users/validate-token/${typeAuth}`, {
-                method: 'GET',
-                headers: myHeaders,
-            })
-                .then((res) => res.json())
-                .then((response) => {
-                    if (response.status === 'error') {
-                        // error
-                        console.log(response.message);
-                        setLogin(false);
-                    } else {
-                        // si NO hay error seteo la sesion redirect a /home
-                        setLogin(true);
-                        setNameUser(localStorage.getItem('userName'));
-                        setLastname(response.data.lastname);
-                        setPhone(response.data.phoneNumber);
-                        setNationality(response.data.nationality);
-                        setCreatedAt(response.data.createdAt);
-                        setBirthday(response.data.birthDate);
-                        setEmail(response.data.email);
-                        setPicture(response.data.avatar);
-                    }
-                });
-        }
-<<<<<<< HEAD
-        if ((token && typeAuth === 'google') || typeAuth === 'fb') {
-=======
-        if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
->>>>>>> 02d65aaa56f96cad46844fcc0ef239d25292de7e
             try {
                 async function validateToken() {
                     const res = await axios.get(
@@ -111,30 +77,73 @@ export const App = () => {
                         {
                             headers: {
                                 'Content-Type': 'application/json',
-                                Authorization: token,
+                                authorization: token,
+                                iduser: idUser,
                             },
                         }
                     );
-<<<<<<< HEAD
 
-=======
->>>>>>> 02d65aaa56f96cad46844fcc0ef239d25292de7e
                     if (res.data.status === 'ok') {
-                        //setValues({...values, ok: "Logado Google OK!", showOk: true});
-                        // si NO hay error seteo la sesion redirect a /home
-                        setLogin(true);
+                        try {
+                            const { data } = await axios.get(
+                                `http://localhost:3001/users/id/${idUser}`
+                            );
 
-                        setNameUser(res.data.data.name);
-                        setLastname(res.data.data.lastname);
-                        setPhone(res.data.data?.phoneNumber);
-                        setNationality(res.data.data?.nationality);
-                        setCreatedAt(res.data.data.createdAt);
-                        setBirthday(res.data.data?.birthday);
-                        setEmail(res.data.data.email);
-                        setPicture(res.data.data?.avatar);
+                            const currentUser = data.data;
 
-                        console.log('DENTRO DE GOOGLE EN APP');
-                        localStorage.setItem('idUser', res.data.data.idUser);
+                            if (currentUser.length === 1) {
+                                console.log(currentUser[0].avatar);
+                                setNameUser(currentUser[0].name);
+                                if (currentUser[0].avatar) {
+                                    setPicture(currentUser[0].avatar);
+                                }
+                                setLogin(true);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        console.log('HAY UN PROBLEMA EN EL LOGADO');
+                        setLogin(false);
+                    }
+                }
+                validateToken();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (token && typeAuth === 'google') {
+            const idUser = localStorage.getItem('idUser');
+
+            try {
+                async function validateToken() {
+                    const res = await axios.get(
+                        `http://localhost:3001/users/validate-token/${typeAuth}`,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                authorization: token,
+                            },
+                        }
+                    );
+
+                    if (res.data.status === 'ok') {
+                        try {
+                            const { data } = await axios.get(
+                                `http://localhost:3001/users/id/${idUser}`
+                            );
+
+                            const currentUser = data.data;
+
+                            if (currentUser.length === 1) {
+                                setNameUser(currentUser[0].name);
+                                setPicture(currentUser[0].avatar);
+                                setLogin(true);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
                     } else {
                         console.log(
                             'HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS'
@@ -143,7 +152,9 @@ export const App = () => {
                     }
                 }
                 validateToken();
-            } catch (error) {}
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         return function cleanup() {
