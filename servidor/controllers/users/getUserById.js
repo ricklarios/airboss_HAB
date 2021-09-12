@@ -9,9 +9,21 @@ const getUserById = async (req, res, next) => {
 
         // Obtenemos el email del usuario actual.
         const [user] = await connection.query(
-            `SELECT email, avatar, name, lastname, nationality, birthDate, createdAt FROM users WHERE id = ?`,
+            `
+            SELECT email, avatar, name, lastname, nationality, birthDate, createdAt, phoneNumber, birthDate FROM users WHERE id = ?`,
             [idUser]
         );
+
+        //console.log(req.headers);
+        if (
+            user[0].avatar[0] === 'h' &&
+            user[0].avatar[1] === 't' &&
+            user[0].avatar[2] === 't'
+        ) {
+            // user[0].avatar = ${user[0].avatar};
+        } else {
+            user[0].avatar = `http://localhost:3001/static/uploads/${user[0].avatar}`;
+        }
 
         res.send({
             status: 'ok',

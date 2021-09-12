@@ -142,6 +142,7 @@ function generateRandomString(length) {
 async function savePhoto(image) {
     // Comprobamos que el directorio de subida de imágenes existe.
     // console.log('DENTRO DE SAVEPHOTO', UPLOADS_DIRECTORY);
+    console.log('Se guarda!');
     await ensureDir(UPLOADS_DIRECTORY, (err) => {
         console.log(err);
     });

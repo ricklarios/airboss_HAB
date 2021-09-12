@@ -53,7 +53,6 @@ Airboss es un portal de reserva de vuelos que consulta en tiempo real la disponi
 5. En el .env del servidor necesitarás generar las siguientes credenciales:
 
     REACT_APP_ID_GOOGLE= Recogido en el paso 5 </br>
-    REACT_APP_ID_FB= Recogido en el paso 5 </br>
     REACT_APP_PAYPAL_EMAIL= <a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
     REACT_APP_PAYPAL_PASSWORD= <a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
     REACT_APP_PAYPAL_CLIENTID=<a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
@@ -74,4 +73,6 @@ Distribuido bajo licencia del MIT.
 <!-- Recursos para el Readme-->
 
 [product-screenshot]: images/home.png
+[payment-screenshot]: images/payment.png
+[payment-screenshot]: images/payment.png
 [payment-screenshot]: images/payment.png

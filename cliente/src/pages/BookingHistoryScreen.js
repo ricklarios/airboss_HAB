@@ -57,7 +57,7 @@ export const BookingHistoryScreen = () => {
         };
         setShowResults(true);
         getUserBooking();
-    }, [idUser]);
+    }, [idUser, values]);
 
     const handleCloseOk = (event, reason) => {
         if (reason === 'clickaway') {

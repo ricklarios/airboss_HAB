@@ -116,6 +116,7 @@ export const ProfileScreen = ({ history, match }) => {
         setPicture(URL.createObjectURL(event.target.files[0]));
         async function changeAvatar() {
             try {
+                console.log('entro en avatar');
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const formData = new FormData();
