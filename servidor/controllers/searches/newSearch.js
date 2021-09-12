@@ -94,6 +94,7 @@ const newSearch = async (req, res, next) => {
         if (idUser !== undefined) {
             connection = await getDB();
             const now = new Date();
+            console.log('now:', now);
             await connection.query(
                 `
                             INSERT INTO searches (searchDate, origin, destination, departureDate, currencyCode, idUser)

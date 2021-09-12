@@ -33,7 +33,7 @@ function SelectedFlightInfo({ dataResults }) {
         showError: false,
         ok: '',
         showOk: false,
-        disabledPDF: true,
+        disabledPDF: false,
     });
     // const { login, setShowForm} = useContext(AuthContext);
     const { setTravelersInfo, setSaveTravelers } = useContext(AuthContext);
@@ -173,7 +173,7 @@ function SelectedFlightInfo({ dataResults }) {
         };
 
         if (dataResults) {
-            // console.log('dataResults:', dataResults);
+            console.log('dataResults:', dataResults);
 
             departureCityCall(departureCity);
 
@@ -314,7 +314,7 @@ function SelectedFlightInfo({ dataResults }) {
                         <div className='departure-info-container'>
                             <br />
                             <div className='itinerarie-info-header'>
-                                Trayecto: IDA
+                                <b>Trayecto: IDA</b>
                             </div>
                             <div>Compañia Aérea: {dataResults.myCarrier}</div>
                             <div>Aeronave: {dataResults.myAircraft}</div>
@@ -322,9 +322,13 @@ function SelectedFlightInfo({ dataResults }) {
                                 Emisiones CO2:{' '}
                                 {dataResults.data.data.flightOffers[0].itineraries[0].segments.reduce(
                                     (acc, segment) => {
-                                        return (acc += Number(
-                                            segment.co2Emissions[0].weight
-                                        ));
+                                        if (!segment.co2Emissions) {
+                                            return (acc += 0);
+                                        } else {
+                                            return (acc += Number(
+                                                segment.co2Emissions[0].weight
+                                            ));
+                                        }
                                     },
                                     0
                                 )}
@@ -340,111 +344,130 @@ function SelectedFlightInfo({ dataResults }) {
                         <div className='flight-info-segments-container'>
                             <div className='flight-info-segment'>
                                 <h5>SALIDA: </h5>
-                                {dataResults && showDepartureCity ? (
-                                    <div>
-                                        <div className='flight-info-time'>
-                                            <>
-                                                {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[0]
-                                                            .segments[0]
-                                                            .departure.at
-                                                    )[0]
-                                                }
-                                            </>
+                                {dataResults &&
+                                    showDepartureCity &&
+                                    myDepartureCity && (
+                                        <div>
+                                            <div className='flight-info-time'>
+                                                <>
+                                                    {
+                                                        getMyDateTime(
+                                                            dataResults.data
+                                                                .data
+                                                                .flightOffers[0]
+                                                                .itineraries[0]
+                                                                .segments[0]
+                                                                .departure.at
+                                                        )[0]
+                                                    }
+                                                </>
+                                                <div>
+                                                    {
+                                                        getMyDateTime(
+                                                            dataResults.data
+                                                                .data
+                                                                .flightOffers[0]
+                                                                .itineraries[0]
+                                                                .segments[0]
+                                                                .departure.at
+                                                        )[1]
+                                                    }
+                                                </div>
+                                            </div>
                                             <div>
                                                 {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[0]
-                                                            .segments[0]
-                                                            .departure.at
-                                                    )[1]
+                                                    myDepartureCity.address
+                                                        .cityName
+                                                }{' '}
+                                                (
+                                                {
+                                                    myDepartureCity.address
+                                                        .countryName
+                                                }
+                                                )
+                                            </div>
+                                            <div>{myDepartureCity.name}</div>
+                                            <div>
+                                                Terminal:{' '}
+                                                {
+                                                    dataResults.data.data
+                                                        .flightOffers[0]
+                                                        .itineraries[0]
+                                                        .segments[0].departure
+                                                        .terminal
                                                 }
                                             </div>
                                         </div>
-                                        <div>
-                                            {myDepartureCity.address.cityName} (
-                                            {
-                                                myDepartureCity.address
-                                                    .countryName
-                                            }
-                                            )
-                                        </div>
-                                        <div>{myDepartureCity.name}</div>
-                                        <div>
-                                            Terminal:{' '}
-                                            {
-                                                dataResults.data.data
-                                                    .flightOffers[0]
-                                                    .itineraries[0].segments[0]
-                                                    .departure.terminal
-                                            }
-                                        </div>
-                                    </div>
-                                ) : null}
+                                    )}
                             </div>
                             <div className='flight-info-separator'></div>
 
                             <div className='flight-info-segment'>
                                 <h5>DESTINO: </h5>
-                                {dataResults && showArrivalCity ? (
-                                    <div>
-                                        <div className='flight-info-time'>
-                                            <>
-                                                {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[0]
-                                                            .segments[
+                                {dataResults &&
+                                    showArrivalCity &&
+                                    myArrivalCity && (
+                                        <div>
+                                            <div className='flight-info-time'>
+                                                <>
+                                                    {
+                                                        getMyDateTime(
                                                             dataResults.data
                                                                 .data
                                                                 .flightOffers[0]
                                                                 .itineraries[0]
-                                                                .segments
-                                                                .length - 1
-                                                        ].arrival.at
-                                                    )[0]
-                                                }
-                                            </>
+                                                                .segments[
+                                                                dataResults.data
+                                                                    .data
+                                                                    .flightOffers[0]
+                                                                    .itineraries[0]
+                                                                    .segments
+                                                                    .length - 1
+                                                            ].arrival.at
+                                                        )[0]
+                                                    }
+                                                </>
+                                                <div>
+                                                    {
+                                                        getMyDateTime(
+                                                            dataResults.data
+                                                                .data
+                                                                .flightOffers[0]
+                                                                .itineraries[0]
+                                                                .segments[
+                                                                dataResults.data
+                                                                    .data
+                                                                    .flightOffers[0]
+                                                                    .itineraries[0]
+                                                                    .segments
+                                                                    .length - 1
+                                                            ].arrival.at
+                                                        )[1]
+                                                    }
+                                                </div>
+                                            </div>
                                             <div>
+                                                {myArrivalCity.address.cityName}{' '}
+                                                (
                                                 {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[0]
-                                                            .segments[
-                                                            dataResults.data
-                                                                .data
-                                                                .flightOffers[0]
-                                                                .itineraries[0]
-                                                                .segments
-                                                                .length - 1
-                                                        ].arrival.at
-                                                    )[1]
+                                                    myArrivalCity.address
+                                                        .countryName
+                                                }
+                                                )
+                                            </div>
+                                            <div>{myArrivalCity.name}</div>
+                                            <div>
+                                                Terminal:{' '}
+                                                {
+                                                    dataResults.data.data
+                                                        .flightOffers[0]
+                                                        .itineraries[0]
+                                                        .segments[0].arrival
+                                                        .terminal
                                                 }
                                             </div>
                                         </div>
-                                        <div>
-                                            {myArrivalCity.address.cityName} (
-                                            {myArrivalCity.address.countryName})
-                                        </div>
-                                        <div>{myArrivalCity.name}</div>
-                                        <div>
-                                            Terminal:{' '}
-                                            {
-                                                dataResults.data.data
-                                                    .flightOffers[0]
-                                                    .itineraries[0].segments[0]
-                                                    .arrival.terminal
-                                            }
-                                        </div>
-                                    </div>
-                                ) : null}
+                                    )}
                             </div>
                         </div>
                         <div>
@@ -510,18 +533,17 @@ function SelectedFlightInfo({ dataResults }) {
                 {dataResults &&
                     showReturnDepartureCity &&
                     showReturnArrivalCity &&
-                    dataResults.data.data.flightOffers[0].itineraries.length >
-                        1 && (
+                    dataResults?.data?.data?.flightOffers[0].itineraries
+                        .length > 1 && (
                         <div>
                             <div className='return-info-container'>
                                 <br />
                                 <div className='itinerarie-info-header'>
-                                    Trayecto: VUELTA
+                                    <b>Trayecto: VUELTA</b>
                                 </div>
                                 <div>
                                     Compañia Aérea:{' '}
                                     {dataResults.myReturnCarrier}
-                                    showRegisterForm,
                                 </div>
                                 <div>
                                     Aeronave: {dataResults.myReturnAircraft}
@@ -530,9 +552,14 @@ function SelectedFlightInfo({ dataResults }) {
                                     Emisiones CO2:{' '}
                                     {dataResults.data.data.flightOffers[0].itineraries[1].segments.reduce(
                                         (acc, segment) => {
-                                            return (acc += Number(
-                                                segment.co2Emissions[0].weight
-                                            ));
+                                            if (!segment.co2Emissions) {
+                                                return (acc += 0);
+                                            } else {
+                                                return (acc += Number(
+                                                    segment.co2Emissions[0]
+                                                        .weight
+                                                ));
+                                            }
                                         },
                                         0
                                     )}
@@ -550,109 +577,115 @@ function SelectedFlightInfo({ dataResults }) {
                             <div className='flight-info-segments-container'>
                                 <div className='flight-info-segment'>
                                     <h5>SALIDA: </h5>
-                                    {dataResults && showReturnDepartureCity && (
-                                        <div>
-                                            <div className='flight-info-time'>
-                                                {
-                                                    getMyDateTime(
+                                    {dataResults &&
+                                        showReturnDepartureCity &&
+                                        myReturnDepartureCity && (
+                                            <div>
+                                                <div className='flight-info-time'>
+                                                    {
+                                                        getMyDateTime(
+                                                            dataResults.data
+                                                                .data
+                                                                .flightOffers[0]
+                                                                .itineraries[1]
+                                                                .segments[0]
+                                                                .departure.at
+                                                        )[1]
+                                                    }
+                                                </div>
+                                                <div>
+                                                    {
+                                                        myReturnDepartureCity
+                                                            .address.cityName
+                                                    }{' '}
+                                                    (
+                                                    {
+                                                        myReturnDepartureCity
+                                                            .address.countryName
+                                                    }
+                                                    )
+                                                </div>
+                                                <div>
+                                                    {myReturnDepartureCity.name}
+                                                </div>
+                                                <div>
+                                                    Terminal:{' '}
+                                                    {
                                                         dataResults.data.data
                                                             .flightOffers[0]
                                                             .itineraries[1]
                                                             .segments[0]
-                                                            .departure.at
-                                                    )[1]
-                                                }
+                                                            .departure.terminal
+                                                    }
+                                                </div>
                                             </div>
-                                            <div>
-                                                {
-                                                    myReturnDepartureCity
-                                                        .address.cityName
-                                                }{' '}
-                                                (
-                                                {
-                                                    myReturnDepartureCity
-                                                        .address.countryName
-                                                }
-                                                )
-                                            </div>
-                                            <div>
-                                                {myReturnDepartureCity.name}
-                                            </div>
-                                            <div>
-                                                Terminal:{' '}
-                                                {
-                                                    dataResults.data.data
-                                                        .flightOffers[0]
-                                                        .itineraries[1]
-                                                        .segments[0].departure
-                                                        .terminal
-                                                }
-                                            </div>
-                                        </div>
-                                    )}
+                                        )}
                                 </div>
                                 <div className='flight-info-separator'></div>
 
                                 <div className='flight-info-segment'>
                                     <h5>DESTINO: </h5>
-                                    {dataResults && showReturnArrivalCity ? (
-                                        <div>
-                                            <div className='flight-info-time'>
-                                                {
-                                                    getMyDateTime(
-                                                        dataResults.data.data
-                                                            .flightOffers[0]
-                                                            .itineraries[1]
-                                                            .segments[
+                                    {dataResults &&
+                                        showReturnArrivalCity &&
+                                        myReturnArrivalCity && (
+                                            <div>
+                                                <div className='flight-info-time'>
+                                                    {
+                                                        getMyDateTime(
                                                             dataResults.data
                                                                 .data
                                                                 .flightOffers[0]
                                                                 .itineraries[1]
-                                                                .segments
-                                                                .length - 1
-                                                        ].arrival.at
-                                                    )[1]
-                                                }
+                                                                .segments[
+                                                                dataResults.data
+                                                                    .data
+                                                                    .flightOffers[0]
+                                                                    .itineraries[1]
+                                                                    .segments
+                                                                    .length - 1
+                                                            ].arrival.at
+                                                        )[1]
+                                                    }
+                                                </div>
+                                                <div>
+                                                    {
+                                                        myReturnArrivalCity
+                                                            .address.cityName
+                                                    }{' '}
+                                                    (
+                                                    {
+                                                        myReturnArrivalCity
+                                                            .address.countryName
+                                                    }
+                                                    )
+                                                </div>
+                                                <div>
+                                                    {myReturnArrivalCity.name}
+                                                </div>
+                                                <div>
+                                                    Terminal:{' '}
+                                                    {
+                                                        dataResults.data.data
+                                                            .flightOffers[0]
+                                                            .itineraries[1]
+                                                            .segments[0].arrival
+                                                            .terminal
+                                                    }
+                                                </div>
                                             </div>
-                                            <div>
-                                                {
-                                                    myReturnArrivalCity.address
-                                                        .cityName
-                                                }{' '}
-                                                (
-                                                {
-                                                    myReturnArrivalCity.address
-                                                        .countryName
-                                                }
-                                                )
-                                            </div>
-                                            <div>
-                                                {myReturnArrivalCity.name}
-                                            </div>
-                                            <div>
-                                                Terminal:{' '}
-                                                {
-                                                    dataResults.data.data
-                                                        .flightOffers[0]
-                                                        .itineraries[1]
-                                                        .segments[0].arrival
-                                                        .terminal
-                                                }
-                                            </div>
-                                        </div>
-                                    ) : null}
+                                        )}
                                 </div>
                             </div>
                             <div>
                                 <p>
                                     Paradas:{' '}
                                     {dataResults.data.data.flightOffers[0]
-                                        .itineraries[0].segments.length === 1
+                                        .itineraries[1].segments.length === 1
                                         ? 'No'
                                         : `${
                                               dataResults.data.data
                                                   .flightOffers[0]
-                                                  .itineraries[0].segments
+                                                  .itineraries[1].segments
                                                   .length - 1
                                           }`}
                                 </p>
@@ -719,11 +752,13 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 BASE:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu + Number(value.price.base),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu + Number(value.price.base),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency
@@ -731,12 +766,14 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p>
                                 IMPUESTOS:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu +
-                                        Number(value.price.refundableTaxes),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu +
+                                            Number(value.price.refundableTaxes),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0]
                                         .travelerPricings[0].price.currency
@@ -744,11 +781,13 @@ function SelectedFlightInfo({ dataResults }) {
                             </p>
                             <p className='total-price'>
                                 TOTAL:{' '}
-                                {dataResults.data.data.flightOffers[0].travelerPricings.reduce(
-                                    (acu, value) =>
-                                        acu + Number(value.price.total),
-                                    0
-                                )}
+                                {dataResults.data.data.flightOffers[0].travelerPricings
+                                    .reduce(
+                                        (acu, value) =>
+                                            acu + Number(value.price.total),
+                                        0
+                                    )
+                                    .toFixed(2)}
                                 {getSymbol(
                                     dataResults.data.data.flightOffers[0].price
                                         .currency
@@ -758,12 +797,6 @@ function SelectedFlightInfo({ dataResults }) {
                     )}
                 </div>
                 <div className='buttons-container not-to-pdf'>
-                    {/* <button className='buy-button'>Comprar</button> */}
-                    {!values.disabledPDF && (
-                        <button onClick={() => generatePDF()}>
-                            Ver en PDF
-                        </button>
-                    )}
                     <button
                         className='passengers-confirm-button'
                         onClick={() => {
@@ -781,6 +814,11 @@ function SelectedFlightInfo({ dataResults }) {
                     >
                         🦠 Información Covid-19
                     </button>
+                    {!values.disabledPDF && (
+                        <button onClick={() => generatePDF()}>
+                            Ver en PDF
+                        </button>
+                    )}
                 </div>
 
                 {dataResults && covidRestrictions && showCovidRestrictions && (

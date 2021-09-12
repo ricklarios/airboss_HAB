@@ -29,7 +29,7 @@ const main = async () => {
                 password VARCHAR(512) NOT NULL,
                 name VARCHAR(50),
                 lastname VARCHAR(50),
-                avatar VARCHAR(50),
+                avatar VARCHAR(150),
                 phoneNumber VARCHAR(12),
                 nationality VARCHAR(50),
                 birthDate DATETIME,

@@ -19,14 +19,12 @@ Airboss es un portal de reserva de vuelos que consulta en tiempo real la disponi
 
 
 
-
-
-
 ## Tecnologías utilizadas
 
 -   **BACKEND** - Node.js
 -   **FRONTEND** - React.js
 -   **BASE DE DATOS** - MySQL
+
 
 ## Tarjetas válidas de pago para simulación
 - **MASTERCARD** 2223000048400011
@@ -35,3 +33,10 @@ Airboss es un portal de reserva de vuelos que consulta en tiempo real la disponi
 
 <!-- Recursos para el Readme-->
 [product-screenshot]: images/home.png
+=======
+## Autores ✒️
+
+-   **Miguel Angel Perez Romero** - [GitHub](https://github.com/maperezromero) - [Linkedin](https://www.linkedin.com/in/miguelangelperezromero/)
+-   **Ricardo Larios** - [GitHub](https://github.com/ricklarios) - [Linkedin](https://www.linkedin.com/in/ricardo-larios-18743646/)
+-   **Rodrigo Manueco** - [GitHub](https://github.com/rmanueco) - [Linkedin](https://www.linkedin.com/in/rodrigomanueco/)
+

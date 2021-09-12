@@ -32,9 +32,9 @@ export const App = () => {
         const token = localStorage.getItem('userToken');
         if (token) {
             return true;
-        } 
-        return false; 
-    }
+        }
+        return false;
+    };
 
     const [login, setLogin] = useState(isLogged());
 
@@ -43,7 +43,7 @@ export const App = () => {
             if (!refApp.current || refApp.current.contains(e.target)) {
                 return;
             }
-            if (e.keyCode === 27){
+            if (e.keyCode === 27) {
                 setShowRegisterForm(false);
                 setShowForm(false);
             }
@@ -66,79 +66,102 @@ export const App = () => {
 
         const token = localStorage.getItem('userToken');
         const typeAuth = localStorage.getItem('typeAuth');
-        
-        if (token && typeAuth==='API') {
+
+        if (token && typeAuth === 'API') {
             const idUser = localStorage.getItem('idUser');
-            const myHeaders = new Headers();
-            myHeaders.append('Content-Type', 'application/json');
-            myHeaders.append('Authorization', token);
-            myHeaders.append('idUser', idUser);
-            
-            // console.log(myHeaders);
-            fetch(`http://localhost:3001/users/validate-token/${typeAuth}`, {
-                method: 'GET',
-                headers: myHeaders,
-            })
-            .then((res) => res.json())
-            .then((response) => {
-                if (response.status === 'error') {
-                    // error
-                    console.log(response.message);
-                    setLogin(false);
-                } else {
-                        // si NO hay error seteo la sesion redirect a /home
-                        setLogin(true);
-                        setNameUser(localStorage.getItem('userName'));
-                        setLastname(response.data.lastname);
-                        setPhone(response.data.phoneNumber);
-                        setNationality(response.data.nationality);
-                        setCreatedAt(response.data.createdAt);
-                        setBirthday(response.data.birthDate);
-                        setEmail(response.data.email);
-                        setPicture(response.data.avatar);
+
+            try {
+                async function validateToken() {
+                    const res = await axios.get(
+                        `http://localhost:3001/users/validate-token/${typeAuth}`,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                authorization: token,
+                                iduser: idUser,
+                            },
+                        }
+                    );
+
+                    if (res.data.status === 'ok') {
+                        try {
+                            const { data } = await axios.get(
+                                `http://localhost:3001/users/id/${idUser}`
+                            );
+
+                            const currentUser = data.data;
+
+                            if (currentUser.length === 1) {
+                                console.log(currentUser[0].avatar);
+                                setNameUser(currentUser[0].name);
+                                if (currentUser[0].avatar) {
+                                    setPicture(currentUser[0].avatar);
+                                }
+                                setLogin(true);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        console.log('HAY UN PROBLEMA EN EL LOGADO');
+                        setLogin(false);
                     }
-                });
-        }
-        if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
-                try {
-                    async function validateToken(){
-                        const res = await axios.get(`http://localhost:3001/users/validate-token/${typeAuth}`, {
-                            headers:{ 'Content-Type': 'application/json',
-                            'Authorization': token,  
-                        },
-                    })
-                    if (res.data.status === 'ok'){
-                        //setValues({...values, ok: "Logado Google OK!", showOk: true});
-                        // si NO hay error seteo la sesion redirect a /home
-                        setLogin(true);
-                        
-                        setNameUser(res.data.data.name);
-                        setLastname(res.data.data.lastname);
-                        setPhone(res.data.data?.phoneNumber);
-                        setNationality(res.data.data?.nationality);
-                        setCreatedAt(res.data.data.createdAt);
-                        setBirthday(res.data.data?.birthday);
-                        setEmail(res.data.data.email);
-                        setPicture(res.data.data?.avatar);
-                        console.log('DENTRO DE GOOGLE EN APP');
-                        localStorage.setItem('idUser', res.data.data.idUser)
-                    }else{
-                            console.log('HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS');
-                            setLogin(false)
-                    }
-                    }
-                    validateToken();
-                } catch (error) {
-                    console.log('ERROR EN VALIDATE');
                 }
-            
+                validateToken();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        if (token && typeAuth === 'google') {
+            const idUser = localStorage.getItem('idUser');
+
+            try {
+                async function validateToken() {
+                    const res = await axios.get(
+                        `http://localhost:3001/users/validate-token/${typeAuth}`,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                authorization: token,
+                            },
+                        }
+                    );
+
+                    if (res.data.status === 'ok') {
+                        try {
+                            const { data } = await axios.get(
+                                `http://localhost:3001/users/id/${idUser}`
+                            );
+
+                            const currentUser = data.data;
+
+                            if (currentUser.length === 1) {
+                                setNameUser(currentUser[0].name);
+                                setPicture(currentUser[0].avatar);
+                                setLogin(true);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        console.log(
+                            'HAY UN PROBLEMA EN EL LOGADO DE GOOGLE/FB APP.JS'
+                        );
+                        setLogin(false);
+                    }
+                }
+                validateToken();
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         return function cleanup() {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, [showForm, email]);
-    
+
     return (
         <div ref={refApp}>
             <AuthContext.Provider
@@ -172,14 +195,14 @@ export const App = () => {
                     setShowRegisterForm,
                     setRestorePasswordForm,
                     showRestorePasswordForm,
-                    showEditTravelerForm, 
+                    showEditTravelerForm,
                     setShowEditTravelerForm,
                     travelersInfo,
                     setTravelersInfo,
                     currentTraveler,
                     setCurrentTraveler,
                     saveTravelers,
-                    setSaveTravelers
+                    setSaveTravelers,
                 }}
             >
                 <AppRouter />

@@ -119,24 +119,28 @@ export const ConfirmPassengersScreen = ({ history }) => {
                 flightObject: data.state[0].data.data.flightOffers[0],
                 travelers: travelersInfo,
             };
+
             const res = await axios.post('http://localhost:3001/booking', body);
             // console.log(res);
             // console.log(res.data.data.data.id);
+
             if (res?.data?.data?.data?.id) {
                 setBookingDone(true);
                 setValues({
                     ...values,
+                    showInfo: false,
                     showOk: true,
                     ok: `Reserva ${res?.data?.data?.data?.id} Confirmada`,
                 });
-
                 setTimeout(() => {
                     <Redirect to={routes.home} />;
+
                     history.push('/');
                 }, 3000);
             } else if (res?.data?.data?.message?.code === 'ClientError') {
                 setValues({
                     ...values,
+
                     showInfo: true,
                     info: 'No se ha podido completar la reserva',
                 });

@@ -35,6 +35,7 @@ const createOrder = async (req, res, next) => {
         const now = new Date();
         const bookingCode = data.id;
         const createdAt = formatDate(now);
+
         const finalPrice = data.flightOffers[0].price.total;
         const currency = data.flightOffers[0].price.currency;
 
@@ -130,15 +131,14 @@ const createOrder = async (req, res, next) => {
             [idUser]
         );
         const emailto = user[0].email;
-        const emailBody = ` Tu reserva ${bookingCode} ha sido realizada con éxito. Gracias por confiar en airboss. A continuación te mostramos la lista de pasajeros:`
+        const emailBody = ` Tu reserva ${bookingCode} ha sido realizada con éxito. Gracias por confiar en airboss. A continuación te mostramos la lista de pasajeros:`;
 
         await sendMailBooking({
             to: emailto,
             subject: `Reserva confirmada con airboss`,
-            body: emailBody    ,
+            body: emailBody,
             passengers: travelers,
-        })
-
+        });
 
         //console.log('todo guay');
         res.send({

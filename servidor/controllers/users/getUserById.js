@@ -1,17 +1,16 @@
 const { getDB } = require('../../bbdd/db');
 
-const getUser = async (req, res, next) => {
+const getUserById = async (req, res, next) => {
     let connection;
     try {
         connection = await getDB();
 
-        const { email } = req.body;
-        console.log(req.body);
+        const { idUser } = req.params;
 
         // Obtenemos el email del usuario actual.
         const [user] = await connection.query(
-            `SELECT id, avatar, name, lastname, nationality, birthDate, createdAt FROM users WHERE email = ?`,
-            [email]
+            `SELECT email, avatar, name, lastname, nationality, birthDate, createdAt FROM users WHERE id = ?`,
+            [idUser]
         );
 
         res.send({
@@ -26,4 +25,4 @@ const getUser = async (req, res, next) => {
     }
 };
 
-module.exports = { getUser };
+module.exports = { getUserById };

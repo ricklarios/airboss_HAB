@@ -4,8 +4,9 @@
     border-radius: 15px;
     padding: 1rem;
     box-shadow: -1px 1px 2px rgb(129, 129, 129);
-    min-width: 700px;
-    max-width: 900px;
+    min-width: 500px;
+    max-width: 800px;
+    margin-left: 100px;
     font-family: Montserrat, sans-serif;
     text-align: left;
 }
@@ -34,10 +35,12 @@
 }
 .flight-info-segments-container {
     display: flex;
+
     justify-content: space-around;
     margin-bottom: 40px;
 }
 .flight-info-segment {
+    width: 300px;
     padding: 20px;
     margin-top: -20px;
     margin-bottom: -20px;

@@ -6,7 +6,7 @@ const path = require('path');
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
 const { parse } = require('iso8601-duration');
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const { UPLOADS_DIRECTORY } = process.env;
@@ -63,22 +63,25 @@ async function sendMail({ to, subject, body }) {
     }
 }
 
-
 /**
  * #############################################
  * ## Enviar email de confirmación de reserva ##
  * #############################################
  */
 
- async function sendMailBooking({ to, subject, body, passengers }) {
+async function sendMailBooking({ to, subject, body, passengers }) {
     try {
         console.log('DENTRO DE SENDMAIL**************************************');
-        console.log('to:::',to);
-        console.log('body:::',body);
+        console.log('to:::', to);
+        console.log('body:::', body);
         console.log('passengers:::', passengers);
+
+       
+
         let passengersList='';
         for (const passenger of passengers){
             passengersList += `- ${passenger.name.firstName} ${passenger.name.lastName} <br>`; 
+
         }
         const msg = {
             to,
@@ -139,36 +142,36 @@ function generateRandomString(length) {
 async function savePhoto(image) {
     // Comprobamos que el directorio de subida de imágenes existe.
     // console.log('DENTRO DE SAVEPHOTO', UPLOADS_DIRECTORY);
-    await ensureDir(UPLOADS_DIRECTORY, err => {
+    await ensureDir(UPLOADS_DIRECTORY, (err) => {
         console.log(err);
     });
     // Leer la imagen con sharp.
     const sharpImage = sharp(image.data);
-    
+
     // Comprobamos que la imagen no tenga un tamaño mayor que "X" píxeles de ancho.
     // Para ello obtenemos los metadatos de la imagen.
     // console.log(sharpImage);
     const imageInfo = await sharpImage.metadata();
-    
+
     // Definimos el ancho máximo.
     const IMAGE_MAX_WIDTH = 1000;
-    
+
     // Si la imagen supera el ancho máximo definido anteriormente redimensionamos la
     // imagen.
     if (imageInfo.width > IMAGE_MAX_WIDTH) {
         sharpImage.resize(IMAGE_MAX_WIDTH);
     }
-    
+
     // Generamos un nombre único para la imagen.
     const savedImageName = `${uuid.v4()}.jpg`;
-    
+
     // Unimos el directorio de imagenes con el nombre de la imagen.
     const imagePath = path.join(UPLOADS_DIRECTORY, savedImageName);
-    
+
     // Guardamos la imagen en el directorio de imágenes.
     await sharpImage.toFile(imagePath);
     // console.log('DENTRO DE SAVEPHOTO');
-    
+
     // Retornamos el nombre del fichero.
     return savedImageName;
 }
@@ -187,27 +190,24 @@ async function deletePhoto(photoName) {
     await unlink(photoPath);
 }
 
-const googleVerify = async(idToken='') =>{
+const googleVerify = async (idToken = '') => {
     try {
         //console.log('LLEGA A GOOGLE VERIFY');
         //console.log(id_token,'****',process.env.GOOGLE_CLIENT_ID );
-      const ticket = await client.verifyIdToken({
-          idToken,
-          audience: process.env.GOOGLE_CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-          // Or, if multiple clients access the backend:
-          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-      });
-      //console.log('PASA PROMESA');
-      const {name, picture, email} = ticket.getPayload();
-      //console.log(name, picture, email);
-      return {name,picture,email};
-
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+        //console.log('PASA PROMESA');
+        const { name, picture, email } = ticket.getPayload();
+        //console.log(name, picture, email);
+        return { name, picture, email };
     } catch (error) {
-        console.log(error);    
+        console.log(error);
     }
-}
-
-
+};
 
 module.exports = {
     formatDate,

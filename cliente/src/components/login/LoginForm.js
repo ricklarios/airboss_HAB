@@ -12,7 +12,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Button from '@material-ui/core/Button';
 import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
 import { AuthContext } from '../../App';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -21,10 +20,8 @@ import axios from 'axios';
 
 import logo3 from '../../assets/isologo.png';
 
-const idFB = process.env.REACT_APP_ID_FB;
 const idGoogle = process.env.REACT_APP_ID_GOOGLE;
 const urlGoogle = `${idGoogle}-pelele5h6cbtvccnk47pourck5eq82pd.apps.googleusercontent.com`;
-//const axios = require('axios');
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,21 +49,12 @@ function LoginForm() {
         login,
         setShowForm,
         setShowRegisterForm,
-        setEmail,
         setRestorePasswordForm,
         setLogin,
         setNameUser,
         animation,
         setOpacity,
         setPicture,
-        setPhone,
-        setNationality,
-        setCreatedAt,
-        setBirthday,
-        setLastname,
-        name,
-        lastname,
-        email,
     } = useContext(AuthContext);
 
     const refLoginForm = useRef(null);
@@ -107,127 +95,149 @@ function LoginForm() {
         setValues({ ...values, showOk: false });
     };
 
-    //Funciones para el manejo de respuestas de las API de Google y Facebook
     const responseGoogle = (response) => {
-        if (response?.profileObj?.name) {
-            setNameUser(response?.profileObj?.givenName);
-            setLastname(response?.profileObj?.familyName);
-            setPicture(response?.profileObj?.imageUrl);
-            setEmail(response?.profileObj?.email);
+        const token_google = response.tokenObj.id_token;
+        //Verifico que la respuesta de google este OK.
+        if (response?.profileObj?.email) {
+            async function getUser() {
+                try {
+                    //Verifico si esta el usuario registrado
+                    const { data } = await axios.get(
+                        `http://localhost:3001/users/${response?.profileObj?.email}`
+                    );
+                    const currentUser = data.data;
 
-            setValues({
-                ...values,
-                ok: 'Te has logado con éxito',
-                showOk: true,
-            });
-            setTimeout(() => {
-                setShowForm(false);
-                setLogin(true);
-            }, 2000);
-            localStorage.setItem('userToken', response.tokenObj.id_token);
-            localStorage.setItem('userName', response.profileObj.givenName);
-            localStorage.setItem('typeAuth', 'google');
-            //*******************/
-            async function loginGoogle() {
-                const typeAuth = localStorage.getItem('typeAuth');
-                const myHeaders = new Headers();
-                
-                /* myHeaders.append('Content-Type', 'application/json');
-                myHeaders.append('authorization', response.tokenObj.id_token);
-                myHeaders.append('email', email);
-                myHeaders.append('name', name);
-                myHeaders.append('lastname', lastname); */
+                    //Si el usuario esta registrado
+                    if (currentUser.length === 1) {
+                        //Valido el token
+                        try {
+                            async function loginGoogle() {
+                                const res = await axios.get(
+                                    'http://localhost:3001/users/validate-token/google',
+                                    {
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            authorization: `${token_google}`,
+                                        },
+                                    }
+                                );
 
-                
-                
-                // console.log('ENTRO EN LOGINGOOGLE');
-                const res = await axios.get(
-                    `http://localhost:3001/users/validate-token/${typeAuth}`,{
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'authorization': `${response.tokenObj.id_token}`,
-                            'typeauth': `${typeAuth}`,
-                            'email': `${email}`,
-                            'name': `${name}`,
-                            'lastname': `${lastname}`,
+                                //Si el token esta ok.
+                                if (res?.data?.status === 'ok') {
+                                    setValues({
+                                        ...values,
+                                        ok: 'Te has logado con éxito',
+                                        showOk: true,
+                                    });
+
+                                    setShowForm(false);
+                                    setLogin(true);
+                                    setNameUser(currentUser[0].name);
+                                    setPicture(currentUser[0].avatar);
+
+                                    localStorage.setItem(
+                                        'userToken',
+                                        response.tokenObj.id_token
+                                    );
+                                    localStorage.setItem(
+                                        'userName',
+                                        currentUser[0].name
+                                    );
+                                    localStorage.setItem('typeAuth', 'google');
+                                    localStorage.setItem(
+                                        'idUser',
+                                        currentUser[0].id
+                                    );
+                                }
+                            }
+                            loginGoogle();
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        //Si el usuario no esta registrado
+                        try {
+                            const currentUser = {
+                                email: response.profileObj.email,
+                                password: '12345678',
+                                name: response.profileObj.givenName,
+                                lastname: response.profileObj.familyName,
+
+                                avatar: response.profileObj.imageUrl,
+                            };
+
+                            const { data } = await axios.post(
+                                `http://localhost:3001/users`,
+                                currentUser
+                            );
+
+                            if (data.status === 'ok') {
+                                const idUser = data.idUser[0].id;
+
+                                try {
+                                    async function loginGoogle() {
+                                        const res = await axios.get(
+                                            'http://localhost:3001/users/validate-token/google',
+                                            {
+                                                headers: {
+                                                    'Content-Type':
+                                                        'application/json',
+                                                    authorization: `${token_google}`,
+                                                },
+                                            }
+                                        );
+
+                                        //Si el token esta ok.
+                                        if (res?.data?.status === 'ok') {
+                                            setValues({
+                                                ...values,
+                                                ok: 'Te has logado con éxito',
+                                                showOk: true,
+                                            });
+
+                                            setShowForm(false);
+                                            setLogin(true);
+                                            setNameUser(currentUser.name);
+                                            setPicture(currentUser.avatar);
+
+                                            localStorage.setItem(
+                                                'userToken',
+                                                response.tokenObj.id_token
+                                            );
+                                            localStorage.setItem(
+                                                'userName',
+                                                currentUser.name
+                                            );
+                                            localStorage.setItem(
+                                                'typeAuth',
+                                                'google'
+                                            );
+                                            localStorage.setItem(
+                                                'idUser',
+                                                idUser
+                                            );
+                                        }
+                                    }
+                                    loginGoogle();
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }
+                        } catch (error) {
+                            console.log(error);
                         }
                     }
-                    );
-                // console.log('ENTRO EN LOGINGOOGLE tras axios');
-                
-                // console.log('RES:::',res);
-                if (res?.data?.status === 'ok') {
-                    // console.log(res);
-                    setValues({
-                        ...values,
-                        ok: 'Logado Google OK!',
-                        showOk: true,
-                    });
-                    localStorage.setItem('idUser', res?.data?.data?.idUser)
+                } catch (error) {
+                    console.log(error);
                 }
             }
-
-            loginGoogle();
-
-            //*******************/
+            getUser();
         } else {
             setValues({
                 ...values,
                 error: 'No ha sido posible logarte mediante Google, inténtalo más tarde',
                 showError: true,
             });
-        }
-    };
-    const responseFacebook = (response) => {
-        // setData(response); //REV_ERRORS
-        //console.log('DENTRO DE RESPONSE FACEBOOK');
-        //console.log('RESPONSE**************:',response);
-        if (response.accessToken) {
-            setPicture(response?.picture?.data?.url);
-            setEmail(response.email);
-            setNameUser(response.first_name);
-            setLastname(response.last_name);
-            setValues({
-                ...values,
-                ok: 'Te has logado con éxito',
-                showOk: true,
-            });
-            setTimeout(() => {
-                setShowForm(false);
-                setLogin(true);
-            }, 2000);
-            localStorage.setItem('userToken', response.accessToken);
-            localStorage.setItem('userName', response.first_name);
-            localStorage.setItem('typeAuth', 'fb');
-            //Validamos en back si el usuario ya está registrado en la BBDD, sino se creará
-            async function loginFB() {
-                const token = localStorage.getItem('userToken');
-                const typeAuth = localStorage.getItem('typeAuth');
-                const myHeaders = new Headers();
-
-                myHeaders.append('Content-Type', 'application/json');
-                myHeaders.append('Authorization', token);
-                myHeaders.append('email', email);
-                myHeaders.append('name', name);
-                myHeaders.append('lastname', lastname);
-
-                const res = await axios.get(
-                    `http://localhost:3001/users/validate-token/${typeAuth}`,
-                    myHeaders
-                );
-
-                if (res.data.status === 'ok') {
-                    setValues({
-                        ...values,
-                        ok: 'Logado Facebook OK!',
-                        showOk: true,
-                    });
-                }
-            }
-
-            loginFB();
-        } else {
-            setLogin(false);
         }
     };
 
@@ -265,53 +275,57 @@ function LoginForm() {
         //console.log('ENTRA EN SUBMIT');
         event.preventDefault();
 
-        fetch('http://localhost:3001/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: values.email,
-                password: values.password,
-            }),
-        })
-            .then((res) => res.json())
-            .then((response) => {
-                // response
-                //console.log(response);
+        const body = {
+            email: values.email,
+            password: values.password,
+        };
 
-                if (response.status === 'error') {
-                    // error
+        if (!body.email || !body.password) {
+            setValues({
+                ...values,
+                error: 'Email o contraseña incorrectos',
+                showError: true, //REV_ERRORS
+            });
+            return;
+        }
+
+        async function login() {
+            try {
+                const { data } = await axios.post(
+                    'http://localhost:3001/users/login',
+                    body
+                );
+
+                if (data.status === 'No existe') {
                     setValues({
                         ...values,
-                        error: response.message,
+                        error: 'Email o contraseña incorrectos',
                         showError: true, //REV_ERRORS
                     });
-                    //console.log(error.message);
                 } else {
-                    // si NO hay error seteo la sesion redirect a /home
                     setValues({
                         ...values,
                         ok: 'Te has logado con éxito',
                         showOk: true,
                     });
-                    setNameUser(response.data.name);
-                    setPhone(response.data.phoneNumber);
-                    setNationality(response.data.nationality);
-                    setCreatedAt(response.data.createdAt);
-                    setBirthday(response.data.birthDate);
-                    setEmail(values.email);
-                    setPicture(response.data.avatar);
+                    setNameUser(data.data.name);
+                    if (data.data.avatar) {
+                        setPicture(data.data.avatar);
+                    }
                     setTimeout(() => {
                         setShowForm(false);
                         setLogin(true);
-                    }, 3000);
-                    localStorage.setItem('userToken', response.data.token);
-                    localStorage.setItem('userName', response.data.name);
-                    localStorage.setItem('idUser', response.data.idUser);
+                    }, 2500);
+                    localStorage.setItem('userToken', data.data.token);
+                    localStorage.setItem('userName', data.data.name);
+                    localStorage.setItem('idUser', data.data.idUser);
                     localStorage.setItem('typeAuth', 'API');
                 }
-            });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        login();
     }
     document.addEventListener('keydown', handleKeyDown);
 
@@ -420,17 +434,6 @@ function LoginForm() {
                             onFailure={responseGoogle}
                             cookiePolicy={'single_host_origin'}
                             expires_on='50000'
-                        />
-                    )}
-                    {!login && (
-                        <FacebookLogin
-                            appId={idFB}
-                            cssClass='btnFacebook'
-                            autoLoad={false}
-                            fields='name,email,picture,first_name,last_name'
-                            scope='public_profile,user_friends, email'
-                            callback={responseFacebook}
-                            icon='fa-facebook'
                         />
                     )}
                 </div>
