@@ -319,7 +319,7 @@ export const BookingHistoryScreen = () => {
                                     {booking.oneWay === 1
                                         ? 'Precio Final: '
                                         : 'Precio Ida/Vuelta: '}
-                                    {booking.finalPrice}
+                                    {Number(booking.finalPrice).toFixed(2)}
                                     {getSymbol(booking.currency)}
                                 </p>
                                 {/* <span
