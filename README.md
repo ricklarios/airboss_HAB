@@ -27,45 +27,52 @@ Airboss es un portal de reserva de vuelos que consulta en tiempo real la disponi
 
 ## Comenzando
 
-### Instalación
+### Instalación 
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clona el repositorio
+1. Clona el repositorio
    ```sh
    git clone https://github.com/rmanueco/airboss_HAB.git
    ```
-3. Instala los paquetes NPM para el servidor
+2. Instala los paquetes NPM para el servidor
    ```sh
    cd servidor
    npm install
    ```
-4. Instala los paquetes NPM para el cliente
+3. Instala los paquetes NPM para el cliente
    ```sh
    cd cliente
    npm install
    ```
-5. En el .env necesitarás generar las siguientes credenciales:
-```sh
-    SENDGRID_API_KEY= <a href= "https://sendgrid.com/">Click aquí para generar</a>
-    SENDGRID_FROM= **Correo desde el que envías el mail**
-    SECRET=jasdFjasdfh3h8980D
-    CLIENT_ID= 'OUUOasYXAi6sbOXpFwF1dPn1fS5zGOjW'
-    CLIENT_SECRET='atGsnEQJZMFYwqVq'
-    GOOGLE_CLIENT_ID=427060005049-pelele5h6cbtvccnk47pourck5eq82pd.apps.googleusercontent.com
-    GOOGLE_SECRET_ID=r1Ch8C6KNs_ZG2DkUGbXQFh9
-    FACEBOOK_CLIENT_ID=1921744851337561
-    FACEBOOK_SECRET_ID=7b35024ac0ebcd85fa0a12f6cba26be0
-   ```
+4. En el .env del servidor necesitarás generar las siguientes credenciales:
 
+    SENDGRID_API_KEY= <a href= "https://sendgrid.com/">Click aquí para generar</a> <br/>
+    SENDGRID_FROM= **Correo desde el que envías el mail** <br/>
+    CLIENT_ID= <a href= "https://developers.amadeus.com/">Click aquí para generar</a> <br/>
+    CLIENT_SECRET=<a href= "https://developers.amadeus.com/">Click aquí para generar</a> <br/>
+    GOOGLE_CLIENT_ID= <a href= "https://developers.google.com/identity/protocols/oauth2">Click aquí para generar</a> <br/>
+    GOOGLE_SECRET_ID= <a href= "https://developers.google.com/identity/protocols/oauth2">Click aquí para generar</a> <br/>
+    FACEBOOK_CLIENT_ID= <a href= "https://developers.facebook.com/?locale=es_ES">Click aquí para generar</a> <br/>
+    FACEBOOK_SECRET_ID= <a href= "https://developers.facebook.com/?locale=es_ES">Click aquí para generar</a> <br/>
 
-## Tarjetas válidas de pago para simulación
+5. En el .env del servidor necesitarás generar las siguientes credenciales:
+
+    REACT_APP_ID_GOOGLE= Recogido en el paso 5 </br>
+    REACT_APP_ID_FB= Recogido en el paso 5 </br>
+    REACT_APP_PAYPAL_EMAIL= <a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
+    REACT_APP_PAYPAL_PASSWORD= <a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
+    REACT_APP_PAYPAL_CLIENTID=<a href= "https://developer.paypal.com/developer/accounts/">Click aquí para generar</a> <br/>
+## Uso
+
+Si quieres realizar un pago mediante Paypal usando tarjeta puedes introducir una de estas dos para validar con éxito, la fecha de caducidad debe ser posterior a la actual:
 - **MASTERCARD** 2223000048400011
 - **VISA** 4012888888881881
 
+![Product Name Screen Shot][payment-screenshot]
+
+## Licencia
+
+Distribuido bajo licencia del MIT.
 
 <!-- Recursos para el Readme-->
 [product-screenshot]: images/home.png
-[logo-node]: images/logo 
-[product-screenshot]: images/home.png
-[product-screenshot]: images/home.png
-[sendgrid]: https://sendgrid.com/
+[payment-screenshot]: images/payment.png
