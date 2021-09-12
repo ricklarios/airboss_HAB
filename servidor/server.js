@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(fileUpload());
 app.use(express.json());
-app.use('/users/login', require('./routes/auth'));
+// app.use('/users/login', require('./routes/auth'));
 
 //Middlewares
 const { userExists } = require('./middlewares/userExists');
@@ -29,7 +29,9 @@ const {
     deleteUser,
     validateToken,
     changeAvatar,
-} = require('./controllers/users');
+    getUserByEmail,
+    getUserById,
+} = require('./controllers/users/index');
 
 //Newsletter
 const {
@@ -38,7 +40,7 @@ const {
     changeNL,
     unsubscribeNL,
     validateUnsubscribeNL,
-} = require('./controllers/newsletter');
+} = require('./controllers/newsletter/index');
 
 //Searches
 const {
@@ -80,6 +82,12 @@ app.get('/users/validate/:registrationCode', validateUser);
 
 //Logado de usuario, genera un token de logado
 app.post('/users/login', loginUser);
+
+//Consultar usuario por email
+app.get('/users/:email', getUserByEmail);
+
+//Consultar usuario por id
+app.get('/users/id/:idUser', getUserById);
 
 //Editar datos de usuario
 app.put('/users/:idUser', authUser, userExists, editUser);
