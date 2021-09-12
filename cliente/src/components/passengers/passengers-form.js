@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, Fragment } from 'react';
+import { useContext, useState, useEffect, Fragment, useRef } from 'react';
 import './passengers-form.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -61,7 +61,6 @@ function getMyDateTime(resultsDate) {
 }
 
 function PassengersForm() {
-    // console.log('SE LANZA FORMULARIO');
 
     //Control de la alerta SnackBar
     const handleClose = (event, reason) => {
@@ -135,7 +134,7 @@ function PassengersForm() {
     const classes = useStyles();
     const classesFlags = useStylesFlags();
 
-    // const refRegisterForm = useRef (null);
+    const refPassengerForm = useRef (null);
 
     useEffect(() => {
         //console.log(travelersInfo);
@@ -149,13 +148,21 @@ function PassengersForm() {
         };
     }, [setOpacity, travelersInfo, values]);
     // console.log('123::::::::::::::',travelersInfo);
-    document.addEventListener('keydown', handleKeyDown);
-
+    
     function handleKeyDown(e) {
         if (e.keyCode === 27) {
-            setShowRegisterForm(false);
+            setShowEditTravelerForm(false);
         }
     }
+    document.addEventListener('keydown', handleKeyDown);
+
+    const closePassengerForm = (e)=>{
+        if(refPassengerForm.current && !refPassengerForm.current.contains(e.target)){
+          setShowEditTravelerForm(false)
+        }
+    }
+    document.addEventListener('mousedown',closePassengerForm)
+
     const handleChange = (prop) => (event) => {
         // console.log('ENTRO', prop);
         if (prop === 'emailAddress') {
@@ -351,6 +358,7 @@ function PassengersForm() {
         <div
             id='passengers-form'
             className={'passengers-container animate__animated ' + animation}
+            ref={refPassengerForm}
         >
             <form id='edit-passenger-form' onSubmit={handleSave}>
                 <div>
