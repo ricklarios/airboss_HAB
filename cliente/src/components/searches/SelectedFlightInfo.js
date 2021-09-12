@@ -265,7 +265,23 @@ function SelectedFlightInfo({ dataResults }) {
                 );
                 // saveTravelers = res.data.data;
                 // console.log('251:::::::::::',res.data.data);
-                setSaveTravelers(res.data.data);
+
+                let passengers =[];
+                res.data.data.map((traveler) => {
+                    let exist = false;
+                    for (const passenger of passengers){
+                        if (passenger.nationality === traveler.nationality && passenger.documentNumber === traveler.documentNumber && passenger.documentType === traveler.documentType) {
+                            exist =true;
+                        }
+                    }
+                    if (!exist){
+                        passengers.push(traveler)
+                    }
+                    return traveler;
+                })
+                // console.log(passengers);
+
+                setSaveTravelers(passengers);
                 history.push('/passengers', [
                     dataResults,
                     myDepartureCity,
