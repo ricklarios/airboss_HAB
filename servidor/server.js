@@ -62,9 +62,7 @@ const {
     poisDestination,
 } = require('./controllers/utilities/index');
 
-const {
-    getAllPassengers,
-} = require('./controllers/passengers/index')
+const { getAllPassengers } = require('./controllers/passengers/index');
 
 const { appsactivity } = require('googleapis/build/src/apis/appsactivity');
 

@@ -99,7 +99,11 @@ export const App = () => {
                     }
                 });
         }
+<<<<<<< HEAD
         if ((token && typeAuth === 'google') || typeAuth === 'fb') {
+=======
+        if (token && (typeAuth === 'google' || typeAuth === 'fb')) {
+>>>>>>> 02d65aaa56f96cad46844fcc0ef239d25292de7e
             try {
                 async function validateToken() {
                     const res = await axios.get(
@@ -111,7 +115,10 @@ export const App = () => {
                             },
                         }
                     );
+<<<<<<< HEAD
 
+=======
+>>>>>>> 02d65aaa56f96cad46844fcc0ef239d25292de7e
                     if (res.data.status === 'ok') {
                         //setValues({...values, ok: "Logado Google OK!", showOk: true});
                         // si NO hay error seteo la sesion redirect a /home
