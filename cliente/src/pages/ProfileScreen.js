@@ -116,14 +116,25 @@ export const ProfileScreen = ({ history, match }) => {
         setPicture(URL.createObjectURL(event.target.files[0]));
         async function changeAvatar() {
             try {
+                console.log('entro en avatar');
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const formData = new FormData();
+<<<<<<< HEAD
+                formData.append(
+                    "avatar",
+                    event.target.files[0]
+                    );
+                formData.append("email", email);
+                console.log('email:::',email);
+                const res = await axios.post('http://localhost:3001/users/avatar', 
+=======
                 formData.append('avatar', event.target.files[0]);
                 formData.append('email', email);
 
                 const res = await axios.post(
                     'http://localhost:3001/users/avatar',
+>>>>>>> 370991611328e474ddb6cd40dd9b9cc77f06e236
                     formData,
                     {
                         headers: {

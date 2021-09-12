@@ -19,13 +19,17 @@ import { Fragment } from 'react';
 import { Stepper } from '../components/ui/Stepper';
 require('dotenv').config();
 
+//Usamos este hook para controlar el cierre del formulario si se clica fuera de él
 export const TravelersContext = createContext(null);
 export const ConfirmPassengersScreen = ({ history }) => {
+    
+
     const {
         setAnimation,
         opacity,
         setOpacity,
         setShowEditTravelerForm,
+        showEditTravelerForm,
         travelersInfo,
         setTravelersInfo,
         setCurrentTraveler,
@@ -231,7 +235,7 @@ export const ConfirmPassengersScreen = ({ history }) => {
                         <div className='list-travelers' key={e.key}>
                             <span>{e?.documents[0]?.number || ''}</span>{' '}
                             <span>
-                                {e.name.firstName ||
+                                {(e.name.firstName || e.name.lastName) ||
                                     'DEBES COMPLETAR DATOS DEL PASAJERO'}
                             </span>
                             <span>
@@ -250,7 +254,8 @@ export const ConfirmPassengersScreen = ({ history }) => {
                                     renderOption={(option) => (
                                         <Fragment>
                                             {option.documentNumber} (
-                                            {option.name})
+                                            {option.name } 
+                                            {option.lastname})
                                         </Fragment>
                                     )}
                                     renderInput={(params) => (

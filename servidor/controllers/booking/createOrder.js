@@ -57,6 +57,29 @@ const createOrder = async (req, res, next) => {
         //Inserto pasajeros
         for (const traveler of travelers) {
             // console.log(traveler);
+<<<<<<< HEAD
+           
+            
+                await connection.query(
+                    `
+                        INSERT INTO passengers (name, lastname, documentNumber, documentType, birthDate, gender, phoneContact, emailContact, nationality, idBooking )
+                        VALUES(?, ?, ?, ?, ?, ? ,?, ?,?,?);
+                    `,
+                    [
+                        traveler.name.firstName,
+                        traveler.name.lastName,
+                        traveler.documents[0].number,
+                        traveler.documents[0].documentType,
+                        traveler.dateOfBirth,
+                        traveler.gender,
+                        traveler.contact.phones[0].number,
+                        traveler.contact.emailAddress,
+                        traveler.documents[0].nationality,
+                        idBooking,
+                    ]
+                );
+            
+=======
             //Si el pasajero ya existe no lo guarda
             // const [passenger] = await connection.query(
             //     `SELECT name
@@ -91,6 +114,7 @@ const createOrder = async (req, res, next) => {
                 ]
             );
             console.log('Pasajero guardado');
+>>>>>>> 370991611328e474ddb6cd40dd9b9cc77f06e236
         }
 
         //Insertamos itinerarios
