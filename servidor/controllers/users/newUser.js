@@ -1,4 +1,4 @@
-const {getDB} = require('../../bbdd/db');
+const { getDB } = require('../../bbdd/db');
 const {
     validate,
     generateRandomString,
@@ -14,9 +14,18 @@ const newUser = async (req, res, next) => {
         connection = await getDB();
 
         // Validamos los datos.
-        await validate(newUserSchema, req.body);
-        // console.log(req.body);
-        const { email, password, name, lastname, birthday, nationality, phone } = req.body;
+        console.log('el body', req.body);
+        // await validate(newUserSchema, req.body);
+        const {
+            email,
+            password,
+            name,
+            lastname,
+            birthday,
+            nationality,
+            phone,
+            avatar,
+        } = req.body;
 
         // Comprobamos si existe en la base de datos un usuario con ese email.
         const [user] = await connection.query(
@@ -47,16 +56,33 @@ const newUser = async (req, res, next) => {
             subject: 'Activa tu usuario de airboss',
             body: emailBody,
         });
-        
+
         // Guardamos al usuario en la base de datos junto al código de registro.
         await connection.query(
-            `INSERT INTO users (email, name, lastname, password, registrationCode, createdAt, birthDate, nationality, phoneNumber) VALUES (?, ?,?, SHA2(?, 512), ?, ?, ?, ?, ?);`,
-            [email, name, lastname, password, registrationCode, formatDate(new Date()), birthday, nationality, phone]
+            `INSERT INTO users (email, name, lastname, password, registrationCode, createdAt, birthDate, nationality, phoneNumber, avatar) VALUES (?, ?,?, SHA2(?, 512), ?, ?, ?, ?, ?, ?);`,
+            [
+                email,
+                name,
+                lastname,
+                password,
+                registrationCode,
+                formatDate(new Date()),
+                birthday,
+                nationality,
+                phone,
+                avatar,
+            ]
+        );
+
+        const [idUser] = await connection.query(
+            `SELECT id FROM users WHERE email = ?;`,
+            [email]
         );
 
         res.send({
             status: 'ok',
             message: 'Usuario registrado, comprueba tu email para activarlo',
+            idUser,
         });
     } catch (error) {
         console.log(error);
@@ -66,4 +92,4 @@ const newUser = async (req, res, next) => {
     }
 };
 
-module.exports = {newUser};
+module.exports = { newUser };

@@ -2,7 +2,7 @@ import './css/booking-history-screen.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getSymbol } from '../helpers';
-import AirlineSeatReclineExtraIcon  from '@material-ui/icons/AirlineSeatReclineExtra';
+import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
@@ -11,8 +11,8 @@ export const BookingHistoryScreen = () => {
 
     const [showResults, setShowResults] = useState(false);
     const [dataHistoryResults, setDataResults] = useState('');
-    const [showPassengersComp, setShowPassengersComp ] = useState(false);
-    const [idBooking, setIdBooking] =useState('');
+    const [showPassengersComp, setShowPassengersComp] = useState(false);
+    const [idBooking, setIdBooking] = useState('');
 
     const [values, setValues] = useState({
         info: '',
@@ -20,8 +20,8 @@ export const BookingHistoryScreen = () => {
     });
 
     function getMyDateTime(resultsDate) {
-        // console.log(resultsDate);
         const dateTime = new Date(resultsDate);
+
         const date = dateTime.toLocaleDateString('es-ES');
         const time = dateTime.toLocaleTimeString([], {
             hour: '2-digit',
@@ -36,22 +36,22 @@ export const BookingHistoryScreen = () => {
         setShowResults(false);
         setDataResults('');
         const getUserBooking = async () => {
-            // console.log('DENTRO DE USEFFECT:::', idUser);
-            const { data } = await axios.get(
-                `http://localhost:3001/allBooking/${idUser}`
-            );
-            console.log('booking history screen 40');
-            if (data) {
-                setDataResults(data);
-                console.log('data:::',data);
-                // Si no hay resultados muestro aviso en pantalla
-                if (data?.data?.length === 0) {
-                    console.log('No hay datos!!');
-                    setValues({
-                        ...values,
-                        info: 'No hay resultados con la búsqueda indicada.',
-                        showInfo: true,
-                    });
+            if (idUser) {
+                const { data } = await axios.get(
+                    `http://localhost:3001/allBooking/${idUser}`
+                );
+                if (data) {
+                    setDataResults(data);
+                    console.log('data:', data);
+                    // Si no hay resultados muestro aviso en pantalla
+                    if (data?.data?.length === 0) {
+                        console.log('No hay datos!!');
+                        setValues({
+                            ...values,
+                            info: 'No hay resultados con la búsqueda indicada.',
+                            showInfo: true,
+                        });
+                    }
                 }
             }
         };
@@ -65,11 +65,13 @@ export const BookingHistoryScreen = () => {
         }
         setValues({ ...values, showInfo: false });
     };
-    const showPassengers = (passengers, idBooking) =>{
-        showPassengersComp ? setShowPassengersComp(false) : setShowPassengersComp(true);
-        setIdBooking(idBooking);
-        // console.log(passengers, idBooking);
-    }
+    // const showPassengers = (passengers, idBooking) => {
+    //     showPassengersComp
+    //         ? setShowPassengersComp(false)
+    //         : setShowPassengersComp(true);
+    //     setIdBooking(idBooking);
+    //     // console.log(passengers, idBooking);
+    // };
 
     return (
         <div id='history-container'>
@@ -190,7 +192,7 @@ export const BookingHistoryScreen = () => {
                                     </div>
                                     <br />
                                     <div id='datos-vuelta'>
-                                        <p>
+                                        <div>
                                             {booking.oneWay === 0 && (
                                                 <div>
                                                     <p>
@@ -220,7 +222,8 @@ export const BookingHistoryScreen = () => {
                                                                     .segments[0]
                                                                     .departure_datetime
                                                             )[1]
-                                                        }pasajeros
+                                                        }
+                                                        pasajeros
                                                     </p>
                                                     <p>
                                                         Destino:{' '}
@@ -265,9 +268,49 @@ export const BookingHistoryScreen = () => {
                                                         }
                                                         )
                                                     </p>
+                                                    <div>
+                                                        Escalas:{' '}
+                                                        {booking.itineraries[1]
+                                                            .segments.length >=
+                                                        2
+                                                            ? 'Si'
+                                                            : 'No'}
+                                                        {booking.itineraries[1]
+                                                            .segments.length >=
+                                                        2 ? (
+                                                            <div>
+                                                                <ul>
+                                                                    {booking.itineraries[1].segments.map(
+                                                                        (
+                                                                            segment
+                                                                        ) => (
+                                                                            <li
+                                                                                id='escales-li'
+                                                                                key={
+                                                                                    segment.segmentId
+                                                                                }
+                                                                            >
+                                                                                <p>
+                                                                                    {
+                                                                                        segment.origin
+                                                                                    }{' '}
+                                                                                    →{' '}
+                                                                                    {
+                                                                                        segment.destination
+                                                                                    }
+                                                                                </p>
+                                                                            </li>
+                                                                        )
+                                                                    )}
+                                                                </ul>
+                                                            </div>
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <br />
@@ -276,14 +319,35 @@ export const BookingHistoryScreen = () => {
                                     {booking.oneWay === 1
                                         ? 'Precio Final: '
                                         : 'Precio Ida/Vuelta: '}
-                                    {booking.finalPrice}
+                                    {Number(booking.finalPrice).toFixed(2)}
                                     {getSymbol(booking.currency)}
                                 </p>
-                                <span className='span-passengers' onClick={() => showPassengers(booking.passengers[0], booking.bookingCode)}><AirlineSeatReclineExtraIcon /> Ver pasajeros del vuelo</span>
-                                {showPassengersComp && booking.bookingCode===idBooking &&<ul id ='ul-passengers'>
-                                        {booking.passengers[0].map ((passenger) =>
-                                            (<li key={passenger.id}> {passenger.name} {passenger.lastname}</li>))}
-                                    </ul>}
+                                {/* <span
+                                    className='span-passengers'
+                                    onClick={() =>
+                                        showPassengers(
+                                            booking.passengers[0],
+                                            booking.bookingCode
+                                        )
+                                    }
+                                >
+                                    <AirlineSeatReclineExtraIcon /> Ver
+                                    pasajeros del vuelo
+                                </span>
+                                {showPassengersComp &&
+                                    booking.bookingCode === idBooking && (
+                                        <ul id='ul-passengers'>
+                                            {booking.passengers.map(
+                                                (passenger) => (
+                                                    <li key={passenger.id}>
+                                                        {' '}
+                                                        {passenger.name}{' '}
+                                                        {passenger.lastname}
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+                                    )} */}
                             </li>
                         ))
                     ) : (

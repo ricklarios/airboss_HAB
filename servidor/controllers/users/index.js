@@ -7,8 +7,11 @@ const { recoverUserPass } = require('./recoverUserPass');
 const { resetUserPass } = require('./resetUserPass');
 const { deleteUser } = require('./deleteUser');
 const { newUser } = require('./newUser');
-const { validateToken } = require('./validateToken')
+const { validateToken } = require('./validateToken');
 const { changeAvatar } = require('./changeAvatar');
+const { getUserByEmail } = require('./getUserByEmail');
+const { getUserById } = require('./getUserById');
+
 module.exports = {
     validateUser,
     loginUser,
@@ -19,5 +22,7 @@ module.exports = {
     deleteUser,
     newUser,
     validateToken,
-    changeAvatar
+    changeAvatar,
+    getUserByEmail,
+    getUserById,
 };

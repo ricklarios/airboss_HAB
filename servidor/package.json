@@ -24,6 +24,7 @@
     "amadeus": "^5.7.0",
     "cors": "^2.8.5",
     "date-fns": "^2.22.1",
+    "date-fns-tz": "^1.1.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",

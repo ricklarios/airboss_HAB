@@ -5,10 +5,11 @@ const userExists = async (req, res, next) => {
     try {
         connection = await getDB();
         const { typeauth } = req.headers;
+
         let idUser;
 
         if (typeauth === 'google' || typeauth === 'fb') {
-            idUser = req.userAuth.idUser;
+            idUser = req.userauth.idUser;
         } else if (typeauth === 'API') {
             idUser = req.params.idUser;
         }
