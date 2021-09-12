@@ -94,6 +94,12 @@ export const App = () => {
                             if (currentUser.length === 1) {
                                 console.log(currentUser[0].avatar);
                                 setNameUser(currentUser[0].name);
+                                setLastname(currentUser[0].lastname);
+                                setPhone(currentUser[0].phoneNumber);
+                                setNationality(currentUser[0].nationality);
+                                setCreatedAt(currentUser[0].createdAt);
+                                setBirthday(currentUser[0].birthday);
+                                setEmail(currentUser[0].email);
                                 if (currentUser[0].avatar) {
                                     setPicture(currentUser[0].avatar);
                                 }
@@ -135,9 +141,15 @@ export const App = () => {
                             );
 
                             const currentUser = data.data;
-
+                            console.log(currentUser[0].lastname);
                             if (currentUser.length === 1) {
                                 setNameUser(currentUser[0].name);
+                                setLastname(currentUser[0].lastname);
+                                setPhone(currentUser[0].phoneNumber);
+                                setNationality(currentUser[0].nationality);
+                                setCreatedAt(currentUser[0].createdAt);
+                                setBirthday(currentUser[0].birthday);
+                                setEmail(currentUser[0].email);
                                 setPicture(currentUser[0].avatar);
                                 setLogin(true);
                             }
