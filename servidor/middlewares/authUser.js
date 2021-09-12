@@ -16,6 +16,7 @@ const authUser = async (req, res, next) => {
         }
         
         if (typeauth === 'google') {
+            // console.log(authorization);
             const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${authorization}`;
             try {
                 const response = await fetch(url);
