@@ -120,13 +120,11 @@ export const ProfileScreen = ({ history, match }) => {
                 const token = localStorage.getItem('userToken');
                 const typeAuth = localStorage.getItem('typeAuth');
                 const formData = new FormData();
-                formData.append(
-                    "avatar",
-                    event.target.files[0]
-                    );
-                formData.append("email", email);
-                console.log('email:::',email);
-                const res = await axios.post('http://localhost:3001/users/avatar', 
+                formData.append('avatar', event.target.files[0]);
+                formData.append('email', email);
+
+                const res = await axios.post(
+                    'http://localhost:3001/users/avatar',
                     formData,
                     {
                         headers: {

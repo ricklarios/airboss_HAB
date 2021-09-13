@@ -140,13 +140,13 @@ function LoginForm() {
                                     setLogin(true);
                                     // console.log(currentUser[0]);
                                     setNameUser(currentUser[0].name);
-                                    setLastname(currentUser[0].lastname)
+                                    setLastname(currentUser[0].lastname);
                                     setPicture(currentUser[0].avatar);
-                                    setEmail(currentUser[0].email)
-                                    setNationality(currentUser[0].nationality)
-                                    setPhone(currentUser[0].phoneNumber)
-                                    setBirthday(currentUser[0].birthDate)
-                                    setCreatedAt(currentUser[0].createdAt)
+                                    setEmail(currentUser[0].email);
+                                    setNationality(currentUser[0].nationality);
+                                    setPhone(currentUser[0].phoneNumber);
+                                    setBirthday(currentUser[0].birthDate);
+                                    setCreatedAt(currentUser[0].createdAt);
                                     // console.log('CURRENT:::',currentUser[0]);
                                     localStorage.setItem(
                                         'userToken',
@@ -175,7 +175,6 @@ function LoginForm() {
                                 password: '12345678',
                                 name: response.profileObj.givenName,
                                 lastname: response.profileObj.familyName,
-
                                 avatar: response.profileObj.imageUrl,
                             };
 

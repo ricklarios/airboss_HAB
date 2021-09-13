@@ -94,12 +94,12 @@ export const App = () => {
                             if (currentUser.length === 1) {
                                 // console.log(currentUser[0].avatar);
                                 setNameUser(currentUser[0].name);
-                                setLastname(currentUser[0].lastname)
-                                setEmail(currentUser[0].email)
-                                setNationality(currentUser[0].nationality)
-                                setPhone(currentUser[0].phoneNumber)
-                                setBirthday(currentUser[0].birthDate)
-                                setCreatedAt(currentUser[0].createdAt)
+                                setLastname(currentUser[0].lastname);
+                                setEmail(currentUser[0].email);
+                                setNationality(currentUser[0].nationality);
+                                setPhone(currentUser[0].phoneNumber);
+                                setBirthday(currentUser[0].birthDate);
+                                setCreatedAt(currentUser[0].createdAt);
                                 if (currentUser[0].avatar) {
                                     setPicture(currentUser[0].avatar);
                                     // console.log('FIJAMOS AVATAR:::', currentUser[0].avatar);
@@ -141,8 +141,9 @@ export const App = () => {
                                 `http://localhost:3001/users/id/${idUser}`
                             );
 
-                            const currentUser = data.data;
-                            console.log(currentUser[0].lastname);
+                            const currentUser = data?.data;
+
+                            console.log(currentUser[0]);
                             if (currentUser.length === 1) {
                                 // console.log('CURRENTUSER:::',currentUser);
                                 setNameUser(currentUser[0].name);

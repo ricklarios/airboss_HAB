@@ -21,4 +21,4 @@ const getDB = async () => {
     return await pool.getConnection();
 };
 
-module.exports = {getDB};
+module.exports = { getDB };
