@@ -13,8 +13,16 @@ const getUserById = async (req, res, next) => {
             [idUser]
         );
         
-        console.log(req.headers);
-        user[0].avatar = `http://localhost:3001/static/uploads/${user[0].avatar}`,
+        //console.log(req.headers);
+        if (user[0].avatar[0] === 'h' && user[0].avatar[1] === 't' && user[0].avatar[2] === 't') {
+          console.log('Encuentra h');
+          console.log(user[0].avatar[0], user[0].avatar[1],user[0].avatar[2]);  
+        // user[0].avatar = `${user[0].avatar}`;
+
+        }   else{
+            user[0].avatar = `http://localhost:3001/static/uploads/${user[0].avatar}`
+            
+        }
 
         res.send({
             status: 'ok',
