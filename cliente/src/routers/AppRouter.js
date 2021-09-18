@@ -119,6 +119,7 @@ export const AppRouter = () => {
                         />
                         <Redirect to={routes.home} />
                     </Switch>
+                    <Footer />
                 </UserContext.Provider>
             </div>
         </Router>
