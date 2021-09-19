@@ -16,7 +16,6 @@ export const HomeScreen = ({ history }) => {
             </div>
             <div>
                 <NewsletterSection />
-                <Footer />
             </div>
         </div>
     );
